@@ -59,6 +59,7 @@ markdown: kramdown
 plugins:
   - jekyll-remote-theme
   - jekyll-seo-tag
+  - jekyll-include-cache
 
 # Theme customization
 show_downloads: false
