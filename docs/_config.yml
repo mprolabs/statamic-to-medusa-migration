@@ -1,3 +1,4 @@
+# Updated: $(date +%Y-%m-%d-%H:%M:%S)
 title: Statamic to Medusa.js Migration
 description: Technical documentation for the Statamic to Medusa.js migration project
 baseurl: "/statamic-to-medusa-migration"
