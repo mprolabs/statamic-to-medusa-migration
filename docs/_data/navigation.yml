@@ -1,0 +1,41 @@
+# Main navigation items
+toc:
+  - title: Architecture
+    url: /architecture/
+    subitems:
+      - title: System Overview
+        url: /architecture/overview/
+      - title: Components
+        url: /architecture/components/
+      - title: Data Flow
+        url: /architecture/data-flow/
+        
+  - title: Guides
+    url: /guides/
+    subitems:
+      - title: Getting Started
+        url: /guides/getting-started/
+      - title: Configuration
+        url: /guides/configuration/
+      - title: Deployment
+        url: /guides/deployment/
+
+  - title: Development
+    url: /development/
+    subitems:
+      - title: Setup
+        url: /development/setup/
+      - title: API Reference
+        url: /development/api-reference/
+      - title: Testing
+        url: /development/testing/
+        
+  - title: Migration
+    url: /migration/
+    subitems:
+      - title: Content Migration
+        url: /migration/content/
+      - title: Data Migration
+        url: /migration/data/
+      - title: User Migration
+        url: /migration/users/ 

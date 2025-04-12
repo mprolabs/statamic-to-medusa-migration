@@ -12,16 +12,33 @@
       </label>
 
       <div class="trigger">
-        {% assign pages = site.pages | where_exp: "page", "page.title != nil" %}
-        {% for page in pages %}
-          {% if page.include_in_nav != false %}
-            <a class="page-link" href="{{ page.url | relative_url }}">{{ page.title | escape }}</a>
-          {% endif %}
-        {% endfor %}
-        
-        {% for link in site.aux_links %}
-          <a class="page-link" href="{{ link[1] | first }}" target="{% if site.aux_links_new_tab %}blank{% else %}_self{% endif %}">{{ link[0] }}</a>
-        {% endfor %}
+        <div class="modern-nav">
+          {% for item in site.data.navigation.toc %}
+            <div class="nav-item-container">
+              <a href="{{ site.baseurl }}{{ item.url }}" class="page-link nav-item{% if page.url contains item.url %} active{% endif %}">
+                {{ item.title }}
+                {% if item.subitems %}
+                <svg class="dropdown-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {% endif %}
+              </a>
+              {% if item.subitems %}
+                <div class="dropdown">
+                  {% for subitem in item.subitems %}
+                    <a href="{{ site.baseurl }}{{ subitem.url }}" class="dropdown-item{% if page.url == subitem.url %} active{% endif %}">
+                      {{ subitem.title }}
+                    </a>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          
+          {% for link in site.aux_links %}
+            <a class="page-link" href="{{ link[1] | first }}" target="{% if site.aux_links_new_tab %}blank{% else %}_self{% endif %}">{{ link[0] }}</a>
+          {% endfor %}
+        </div>
       </div>
     </nav>
   </div>

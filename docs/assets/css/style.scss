@@ -1,0 +1,141 @@
+@import "{{ site.theme }}";
+
+// Modern Navigation Styles
+.site-header {
+  border-bottom: 1px solid #e8e8e8;
+  background-color: #fff;
+  min-height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.site-title {
+  font-weight: 600;
+  line-height: 60px;
+  font-size: 1.3rem;
+}
+
+.modern-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.nav-item-container {
+  position: relative;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+  background-color: rgba(0,0,0,0.04);
+  text-decoration: none;
+}
+
+.nav-item.active {
+  color: #157878;
+  background-color: rgba(21, 120, 120, 0.08);
+}
+
+.dropdown-icon {
+  margin-left: 5px;
+  transition: transform 0.2s;
+}
+
+.nav-item-container:hover .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  min-width: 200px;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 1;
+  padding: 8px 0;
+  margin-top: 5px;
+}
+
+.nav-item-container:hover .dropdown {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 8px 16px;
+  color: #606c71;
+  font-size: 0.85rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(21, 120, 120, 0.08);
+  color: #157878;
+  text-decoration: none;
+}
+
+.dropdown-item.active {
+  background-color: rgba(21, 120, 120, 0.1);
+  color: #157878;
+  font-weight: 500;
+}
+
+// Mobile menu adjustments
+@media screen and (max-width: 42em) {
+  .site-nav {
+    background-color: #fff;
+  }
+  
+  .nav-trigger:checked ~ .trigger {
+    display: block;
+    padding-bottom: 15px;
+  }
+  
+  .modern-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .nav-item-container {
+    margin: 5px 0;
+    width: 100%;
+  }
+  
+  .dropdown {
+    position: static;
+    box-shadow: none;
+    margin-top: 0;
+    margin-left: 15px;
+    display: none;
+  }
+  
+  .nav-item-container:hover .dropdown {
+    display: block;
+  }
+  
+  .nav-item {
+    justify-content: space-between;
+  }
+  
+  .page-link {
+    display: block;
+    padding: 8px 10px;
+    margin: 2px 0;
+  }
+} 
