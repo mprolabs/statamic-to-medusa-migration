@@ -24,6 +24,9 @@ The project is currently in the proof of concept phase, with a focus on validati
 ## Getting Started
 For new team members, start by reviewing the [Architecture](architecture/index.md) section to understand the system structure, then proceed to the relevant implementation details based on your assigned tasks.
 
+## Workflow Test
+This line was added to test the GitHub workflow triggering.
+
 ---
 
 *Last updated: {{ site.time | date: '%B %d, %Y' }}* 
