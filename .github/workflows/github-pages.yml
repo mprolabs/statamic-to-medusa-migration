@@ -69,7 +69,7 @@ jobs:
         run: |
           cd docs
           bundle install
-          bundle exec jekyll build --baseurl "${{ github.event.repository.name }}"
+          bundle exec jekyll build --baseurl "/${{ github.event.repository.name }}"
         env:
           JEKYLL_ENV: production
       
@@ -88,4 +88,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2 
+        uses: actions/deploy-pages@v2
