@@ -1,137 +1,40 @@
 @import "{{ site.theme }}";
 
-// Modern Navigation Styles
+// Simple header styling
 .site-header {
+  border-bottom: 1px solid #e8e8e8;
   background-color: #fff;
-  min-height: 55px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  min-height: 60px;
 }
 
 .site-title {
   font-weight: 600;
-  line-height: 55px;
-  font-size: 1.2rem;
+  line-height: 60px;
 }
 
-// Modern navigation container
-.modern-nav {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-// Navigation items
-.nav-item-container {
-  position: relative;
-  margin: 0 2px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  padding: 8px 12px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  border-radius: 3px;
-  transition: all 0.15s ease;
-}
-
-.nav-item:hover {
-  background-color: rgba(0, 0, 0, 0.03);
-  text-decoration: none;
-}
-
-.nav-item.active {
-  color: #157878;
-  background-color: rgba(21, 120, 120, 0.06);
-}
-
-// Dropdown styles
-.dropdown-icon {
-  margin-left: 4px;
-  transition: transform 0.2s;
-}
-
-.nav-item-container:hover .dropdown-icon {
-  transform: rotate(180deg);
-}
-
-.dropdown {
-  display: none;
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  background-color: #fff;
-  min-width: 180px;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  z-index: 2;
-  padding: 6px 0;
-}
-
-.nav-item-container:hover .dropdown {
-  display: block;
-}
-
-.dropdown-item {
-  display: block;
-  padding: 6px 14px;
+.page-link {
   color: #606c71;
-  font-size: 0.8rem;
-  transition: all 0.15s ease;
+  padding: 8px 12px;
+  margin-left: 5px;
+  font-size: 0.9rem;
+  line-height: 60px;
+  transition: color 0.2s;
 }
 
-.dropdown-item:hover {
-  background-color: rgba(21, 120, 120, 0.06);
+.page-link:hover {
   color: #157878;
   text-decoration: none;
 }
 
-.dropdown-item.active {
-  color: #157878;
-  font-weight: 500;
-}
-
-// Mobile menu adjustments
 @media screen and (max-width: 42em) {
-  .site-title {
-    padding-left: 0;
-  }
-  
   .site-nav {
     background-color: #fff;
   }
   
-  .nav-trigger:checked ~ .trigger {
-    display: block;
-    padding-bottom: 10px;
-  }
-  
-  .modern-nav {
-    flex-direction: column;
-  }
-  
-  .nav-item-container {
-    width: 100%;
-    margin: 3px 0;
-  }
-  
-  .dropdown {
-    position: static;
-    box-shadow: none;
-    margin-left: 12px;
-    padding: 3px 0;
-  }
-  
-  .nav-item {
-    justify-content: space-between;
-  }
-  
   .page-link {
-    padding: 6px 8px;
-    margin: 0;
+    display: block;
+    margin: 5px 0;
+    padding: 5px;
+    line-height: normal;
   }
 } 
