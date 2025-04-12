@@ -1,9 +1,9 @@
-# Main navigation items
+# Main navigation structure
 toc:
   - title: Architecture
     url: /architecture/
     subitems:
-      - title: System Overview
+      - title: Overview
         url: /architecture/overview/
       - title: Components
         url: /architecture/components/
@@ -33,9 +33,9 @@ toc:
   - title: Migration
     url: /migration/
     subitems:
-      - title: Content Migration
+      - title: Content
         url: /migration/content/
-      - title: Data Migration
+      - title: Data
         url: /migration/data/
-      - title: User Migration
+      - title: Users
         url: /migration/users/ 
