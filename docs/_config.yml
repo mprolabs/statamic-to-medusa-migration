@@ -3,12 +3,14 @@
 title: Statamic to Medusa.js Migration
 description: Technical documentation for the Statamic to Medusa.js migration project
 baseurl: "/statamic-to-medusa-migration"
+repository: mprolabs/statamic-to-medusa-migration
 
 # Build settings
 markdown: kramdown
 remote_theme: pages-themes/cayman@v0.2.0
 plugins:
   - jekyll-remote-theme
+  - jekyll-github-metadata
 
 # Theme customization
 show_downloads: false
