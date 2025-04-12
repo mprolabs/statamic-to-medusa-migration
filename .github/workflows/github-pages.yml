@@ -1,23 +1,28 @@
 name: Deploy to GitHub Pages
 
 on:
+  # Runs on pushes targeting the default branch
   push:
-    branches:
-      - main
+    branches: ["main"]
     paths:
       - 'docs/**'
       - 'src/architecture/diagrams/**'
       - '.github/workflows/github-pages.yml'
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   # Build job
@@ -25,67 +30,56 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      
-      # If using PlantUML diagrams, install Java and PlantUML
-      - name: Setup Java
+        uses: actions/checkout@v3
+      - name: Setup Java for PlantUML
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
-      
-      - name: Install PlantUML
+          java-version: '11'
+      - name: Generate Diagrams
         run: |
-          sudo apt-get update
-          sudo apt-get install -y plantuml
-
-      # Update diagrams from source if needed
-      - name: Generate diagrams
-        run: |
-          cd src/architecture/diagrams
-          chmod +x render.sh
-          ./render.sh
-          mkdir -p ../../../docs/architecture/diagrams/
-          cp *.png *.svg ../../../docs/architecture/diagrams/
-      
+          mkdir -p docs/assets/images
+          curl -o plantuml.jar https://sourceforge.net/projects/plantuml/files/plantuml.jar/download
+          if [ -d "src/architecture/diagrams" ]; then
+            cd src/architecture/diagrams
+            for file in *.puml; do
+              if [ -f "$file" ]; then
+                echo "Rendering $file"
+                java -jar ../../../plantuml.jar -tsvg "$file"
+                mv "${file%.puml}.svg" ../../../docs/assets/images/
+              fi
+            done
+            cd ../../..
+          fi
       - name: Setup Pages
-        uses: actions/configure-pages@v4
-      
-      # Add explicit dependency for upload-artifact
-      - name: Setup upload-artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: upload-artifact-dependency
-          path: .github/
-      
+        uses: actions/configure-pages@v3
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
           bundler-cache: true
-          working-directory: ./docs
-      
+          cache-version: 0
+          working-directory: './docs'
       - name: Build with Jekyll
         run: |
           cd docs
           bundle install
-          bundle exec jekyll build --baseurl "/${{ github.event.repository.name }}"
+          bundle exec jekyll build --baseurl "${{ github.repository }}"
         env:
           JEKYLL_ENV: production
-      
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
-          path: ./docs/_site
+          path: docs/_site
 
   # Deployment job
   deploy:
-    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v2

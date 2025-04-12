@@ -21,9 +21,6 @@ defaults:
     values:
       layout: "default"
 
-# Theme settings
-theme: jekyll-theme-cayman
-
 # Color scheme - not used by Cayman but kept for reference
 color_scheme: light
 
