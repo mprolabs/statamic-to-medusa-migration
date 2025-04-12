@@ -1,6 +1,6 @@
 title: Statamic to Medusa.js Migration
 description: Technical documentation for the Statamic to Medusa.js migration project
-baseurl: ""
+baseurl: "/statamic-to-medusa-migration"
 
 # Theme settings
 theme: just-the-docs
