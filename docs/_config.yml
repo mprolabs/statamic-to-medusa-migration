@@ -1,11 +1,28 @@
 # Updated: $(date +%Y-%m-%d-%H:%M:%S)
+# Site settings
 title: Statamic to Medusa.js Migration
 description: Technical documentation for the Statamic to Medusa.js migration project
 baseurl: "/statamic-to-medusa-migration"
 
+# Build settings
+markdown: kramdown
+remote_theme: pages-themes/cayman@v0.2.0
+plugins:
+  - jekyll-remote-theme
+
+# Theme customization
+show_downloads: false
+
+# Default layout
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      layout: "default"
+
 # Theme settings
 theme: jekyll-theme-cayman
-remote_theme: pages-themes/cayman@v0.2.0
 
 # Color scheme - not used by Cayman but kept for reference
 color_scheme: light
@@ -54,24 +71,6 @@ exclude:
   - vendor
   - .git
   - .github
-
-# Build settings
-markdown: kramdown
-plugins:
-  - jekyll-remote-theme
-  - jekyll-seo-tag
-  - jekyll-include-cache
-
-# Theme customization
-show_downloads: false
-
-# Default layout
-defaults:
-  -
-    scope:
-      path: ""
-    values:
-      layout: "default"
 
 # Navigation
 header_pages:

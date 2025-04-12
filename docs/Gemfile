@@ -3,14 +3,6 @@ source "https://rubygems.org"
 # Use github-pages for GitHub Pages integration
 gem "github-pages", group: :jekyll_plugins
 
-# For Cayman theme support
-gem "jekyll-theme-cayman"
-
-# Plugins used by the site
-gem "jekyll-remote-theme", "~> 0.4.3"
-gem "jekyll-seo-tag", "~> 2.8.0"
-gem "jekyll-include-cache", "~> 0.2.1"
-
 # Windows and JRuby support
 platforms :mingw, :x64_mingw, :mswin, :jruby do
   gem "tzinfo", ">= 1", "< 3"
