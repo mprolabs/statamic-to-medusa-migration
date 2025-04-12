@@ -1,0 +1,83 @@
+title: Statamic to Medusa.js Migration
+description: Technical documentation for the Statamic to Medusa.js migration project
+baseurl: ""
+
+# Theme settings
+theme: jekyll-theme-just-the-docs
+remote_theme: pmarsceill/just-the-docs
+
+# Color scheme
+color_scheme: light
+
+# Enable or disable the site search
+search_enabled: true
+
+# Aux links for the upper right navigation
+aux_links:
+  "Project Repository":
+    - "https://github.com/yourusername/statamic-to-medusa-migration"
+
+# Makes Aux links open in a new tab
+aux_links_new_tab: true
+
+# Heading anchor links
+heading_anchors: true
+
+# Footer content
+footer_content: "Copyright &copy; 2023. All rights reserved."
+
+# Navigation structure
+# Navigation structure configuration can be added here if needed
+
+# Callouts
+callouts:
+  warning:
+    title: Warning
+    color: red
+  note:
+    title: Note
+    color: blue
+  tip:
+    title: Tip
+    color: green
+
+# Google Analytics
+# ga_tracking: UA-5555555-5
+# ga_tracking_anonymize_ip: true
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .git
+  - .github
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+
+# Theme customization
+show_downloads: false
+
+# Default layout
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      layout: "default"
+
+# Navigation
+header_pages:
+  - architecture/index.md
+  - guides/index.md
+  - development/index.md
+
+# Include additional directories
+include:
+  - assets
+  - _data 

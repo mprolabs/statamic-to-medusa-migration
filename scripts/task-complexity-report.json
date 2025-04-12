@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "generatedAt": "2025-04-11T15:29:51.597Z",
+    "tasksAnalyzed": 10,
+    "thresholdScore": 5,
+    "projectName": "Your Project Name",
+    "usedResearch": true
+  },
+  "complexityAnalysis": [
+    {
+      "taskId": 1,
+      "taskTitle": "Define System Architecture Components",
+      "complexityScore": 9,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down the task into subtasks such as creating the architecture diagram, defining component responsibilities, documenting interfaces, selecting the technology stack, and specifying communication patterns.",
+      "reasoning": "This task involves high structural complexity due to the need for a comprehensive architecture diagram, detailed specifications, and integration of multiple technologies."
+    },
+    {
+      "taskId": 2,
+      "taskTitle": "Design Data Models and Database Schema",
+      "complexityScore": 8,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Divide the task into subtasks such as creating entity-relationship diagrams, defining data entities and attributes, documenting relationships, and specifying database technology and indexing strategies.",
+      "reasoning": "The task is moderately complex due to the need for precise data modeling and database design, which requires understanding relationships and constraints."
+    },
+    {
+      "taskId": 3,
+      "taskTitle": "Implement Core API Endpoints",
+      "complexityScore": 7,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break this task into subtasks such as designing API contracts, implementing endpoints, setting up authentication, configuring error handling, and writing documentation.",
+      "reasoning": "The task is complex due to the need for secure API implementation, error handling, and compliance with RESTful standards."
+    },
+    {
+      "taskId": 4,
+      "taskTitle": "Setup Infrastructure and Deployment Pipeline",
+      "complexityScore": 8,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Divide the task into subtasks such as configuring environments, setting up infrastructure as code, implementing CI/CD pipelines, configuring monitoring, and documenting deployment procedures.",
+      "reasoning": "This task has high complexity due to the integration of multiple tools and environments, as well as the need for automation and monitoring."
+    },
+    {
+      "taskId": 5,
+      "taskTitle": "Develop Minimal Viable Frontend",
+      "complexityScore": 6,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break this task into subtasks such as implementing key screens, connecting to APIs, handling errors, and applying minimal styling.",
+      "reasoning": "The task is moderately complex as it focuses on basic functionality and connectivity to APIs, with minimal design considerations."
+    },
+    {
+      "taskId": 6,
+      "taskTitle": "Implement Authentication and Authorization",
+      "complexityScore": 9,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Divide the task into subtasks such as implementing user registration, setting up authentication mechanisms, defining role-based access controls, securing API endpoints, and implementing account recovery features.",
+      "reasoning": "This task is highly complex due to the need for secure authentication mechanisms and role-based access controls, which require careful design and implementation."
+    },
+    {
+      "taskId": 7,
+      "taskTitle": "Develop Integration Points with External Systems",
+      "complexityScore": 8,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break this task into subtasks such as implementing adapters for external systems, handling authentication, setting up retry logic, creating data transformation layers, and documenting integration points.",
+      "reasoning": "The task is complex due to the need for robust integration with external systems, requiring resilience and clear documentation."
+    },
+    {
+      "taskId": 8,
+      "taskTitle": "Implement Advanced UI Features and Refinements",
+      "complexityScore": 7,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Divide the task into subtasks such as implementing advanced UI components, adding animations, optimizing performance, and ensuring accessibility compliance.",
+      "reasoning": "The task is moderately complex due to the focus on enhancing user experience and ensuring compliance with accessibility standards."
+    },
+    {
+      "taskId": 9,
+      "taskTitle": "Develop Analytics and Reporting Features",
+      "complexityScore": 7,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break this task into subtasks such as implementing event tracking, creating data pipelines, developing reporting interfaces, and setting up scheduled reports.",
+      "reasoning": "The task is moderately complex due to the need for data aggregation, analysis, and visualization, which require careful planning and implementation."
+    },
+    {
+      "taskId": 10,
+      "taskTitle": "Conduct System-wide Testing and Risk Mitigation",
+      "complexityScore": 10,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Divide the task into subtasks such as conducting end-to-end testing, performing load testing, identifying risks, implementing mitigations, documenting limitations, and planning for technical debt resolution.",
+      "reasoning": "This task is highly complex as it involves comprehensive testing across all components and addressing risks and limitations, which requires significant coordination and effort."
+    }
+  ]
+}
