@@ -1,10 +1,10 @@
 source "https://rubygems.org"
 
-# Use the latest version of Jekyll
-gem "jekyll", "~> 4.3.2"
+# Use github-pages for GitHub Pages integration
+gem "github-pages", group: :jekyll_plugins
 
-# Use the just-the-docs theme
-gem "just-the-docs", "~> 0.5.0"
+# For Cayman theme support
+gem "jekyll-theme-cayman"
 
 # Plugins used by the site
 gem "jekyll-remote-theme", "~> 0.4.3"

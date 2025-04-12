@@ -1,4 +1,10 @@
-# Project Documentation
+---
+layout: default
+title: Home
+description: Documentation for the Statamic to Medusa.js migration project
+---
+
+# Statamic to Medusa.js Migration
 
 ## Overview
 This documentation covers the migration from Statamic to Medusa.js, including architecture, implementation details, testing strategies, and deployment procedures.
@@ -20,4 +26,4 @@ For new team members, start by reviewing the [Architecture](architecture/index.m
 
 ---
 
-*Last updated: {% raw %}{{ site.time | date: '%B %d, %Y' }}{% endraw %}* 
+*Last updated: {{ site.time | date: '%B %d, %Y' }}* 

@@ -4,10 +4,10 @@ description: Technical documentation for the Statamic to Medusa.js migration pro
 baseurl: "/statamic-to-medusa-migration"
 
 # Theme settings
-theme: just-the-docs
-remote_theme: just-the-docs/just-the-docs
+theme: jekyll-theme-cayman
+remote_theme: pages-themes/cayman@v0.2.0
 
-# Color scheme
+# Color scheme - not used by Cayman but kept for reference
 color_scheme: light
 
 # Enable or disable the site search
