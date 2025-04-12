@@ -1,26 +1,60 @@
 ---
 layout: default
 title: Guides
-nav_order: 5
-has_children: true
-permalink: /guides
+description: Development and usage guides for the Statamic to Medusa.js migration
+include_in_nav: true
 ---
 
 # Guides
 
-This section contains practical guides and how-to information for working with the Statamic to Medusa.js migration project.
+This section provides comprehensive guides for developers and users working with the Medusa.js platform.
 
-## Available Guides
+## Developer Guides
 
-- [Documentation Maintenance](documentation-maintenance.md) - How to maintain and update the project documentation
-- [Development Environment Setup](development.md) - Setting up your local development environment
+### Getting Started
 
-## Upcoming Guides
+- [Development Environment Setup](./dev-environment-setup.md)
+- [Local Development Workflow](./local-development.md)
+- [Medusa.js Basics](./medusa-basics.md)
+- [Strapi Integration](./strapi-integration.md)
 
-The following guides will be added in the future:
+### Implementation Guides
 
-- Multi-region Configuration
-- Multi-language Setup
-- Data Migration Workflow
-- Testing Process
-- Deployment Procedures 
+- [Creating Custom Endpoints](./custom-endpoints.md)
+- [Building Plugins](./building-plugins.md)
+- [Multi-Region Configuration](./multi-region-config.md)
+- [Multi-Language Implementation](./multi-language-implementation.md)
+
+### Data Migration
+
+- [Preparing for Migration](./migration-preparation.md)
+- [Running Migration Scripts](./running-migration.md)
+- [Post-Migration Verification](./post-migration-verification.md)
+
+## User Guides
+
+### Content Management
+
+- [Managing Products in Strapi](./managing-products.md)
+- [Translation Workflow](./translation-workflow.md)
+- [Media Library Usage](./media-library.md)
+
+### Admin Dashboard
+
+- [Admin Dashboard Overview](./admin-dashboard.md)
+- [Order Management](./order-management.md)
+- [Inventory Management](./inventory-management.md)
+- [Customer Management](./customer-management.md)
+
+## Troubleshooting
+
+- [Common Issues and Solutions](./troubleshooting.md)
+- [Performance Optimization](./performance-optimization.md)
+- [Error Logging and Monitoring](./error-logging.md)
+
+## Best Practices
+
+- [Code Standards](./code-standards.md)
+- [Testing Strategy](./testing-strategy.md)
+- [Deployment Process](./deployment-process.md)
+- [Security Guidelines](./security-guidelines.md) 
