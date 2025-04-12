@@ -25,14 +25,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       # If using PlantUML diagrams, install Java and PlantUML
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       
       - name: Install PlantUML
         run: |
@@ -45,10 +45,11 @@ jobs:
           cd src/architecture/diagrams
           chmod +x render.sh
           ./render.sh
+          mkdir -p ../../../docs/architecture/diagrams/
           cp *.png *.svg ../../../docs/architecture/diagrams/
       
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v4
       
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -66,10 +67,10 @@ jobs:
       - name: Build site
         run: |
           cd docs
-          bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+          bundle exec jekyll build
       
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: docs/_site
 
@@ -83,4 +84,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2 
+        uses: actions/deploy-pages@v4 
