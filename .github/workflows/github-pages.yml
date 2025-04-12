@@ -39,7 +39,7 @@ jobs:
       - name: Generate Diagrams
         run: |
           mkdir -p docs/assets/images
-          curl -o plantuml.jar https://sourceforge.net/projects/plantuml/files/plantuml.jar/download
+          curl -L -o plantuml.jar https://sourceforge.net/projects/plantuml/files/plantuml.jar/download
           if [ -d "src/architecture/diagrams" ]; then
             cd src/architecture/diagrams
             for file in *.puml; do
