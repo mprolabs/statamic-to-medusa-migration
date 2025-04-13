@@ -1,0 +1,620 @@
+{
+  "version": "1.0.0",
+  "description": "Field mapping for Statamic to Medusa.js and Strapi migration",
+  "entities": {
+    "products": {
+      "medusa": {
+        "id": {
+          "type": "direct",
+          "source": "_id"
+        },
+        "title": {
+          "type": "direct", 
+          "source": "title"
+        },
+        "subtitle": {
+          "type": "direct",
+          "source": "subtitle"
+        },
+        "handle": {
+          "type": "transform_slug",
+          "source": "_slug"
+        },
+        "description": {
+          "type": "direct",
+          "source": "description"
+        },
+        "variants": {
+          "type": "transform_variants",
+          "source": "variants",
+          "fallback_source": "price"
+        },
+        "options": {
+          "type": "transform_options",
+          "source": "options"
+        },
+        "categories": {
+          "type": "transform_relationship",
+          "source": "product_categories"
+        },
+        "images": {
+          "type": "transform_media",
+          "source": "images"
+        },
+        "thumbnail": {
+          "type": "transform_media",
+          "source": "thumbnail"
+        },
+        "weight": {
+          "type": "direct",
+          "source": "shipping_weight"
+        },
+        "material": {
+          "type": "direct",
+          "source": "material"
+        },
+        "metadata": {
+          "type": "transform_json",
+          "source": "metadata"
+        },
+        "status": {
+          "type": "transform_status",
+          "source": "status"
+        }
+      },
+      "strapi": {
+        "handle": {
+          "type": "transform_slug",
+          "source": "_slug"
+        },
+        "content": {
+          "type": "direct",
+          "source": "content"
+        },
+        "seo_title": {
+          "type": "direct",
+          "source": "seo_title"
+        },
+        "seo_description": {
+          "type": "direct",
+          "source": "seo_description"
+        },
+        "additional_information": {
+          "type": "direct",
+          "source": "additional_information"
+        },
+        "features": {
+          "type": "transform_array",
+          "source": "features"
+        },
+        "dimensions": {
+          "type": "transform_json",
+          "source": "dimensions"
+        },
+        "care_instructions": {
+          "type": "direct",
+          "source": "care_instructions"
+        }
+      },
+      "multi_language": [
+        {
+          "source": "title",
+          "medusa_field": "title",
+          "strapi_field": "title"
+        },
+        {
+          "source": "description",
+          "medusa_field": "description",
+          "strapi_field": "description"
+        },
+        {
+          "source": "content",
+          "medusa_field": null,
+          "strapi_field": "content"
+        },
+        {
+          "source": "seo_title",
+          "medusa_field": null,
+          "strapi_field": "seo_title"
+        },
+        {
+          "source": "seo_description",
+          "medusa_field": null,
+          "strapi_field": "seo_description"
+        },
+        {
+          "source": "additional_information",
+          "medusa_field": null,
+          "strapi_field": "additional_information"
+        },
+        {
+          "source": "care_instructions",
+          "medusa_field": null,
+          "strapi_field": "care_instructions"
+        }
+      ],
+      "multi_region": [
+        {
+          "source": "price",
+          "medusa_field": "variants.prices",
+          "strapi_field": null,
+          "transformation": "currency_format"
+        },
+        {
+          "source": "stock",
+          "medusa_field": "variants.inventory_quantity",
+          "strapi_field": null
+        },
+        {
+          "source": "availability",
+          "medusa_field": "variants.allow_backorder",
+          "strapi_field": "availability"
+        }
+      ]
+    },
+    "categories": {
+      "medusa": {
+        "id": {
+          "type": "direct",
+          "source": "_id"
+        },
+        "name": {
+          "type": "direct",
+          "source": "title"
+        },
+        "handle": {
+          "type": "transform_slug",
+          "source": "_slug"
+        },
+        "description": {
+          "type": "direct",
+          "source": "description"
+        },
+        "parent_category_id": {
+          "type": "transform_relationship",
+          "source": "parent"
+        },
+        "metadata": {
+          "type": "transform_json",
+          "source": "metadata"
+        }
+      },
+      "strapi": {
+        "name": {
+          "type": "direct",
+          "source": "title"
+        },
+        "handle": {
+          "type": "transform_slug",
+          "source": "_slug"
+        },
+        "description": {
+          "type": "direct",
+          "source": "description"
+        },
+        "seo_title": {
+          "type": "direct",
+          "source": "seo_title"
+        },
+        "seo_description": {
+          "type": "direct",
+          "source": "seo_description"
+        },
+        "banner_image": {
+          "type": "transform_media",
+          "source": "banner_image"
+        },
+        "icon": {
+          "type": "transform_media",
+          "source": "icon"
+        }
+      },
+      "multi_language": [
+        {
+          "source": "title",
+          "medusa_field": "name",
+          "strapi_field": "name"
+        },
+        {
+          "source": "description",
+          "medusa_field": "description",
+          "strapi_field": "description"
+        },
+        {
+          "source": "seo_title",
+          "medusa_field": null,
+          "strapi_field": "seo_title"
+        },
+        {
+          "source": "seo_description",
+          "medusa_field": null,
+          "strapi_field": "seo_description"
+        }
+      ],
+      "multi_region": []
+    },
+    "collections": {
+      "medusa": {
+        "id": {
+          "type": "direct",
+          "source": "_id"
+        },
+        "title": {
+          "type": "direct",
+          "source": "title"
+        },
+        "handle": {
+          "type": "transform_slug",
+          "source": "_slug"
+        },
+        "metadata": {
+          "type": "transform_json",
+          "source": "metadata"
+        }
+      },
+      "strapi": {
+        "title": {
+          "type": "direct",
+          "source": "title"
+        },
+        "handle": {
+          "type": "transform_slug",
+          "source": "_slug"
+        },
+        "description": {
+          "type": "direct",
+          "source": "description"
+        },
+        "banner_image": {
+          "type": "transform_media",
+          "source": "banner_image"
+        },
+        "seo_title": {
+          "type": "direct",
+          "source": "seo_title"
+        },
+        "seo_description": {
+          "type": "direct",
+          "source": "seo_description"
+        }
+      },
+      "multi_language": [
+        {
+          "source": "title",
+          "medusa_field": "title",
+          "strapi_field": "title"
+        },
+        {
+          "source": "description",
+          "medusa_field": null,
+          "strapi_field": "description"
+        },
+        {
+          "source": "seo_title",
+          "medusa_field": null,
+          "strapi_field": "seo_title"
+        },
+        {
+          "source": "seo_description",
+          "medusa_field": null,
+          "strapi_field": "seo_description"
+        }
+      ],
+      "multi_region": []
+    },
+    "customers": {
+      "medusa": {
+        "id": {
+          "type": "direct",
+          "source": "_id"
+        },
+        "email": {
+          "type": "direct",
+          "source": "email"
+        },
+        "first_name": {
+          "type": "transform_name",
+          "source": "name",
+          "part": "first"
+        },
+        "last_name": {
+          "type": "transform_name",
+          "source": "name",
+          "part": "last"
+        },
+        "phone": {
+          "type": "direct",
+          "source": "phone"
+        },
+        "has_account": {
+          "type": "direct",
+          "source": "has_account"
+        },
+        "metadata": {
+          "type": "transform_json",
+          "source": "metadata"
+        }
+      },
+      "strapi": {
+        "email": {
+          "type": "direct",
+          "source": "email"
+        },
+        "name": {
+          "type": "direct",
+          "source": "name"
+        },
+        "phone": {
+          "type": "direct",
+          "source": "phone"
+        },
+        "preferences": {
+          "type": "transform_json",
+          "source": "preferences"
+        }
+      },
+      "multi_language": [],
+      "multi_region": [
+        {
+          "source": "preferred_region",
+          "medusa_field": "metadata.preferred_region",
+          "strapi_field": "preferred_region"
+        }
+      ]
+    },
+    "pages": {
+      "medusa": null,
+      "strapi": {
+        "title": {
+          "type": "direct",
+          "source": "title"
+        },
+        "slug": {
+          "type": "transform_slug",
+          "source": "_slug"
+        },
+        "content": {
+          "type": "direct",
+          "source": "content"
+        },
+        "seo_title": {
+          "type": "direct",
+          "source": "seo_title"
+        },
+        "seo_description": {
+          "type": "direct",
+          "source": "seo_description"
+        },
+        "featured_image": {
+          "type": "transform_media",
+          "source": "featured_image"
+        },
+        "template": {
+          "type": "direct",
+          "source": "template"
+        },
+        "parent": {
+          "type": "transform_relationship",
+          "source": "parent"
+        }
+      },
+      "multi_language": [
+        {
+          "source": "title",
+          "medusa_field": null,
+          "strapi_field": "title"
+        },
+        {
+          "source": "content",
+          "medusa_field": null,
+          "strapi_field": "content"
+        },
+        {
+          "source": "seo_title",
+          "medusa_field": null,
+          "strapi_field": "seo_title"
+        },
+        {
+          "source": "seo_description",
+          "medusa_field": null,
+          "strapi_field": "seo_description"
+        }
+      ],
+      "multi_region": [
+        {
+          "source": "region_availability",
+          "medusa_field": null,
+          "strapi_field": "region_availability"
+        }
+      ]
+    },
+    "regions": {
+      "medusa": {
+        "id": {
+          "type": "direct",
+          "source": "_id"
+        },
+        "name": {
+          "type": "direct",
+          "source": "name"
+        },
+        "currency_code": {
+          "type": "transform_currency",
+          "source": "currency"
+        },
+        "tax_rate": {
+          "type": "transform_tax_rate",
+          "source": "taxRate"
+        },
+        "payment_providers": {
+          "type": "direct",
+          "source": "payment_providers",
+          "default": ["system"]
+        },
+        "fulfillment_providers": {
+          "type": "direct",
+          "source": "fulfillment_providers",
+          "default": ["manual"]
+        },
+        "countries": {
+          "type": "transform_countries",
+          "source": "code"
+        }
+      },
+      "strapi": {
+        "code": {
+          "type": "direct",
+          "source": "code"
+        },
+        "name": {
+          "type": "direct",
+          "source": "name"
+        },
+        "domain": {
+          "type": "direct",
+          "source": "domain"
+        },
+        "languages": {
+          "type": "direct",
+          "source": "languages"
+        },
+        "currency": {
+          "type": "direct",
+          "source": "currency"
+        },
+        "tax_rate": {
+          "type": "direct",
+          "source": "taxRate"
+        }
+      },
+      "multi_language": [
+        {
+          "source": "name",
+          "medusa_field": "name",
+          "strapi_field": "name"
+        }
+      ],
+      "multi_region": []
+    },
+    "navigation": {
+      "medusa": null,
+      "strapi": {
+        "title": {
+          "type": "direct",
+          "source": "title"
+        },
+        "handle": {
+          "type": "transform_slug",
+          "source": "_slug"
+        },
+        "url": {
+          "type": "direct",
+          "source": "url"
+        },
+        "external": {
+          "type": "direct",
+          "source": "external",
+          "default": false
+        },
+        "parent": {
+          "type": "transform_relationship",
+          "source": "parent"
+        },
+        "order": {
+          "type": "direct",
+          "source": "order"
+        }
+      },
+      "multi_language": [
+        {
+          "source": "title",
+          "medusa_field": null,
+          "strapi_field": "title"
+        }
+      ],
+      "multi_region": [
+        {
+          "source": "region_availability",
+          "medusa_field": null,
+          "strapi_field": "region_availability"
+        }
+      ]
+    }
+  },
+  "transformations": {
+    "transform_slug": {
+      "description": "Transform a slug from Statamic format to the target system format",
+      "function": "transformSlug"
+    },
+    "transform_currency": {
+      "description": "Transform currency codes to lowercase for Medusa compatibility",
+      "function": "transformCurrency"
+    },
+    "transform_tax_rate": {
+      "description": "Transform tax rates from percentage to decimal",
+      "function": "transformTaxRate"
+    },
+    "transform_media": {
+      "description": "Transform media references from Statamic to the target system",
+      "function": "transformMedia"
+    },
+    "transform_relationship": {
+      "description": "Transform relationship references from Statamic to the target system",
+      "function": "transformRelationship"
+    },
+    "transform_array": {
+      "description": "Transform arrays of data from Statamic to the target system",
+      "function": "transformArray"
+    },
+    "transform_json": {
+      "description": "Transform JSON data from Statamic to the target system",
+      "function": "transformJson"
+    },
+    "transform_variants": {
+      "description": "Transform product variants from Statamic to Medusa",
+      "function": "transformVariants"
+    },
+    "transform_options": {
+      "description": "Transform product options from Statamic to Medusa",
+      "function": "transformOptions"
+    },
+    "transform_status": {
+      "description": "Transform status fields from Statamic to the target system",
+      "function": "transformStatus"
+    },
+    "transform_name": {
+      "description": "Transform name fields from a single field to first/last",
+      "function": "transformName"
+    },
+    "transform_countries": {
+      "description": "Transform country codes to uppercase for Medusa compatibility",
+      "function": "transformCountries"
+    }
+  },
+  "language_mappings": {
+    "nl": "nl-NL",
+    "de": "de-DE",
+    "fr": "fr-BE",
+    "en": "en-GB"
+  },
+  "region_mappings": {
+    "nl": {
+      "currency": "EUR",
+      "tax_rate": 21,
+      "languages": ["nl"],
+      "domain": "example.nl"
+    },
+    "be": {
+      "currency": "EUR",
+      "tax_rate": 21,
+      "languages": ["nl", "fr"],
+      "domain": "example.be"
+    },
+    "de": {
+      "currency": "EUR",
+      "tax_rate": 19,
+      "languages": ["de"],
+      "domain": "example.de"
+    }
+  }
+} 

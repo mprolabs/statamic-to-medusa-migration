@@ -200,16 +200,37 @@
 - Create test instances that mirror production environment
 - Develop and test data migration scripts with sample data
 
-### Phase 3: Data Migration
-- Extract products from Simple Commerce
-- Extract content from Statamic collections
-- Transform data to match Medusa.js and Strapi schemas
-- Migrate product catalog with region availability
-- Transfer content with language variants
-- Migrate user accounts and order history
-- Import media assets
-- Validate data integrity across regions
-- Perform quality assurance on migrated data
+### Phase 3: Data Validation and Migration
+- **Validation Framework**: Node.js based validation system with the following features:
+  - Entity-specific validation rules (products, categories, customers, orders, etc.)
+  - Format validation for common data types (email, URL, currency, etc.)
+  - Region-specific validation rules for NL, BE, DE
+  - Multi-language content validation
+  - Comprehensive reporting with JSON and text output
+  - Command-line interface with configurable options
+  - Integration with migration pipeline for pre-import validation
+  - Support for both single file and directory-based batch validation
+  - Customizable strictness levels for different migration phases
+- **Transformation Rules**: Enforced during validation
+  - Direct field mapping for simple fields
+  - Currency transformations (ensuring integer cents format)
+  - Slug transformations with proper formatting
+  - Media/asset path transformations
+  - Object and array transformations for complex data
+  - Region-specific transformations based on target market
+  - Relationship mapping between entities
+- **Validation Reports**: Generated for each entity type
+  - Summary statistics (valid vs. invalid entities)
+  - Detailed error listings with field-level context
+  - Warnings for potential issues that aren't blocking
+  - Structured JSON output for programmatic processing
+  - Human-readable text reports for review
+- **Error Handling**: 
+  - Graceful error handling during validation
+  - Context-specific error messages with field and entity information
+  - Batch processing that continues despite individual entity failures
+  - Configurable strictness level for blocking vs. warning errors
+  - Integration with import process to prevent invalid data imports
 
 ### Phase 4: Frontend Development
 - Develop Next.js application with region/language routing

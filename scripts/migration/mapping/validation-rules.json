@@ -1,0 +1,254 @@
+{
+  "product": {
+    "required": ["title", "handle", "status"],
+    "formats": {
+      "title": "string",
+      "handle": "slug",
+      "status": {
+        "type": "enum",
+        "values": ["draft", "published", "archived"]
+      },
+      "description": "string",
+      "thumbnail": "url",
+      "material": "string",
+      "weight": "numeric",
+      "origin_country": "string",
+      "type": "string",
+      "collection_id": "string",
+      "tags": "array",
+      "price": {
+        "type": "object",
+        "properties": {
+          "amount": "numeric",
+          "currency_code": {
+            "type": "enum",
+            "values": ["eur", "usd"]
+          }
+        }
+      },
+      "options": "array",
+      "variants": {
+        "type": "array",
+        "items": {
+          "title": "string",
+          "sku": "string",
+          "barcode": "string",
+          "inventory_quantity": "numeric",
+          "allow_backorder": "boolean",
+          "manage_inventory": "boolean",
+          "prices": "array"
+        }
+      },
+      "metadata": "object"
+    },
+    "relationships": {
+      "collection_id": {
+        "entity": "collection",
+        "field": "id"
+      },
+      "categories": {
+        "entity": "category",
+        "field": "id"
+      }
+    }
+  },
+  "category": {
+    "required": ["name", "handle"],
+    "formats": {
+      "name": "string",
+      "handle": "slug",
+      "description": "string",
+      "parent_category_id": "string",
+      "rank": "numeric",
+      "metadata": "object"
+    },
+    "relationships": {
+      "parent_category_id": {
+        "entity": "category",
+        "field": "id"
+      }
+    }
+  },
+  "collection": {
+    "required": ["title", "handle"],
+    "formats": {
+      "title": "string",
+      "handle": "slug",
+      "products": "array"
+    },
+    "relationships": {
+      "products": {
+        "entity": "product",
+        "field": "id"
+      }
+    }
+  },
+  "customer": {
+    "required": ["email", "first_name", "last_name"],
+    "formats": {
+      "email": "email",
+      "first_name": "string",
+      "last_name": "string",
+      "phone": "phone",
+      "has_account": "boolean",
+      "password_hash": "string",
+      "metadata": "object",
+      "billing_address": {
+        "type": "object",
+        "properties": {
+          "first_name": "string",
+          "last_name": "string",
+          "address_line_1": "string",
+          "address_line_2": "string",
+          "city": "string",
+          "postal_code": "string",
+          "province": "string",
+          "country_code": "string",
+          "phone": "phone"
+        }
+      },
+      "shipping_address": {
+        "type": "object",
+        "properties": {
+          "first_name": "string",
+          "last_name": "string",
+          "address_line_1": "string",
+          "address_line_2": "string",
+          "city": "string",
+          "postal_code": "string",
+          "province": "string",
+          "country_code": "string",
+          "phone": "phone"
+        }
+      }
+    }
+  },
+  "order": {
+    "required": ["email", "items"],
+    "formats": {
+      "email": "email",
+      "status": {
+        "type": "enum",
+        "values": ["pending", "processing", "shipped", "completed", "canceled", "refunded"]
+      },
+      "customer_id": "string",
+      "shipping_address_id": "string",
+      "billing_address_id": "string",
+      "region_id": "string",
+      "currency_code": {
+        "type": "enum",
+        "values": ["eur", "usd"]
+      },
+      "tax_rate": "numeric",
+      "shipping_total": "numeric",
+      "discount_total": "numeric",
+      "gift_card_total": "numeric",
+      "subtotal": "numeric",
+      "total": "numeric",
+      "items": {
+        "type": "array",
+        "items": {
+          "title": "string",
+          "description": "string",
+          "thumbnail": "string",
+          "quantity": "numeric",
+          "variant_id": "string",
+          "unit_price": "numeric",
+          "subtotal": "numeric",
+          "total": "numeric",
+          "refundable": "boolean"
+        }
+      },
+      "shipping_methods": "array",
+      "payments": "array",
+      "fulfillments": "array",
+      "returns": "array",
+      "metadata": "object"
+    },
+    "relationships": {
+      "customer_id": {
+        "entity": "customer",
+        "field": "id"
+      },
+      "region_id": {
+        "entity": "region",
+        "field": "id"
+      }
+    }
+  },
+  "region": {
+    "required": ["name", "currency_code", "countries"],
+    "formats": {
+      "name": "string",
+      "currency_code": {
+        "type": "enum",
+        "values": ["eur", "usd"]
+      },
+      "tax_rate": "numeric",
+      "tax_code": "string",
+      "countries": "array",
+      "payment_providers": "array",
+      "fulfillment_providers": "array",
+      "metadata": "object"
+    }
+  },
+  "page": {
+    "required": ["title", "handle", "status"],
+    "formats": {
+      "title": "string",
+      "handle": "slug",
+      "status": {
+        "type": "enum",
+        "values": ["draft", "published", "archived"]
+      },
+      "type": "string",
+      "content": "string",
+      "metadata": "object",
+      "parent_id": "string",
+      "translations": "object",
+      "seo": {
+        "type": "object",
+        "properties": {
+          "title": "string",
+          "description": "string",
+          "canonical_url": "url",
+          "meta_keywords": "array",
+          "og_image": "url"
+        }
+      }
+    },
+    "relationships": {
+      "parent_id": {
+        "entity": "page",
+        "field": "id"
+      }
+    }
+  },
+  "multilingual": {
+    "required": ["translations"],
+    "formats": {
+      "translations": {
+        "type": "object",
+        "properties": {
+          "nl": "object",
+          "en": "object",
+          "de": "object",
+          "fr": "object"
+        }
+      }
+    }
+  },
+  "multiregion": {
+    "required": ["regions"],
+    "formats": {
+      "regions": {
+        "type": "object",
+        "properties": {
+          "nl": "object",
+          "be": "object",
+          "de": "object"
+        }
+      }
+    }
+  }
+} 

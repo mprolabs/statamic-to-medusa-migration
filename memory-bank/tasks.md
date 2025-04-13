@@ -53,7 +53,7 @@
 | 3.8 | Develop user data migration procedure | TO DO | HIGH | 3.3 | - | - |
 | 3.9 | Implement cross-region user data relationships | TO DO | MEDIUM | 3.8, 2.3 | - | - |
 | 3.10 | Create order history migration scripts | TO DO | MEDIUM | 3.4 | - | - |
-| 3.11 | Set up test data validation procedures | TO DO | MEDIUM | 3.1-3.10 | - | - |
+| 3.11 | Set up test data validation procedures | COMPLETED | MEDIUM | 3.1-3.10 | - | 2023-12-10 |
 | 3.12 | Perform test migration | TO DO | HIGH | 3.1-3.11 | - | - |
 | 3.13 | Document migration process | TO DO | MEDIUM | 3.1-3.12 | - | - |
 | 3.14 | Create migration rollback procedures | TO DO | MEDIUM | 3.1-3.13 | - | - |
@@ -164,6 +164,33 @@
 - Document performance characteristics
 - Test authentication flow across domains
 - Validate consistent user experience across all domains and languages
+
+### Task 3.11: Set up test data validation procedures
+**Description:** Develop a comprehensive validation system to ensure data integrity during the migration process.  
+**Acceptance Criteria:**
+- Create validation scripts for all entity types (products, categories, customers, orders)
+- Implement format validation for common data types (email, URL, currency)
+- Add support for region-specific validation rules
+- Implement multi-language content validation
+- Create detailed validation reporting system
+- Test with sample data from Statamic export
+- Document validation procedures and rules
+- Integrate validation with the import process
+- Support batch validation for large datasets
+- Handle errors gracefully with clear reporting
+
+**Completion Summary:**
+- Created `validate-migration-data.js` command-line script with comprehensive options
+- Implemented `MigrationValidator` class with entity-specific validation rules
+- Added format validators for emails, URLs, slugs, currency, and more
+- Created support for region-specific validation (NL, BE, DE) 
+- Implemented multi-language content validation
+- Added validation reporting with both JSON and human-readable outputs
+- Fixed syntax errors and improved error handling
+- Enhanced validation for pricing data and currency formats
+- Added robust validation for product variants
+- Created comprehensive documentation in `docs/migration/data-validation-guide.md`
+- Integrated validation with the import process to prevent invalid data imports
 
 ## Current Focus
 

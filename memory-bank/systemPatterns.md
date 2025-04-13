@@ -376,3 +376,325 @@ const testConfig = {
 - **Edge Caching**: CDN implementation for region-specific performance optimization
 
 These patterns establish the foundation for a scalable, maintainable system that addresses the current limitations while providing a path for future growth. The multi-region and multi-language architecture ensures that the solution will support the business requirements for three distinct domains with two languages across all stores. 
+
+# System Patterns
+
+This document outlines the architectural patterns and design decisions for the Statamic to Medusa.js migration project, with a focus on multi-region and multi-language support.
+
+## Core Architecture
+
+The system follows a headless commerce architecture with the following components:
+
+```mermaid
+graph TD
+    Frontend[Next.js Frontend]
+    APIGateway[API Gateway]
+    MedusaBackend[Medusa.js Commerce Engine]
+    StrapiCMS[Strapi CMS]
+    MedusaDB[(PostgreSQL - Medusa)]
+    StrapiDB[(PostgreSQL - Strapi)]
+    RedisCache[(Redis Cache)]
+    Storage[(MinIO Object Storage)]
+    
+    Frontend --> APIGateway
+    APIGateway --> MedusaBackend
+    APIGateway --> StrapiCMS
+    MedusaBackend --> MedusaDB
+    MedusaBackend --> RedisCache
+    StrapiCMS --> StrapiDB
+    StrapiCMS --> Storage
+```
+
+## Multi-Region Implementation
+
+### Domain-Based Region Structure
+
+The system uses a domain-based approach to region detection and configuration:
+
+- **Netherlands**: example.nl (primary)
+- **Belgium**: example.be
+- **Germany**: example.de
+
+Each domain is mapped to a specific Medusa.js region and sales channel, with appropriate configurations for:
+
+- Currency (EUR for all regions)
+- Tax rates (region-specific)
+- Payment providers (region-specific)
+- Shipping options (region-specific)
+
+### Region Detection Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant APIGateway
+    participant MedusaBackend
+    
+    User->>Frontend: Visit domain (example.nl)
+    Frontend->>APIGateway: Request region info
+    APIGateway->>MedusaBackend: Get region by domain
+    MedusaBackend-->>APIGateway: Return region config
+    APIGateway-->>Frontend: Region + settings
+    Frontend-->>User: Region-specific content
+```
+
+### Sales Channel Implementation
+
+Sales channels are used to control product availability across regions:
+
+```mermaid
+graph TD
+    Product[Product]
+    NLChannel[NL Sales Channel]
+    BEChannel[BE Sales Channel]
+    DEChannel[DE Sales Channel]
+    
+    Product -->|Available in| NLChannel
+    Product -->|Available in| BEChannel
+    Product -->|Not available in| DEChannel
+    
+    NLStore[Dutch Storefront]
+    BEStore[Belgian Storefront]
+    DEStore[German Storefront]
+    
+    NLChannel --> NLStore
+    BEChannel --> BEStore
+    DEChannel --> DEStore
+```
+
+## Multi-Language Implementation
+
+### Language Mapping
+
+The system supports two primary languages:
+
+- **Dutch (nl)**: Default language for Netherlands and Belgium regions
+- **German (de)**: Default language for Germany region
+
+### Content Translation Storage
+
+Translations are handled across two systems:
+
+1. **Medusa.js**: Product essential data translations (title, description) stored in metadata
+2. **Strapi CMS**: Extended content translations managed through Strapi's i18n system
+
+```mermaid
+graph TD
+    subgraph "Medusa.js"
+        ProductCore[Product Core Data]
+        MetadataTranslations[Metadata Translations]
+        ProductCore --> MetadataTranslations
+    end
+    
+    subgraph "Strapi CMS"
+        ExtendedContent[Extended Content]
+        I18nSystem[Internationalization System]
+        ExtendedContent --> I18nSystem
+    end
+    
+    MetadataTranslations -.->|References| ExtendedContent
+```
+
+## Integration Patterns
+
+### Medusa-Strapi Integration
+
+The system implements a bidirectional integration between Medusa.js and Strapi:
+
+```mermaid
+graph TD
+    Medusa[Medusa.js]
+    Strapi[Strapi CMS]
+    Integration[Integration Service]
+    
+    Medusa -->|Webhooks| Integration
+    Integration -->|Update content| Strapi
+    Strapi -->|Webhooks| Integration
+    Integration -->|Update metadata| Medusa
+```
+
+The integration service handles:
+- Product creation/updates synchronization
+- Region-specific content management
+- Translation consistency across systems
+- Media asset synchronization
+
+### Frontend Integration
+
+The Next.js frontend integrates with both systems:
+
+```mermaid
+graph TD
+    Next[Next.js Frontend]
+    MedusaSDK[Medusa JS SDK]
+    StrapiAPI[Strapi API]
+    
+    Next -->|Commerce operations| MedusaSDK
+    Next -->|Content retrieval| StrapiAPI
+    
+    RegionContext[Region Context]
+    LanguageContext[Language Context]
+    
+    Next --> RegionContext
+    Next --> LanguageContext
+    
+    RegionContext -->|Filters| MedusaSDK
+    LanguageContext -->|Locale parameter| StrapiAPI
+```
+
+## Data Migration Patterns
+
+### Product Migration Flow
+
+```mermaid
+graph TD
+    StatamicExtract[Extract Statamic Data]
+    Transform[Transform Data]
+    MedusaLoad[Load to Medusa.js]
+    StrapiLoad[Load Extended Content to Strapi]
+    
+    StatamicExtract --> Transform
+    Transform --> MedusaLoad
+    Transform --> StrapiLoad
+    
+    subgraph "Transformation Steps"
+        MapCore[Map Core Fields]
+        MapVariants[Transform Variants]
+        MapPrices[Handle Region Pricing]
+        MapTranslations[Process Translations]
+        ExtractMedia[Extract Media Assets]
+    end
+```
+
+### Region-Specific Data Migration
+
+For region-specific configurations:
+
+1. **Default region assignments** based on Statamic availability flags
+2. **Price list creation** for region-specific pricing
+3. **Domain-specific content** mapped from Statamic globals to Strapi regional content
+
+## Development Patterns
+
+### Feature Flag System
+
+```mermaid
+graph TD
+    FeatureFlags[Feature Flags Service]
+    RegionContext[Region Context]
+    
+    FeatureFlags --> RegionContext
+    
+    subgraph "Feature Types"
+        RegionSpecific[Region-Specific Features]
+        GlobalFeatures[Global Features]
+        StageFeatures[Staged Rollout Features]
+    end
+    
+    RegionSpecific & GlobalFeatures & StageFeatures --> FeatureFlags
+```
+
+### Testing Strategy
+
+The system employs:
+
+1. **Region-specific test cases** to validate region functionality
+2. **Language-specific tests** for translation validation
+3. **Cross-region tests** to ensure consistency across storefronts
+4. **Domain-specific routing tests** to verify correct region detection
+
+## API Patterns
+
+### Region-Aware API Structure
+
+All APIs support region context:
+
+```
+GET /store/products?region_id=<region_id>
+GET /api/content/pages?locale=<locale>&region=<region_id>
+```
+
+### Custom API Extensions
+
+1. **Region detection endpoint**:
+   ```
+   GET /store/regions/detect
+   ```
+
+2. **Region switching endpoint**:
+   ```
+   POST /store/regions/switch
+   ```
+
+3. **Language preference endpoint**:
+   ```
+   POST /store/customer/preferences
+   ```
+
+## Deployment Patterns
+
+### Multi-Domain Configuration
+
+```mermaid
+graph TD
+    DNS[DNS Configuration]
+    LoadBalancer[Load Balancer]
+    CDN[Content Delivery Network]
+    
+    DNS -->|example.nl| LoadBalancer
+    DNS -->|example.be| LoadBalancer
+    DNS -->|example.de| LoadBalancer
+    
+    LoadBalancer --> CDN
+    CDN --> AppServers[Application Servers]
+```
+
+### Container Orchestration
+
+Services are deployed as containerized applications with Kubernetes, allowing:
+
+1. **Independent scaling** of Medusa.js and Strapi services
+2. **Regional routing** through ingress controllers
+3. **Shared database clusters** with appropriate connection pooling
+4. **Redis-based caching** for performance optimization
+
+## Security Patterns
+
+### Cross-Domain Security
+
+1. **CORS configuration** specific to each regional domain
+2. **JWT-based authentication** with region context
+3. **API rate limiting** per region and domain
+4. **Region-specific data isolation** where appropriate
+
+## Caching Strategy
+
+```mermaid
+graph TD
+    BrowserCache[Browser Cache]
+    CDNCache[CDN Cache]
+    RedisCache[Redis Cache]
+    DatabaseCache[Database Cache]
+    
+    Request[Request] --> BrowserCache
+    BrowserCache -->|Miss| CDNCache
+    CDNCache -->|Miss| RedisCache
+    RedisCache -->|Miss| DatabaseCache
+    
+    subgraph "Cache Invalidation"
+        ProductUpdate[Product Update]
+        ContentUpdate[Content Update]
+        RegionUpdate[Region Config Update]
+    end
+    
+    ProductUpdate --> RedisCache
+    ContentUpdate --> CDNCache
+    RegionUpdate --> BrowserCache
+```
+
+Redis is used for:
+1. **Session storage** with region context
+2. **Product cache** with region-specific variants
+3. **Cart storage** linked to regions
+4. **Region configuration cache** for quick access 
