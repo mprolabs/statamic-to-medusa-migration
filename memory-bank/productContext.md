@@ -1,4 +1,4 @@
-# Product Context: Statamic to Medusa.js Migration
+# Product Context: Statamic to Saleor Migration
 
 ## Why This Migration
 
@@ -22,15 +22,15 @@ The current Statamic-based website with Simple Commerce functionality has served
 
 ### For End Users
 - **Faster Page Loads**: A headless architecture with optimized frontend will deliver content more quickly.
-- **Improved Shopping Experience**: Medusa.js provides more sophisticated ecommerce features and a smoother checkout process.
+- **Improved Shopping Experience**: Saleor provides more sophisticated ecommerce features and a smoother checkout process.
 - **Better Mobile Experience**: The new stack will support a more responsive, app-like experience on mobile devices.
 - **Consistent Performance**: Even as the catalog grows, performance will remain consistent due to the more efficient architecture.
 - **Seamless Language Switching**: Users can easily switch between languages while maintaining their shopping context.
 - **Region-Specific Features**: Users see pricing, payment options, and shipping methods relevant to their region.
 
 ### For Business Operations
-- **Greater Content Flexibility**: Strapi provides a more intuitive and powerful content management experience.
-- **Enhanced Ecommerce Capabilities**: Medusa.js offers advanced inventory management, promotions, and customer relationship features.
+- **Greater Content Flexibility**: Saleor's integrated content management provides an intuitive and powerful experience.
+- **Enhanced Ecommerce Capabilities**: Saleor offers advanced inventory management, promotions, and customer relationship features.
 - **Better Analytics Integration**: The new stack makes it easier to implement and track detailed analytics.
 - **Reduced Operational Costs**: More efficient hosting and reduced maintenance requirements will lower overall costs.
 - **Multi-Region Management**: Centralized management of products across multiple regions from a single admin interface.
@@ -38,36 +38,29 @@ The current Statamic-based website with Simple Commerce functionality has served
 - **Regional Business Rules**: Support for region-specific pricing, tax rules, and payment methods.
 
 ### For Development
-- **Modern Technology Stack**: Moving to JavaScript/Node.js-based technologies aligns with current industry standards.
-- **API-First Architecture**: Enables easier integration with third-party services and future expansion.
+- **Modern Technology Stack**: Moving to Python/Node.js/React-based technologies aligns with current industry standards.
+- **API-First Architecture**: Enables easier integration with third-party services and future expansion using GraphQL.
 - **Component-Based Development**: Facilitates more efficient development and testing processes.
-- **Better Documentation and Community**: Both Strapi and Medusa.js have active communities and comprehensive documentation.
-- **Multi-Region Architecture**: Built-in support for multiple storefronts with a shared backend.
-- **Localization Framework**: Structured approach to managing multilingual content.
+- **Better Documentation and Community**: Saleor has an active community and comprehensive documentation.
+- **Multi-Region Architecture**: Built-in support for multiple storefronts via Channels.
+- **Localization Framework**: Structured approach to managing multilingual content via Translation API.
 
 ## How It Should Work
 
-The migrated system will implement a clear separation of concerns:
+The migrated system will implement a clear separation of concerns using Saleor as the unified backend:
 
-1. **Medusa.js Backend**: Handles all ecommerce functionality including:
+1. **Saleor Backend**: Handles all ecommerce and core content functionality including:
    - Product and inventory management
    - Cart and checkout processes
    - Order management
    - Customer accounts
    - Payment processing
-   - Region-specific configurations
-   - Sales channel management
-
-2. **Strapi CMS**: Manages all content-related aspects:
-   - Pages and layouts
-   - Blog posts and articles
+   - Region-specific configurations via Channels
+   - Multi-language content via Translation API
+   - Core content management (product descriptions, pages, etc.)
    - Media assets
-   - SEO metadata
-   - Navigation structures
-   - Multilingual content
-   - Domain-specific content
 
-3. **Modern Frontend**: Delivers the user experience through:
+2. **Modern Frontend (Next.js)**: Delivers the user experience through:
    - React-based components
    - Optimized loading strategies
    - Responsive design principles
@@ -76,9 +69,9 @@ The migrated system will implement a clear separation of concerns:
    - Language switching capabilities
    - Domain-specific theming
 
-4. **Integration Layer**: Connects the various systems:
-   - API endpoints for data exchange
-   - Authentication and authorization
+3. **Integration Layer**: Connects Saleor with external systems:
+   - API endpoints for data exchange (primarily GraphQL)
+   - Authentication and authorization (handled by Saleor)
    - Cache management
    - Data synchronization
    - Region and language detection
@@ -109,4 +102,4 @@ The migrated system will implement a clear separation of concerns:
 
 8. **Language Preference Persistence**: The system should remember and respect user language preferences across sessions.
 
-This migration represents a significant technological advancement that will position the platform for future growth while immediately delivering tangible benefits to both users and administrators. The multi-region and multi-language capabilities will provide a foundation for expanding into new markets while improving the experience for existing users. 
+This migration represents a significant technological advancement that will position the platform for future growth while immediately delivering tangible benefits to both users and administrators using Saleor. The multi-region and multi-language capabilities will provide a foundation for expanding into new markets while improving the experience for existing users. 

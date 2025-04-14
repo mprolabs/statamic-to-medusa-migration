@@ -1,39 +1,31 @@
 # Technology Stack and Infrastructure Requirements
 
-This document specifies the technology stack and infrastructure requirements for the Statamic to Medusa.js migration project, with a particular focus on supporting multi-region and multi-language capabilities.
+This document specifies the technology stack and infrastructure requirements for the Statamic to Saleor migration project, with a particular focus on supporting multi-region and multi-language capabilities.
 
 ## Core Technology Stack
 
-### Commerce Platform
+### Commerce & Content Platform
 
 | Component | Technology | Version | Purpose |
 |-----------|------------|---------|---------|
-| **Core Commerce Engine** | [Medusa.js](https://medusajs.com/) | Latest stable (1.x) | E-commerce backend with multi-region support |
-| **Commerce Database** | PostgreSQL | 14+ | Relational database for Medusa.js |
-| **Commerce Admin** | Medusa Admin | Latest stable | Admin interface for managing products, orders, etc. |
-| **API Layer** | Express.js | 4.x | API framework used by Medusa.js |
-| **Payment Processing** | Mollie | Latest API | Payment gateway with support for European payment methods |
-| **Search** | MeiliSearch | Latest stable | Fast, lightweight search engine with multi-language support |
-
-### Content Management
-
-| Component | Technology | Version | Purpose |
-|-----------|------------|---------|---------|
-| **Content Management System** | [Strapi](https://strapi.io/) | Latest stable (4.x) | Headless CMS for managing content with i18n support |
-| **Content Database** | PostgreSQL | 14+ | Relational database for Strapi |
-| **Media Storage** | AWS S3 or compatible | N/A | Scalable storage for images and other media |
-| **Content Delivery Network** | Cloudflare | N/A | CDN for edge caching of static assets |
+| **Core Platform** | [Saleor](https://saleor.io/) | Latest stable (3.x) | Unified headless commerce and content platform |
+| **Database** | PostgreSQL | 14+ | Relational database for Saleor |
+| **Admin Dashboard** | Saleor Dashboard | Latest stable | Admin interface for managing products, orders, content, etc. |
+| **API Layer** | GraphQL | Saleor API | Primary API for frontend and integrations |
+| **Payment Processing** | Mollie, Stripe | Latest APIs | Payment gateways with region-specific methods |
+| **Search (Optional)** | Algolia, Elasticsearch | Latest stable | External search engine integrated via Saleor App |
 
 ### Frontend
 
 | Component | Technology | Version | Purpose |
 |-----------|------------|---------|---------|
 | **Framework** | Next.js | 13+ (App Router) | React framework with built-in SSR, ISR, and i18n support |
-| **State Management** | React Context + SWR | Latest stable | Client-side state management and data fetching |
+| **GraphQL Client** | Apollo Client / urql | Latest stable | Client-side GraphQL communication with Saleor |
+| **State Management** | React Context / Zustand | Latest stable | Client-side state management |
 | **Styling** | Tailwind CSS | Latest stable | Utility-first CSS framework for styling |
-| **UI Components** | Radix UI | Latest stable | Unstyled, accessible component primitives |
+| **UI Components** | Radix UI / Shadcn UI | Latest stable | Accessible component primitives |
 | **Form Handling** | React Hook Form | Latest stable | Form validation and handling |
-| **Internationalization** | next-intl | Latest stable | Translation and internationalization support |
+| **Internationalization** | next-intl / react-intl | Latest stable | Translation and internationalization support |
 
 ### Development Tooling
 
@@ -53,11 +45,13 @@ This document specifies the technology stack and infrastructure requirements for
 | Component | Technology | Version | Purpose |
 |-----------|------------|---------|---------|
 | **Container Runtime** | Docker | Latest stable | Application containerization |
-| **Orchestration** | Docker Compose | Latest stable | Local environment orchestration |
-| **Cloud Platform** | AWS or similar | N/A | Cloud infrastructure provider |
-| **Monitoring** | Prometheus + Grafana | Latest stable | System monitoring and alerting |
-| **Logging** | ELK Stack | Latest stable | Log aggregation and analysis |
+| **Orchestration** | Docker Compose / Kubernetes | Latest stable | Environment orchestration |
+| **Cloud Platform** | AWS / GCP / Azure | N/A | Cloud infrastructure provider |
+| **Monitoring** | Prometheus + Grafana / Datadog | Latest stable | System monitoring and alerting |
+| **Logging** | ELK Stack / Loki | Latest stable | Log aggregation and analysis |
 | **Error Tracking** | Sentry | Latest stable | Error reporting and monitoring |
+| **CDN** | Cloudflare / AWS CloudFront | N/A | CDN for edge caching of static assets & API |
+| **Media Storage** | AWS S3 or compatible | N/A | Scalable storage for images and other media |
 
 ## Infrastructure Requirements
 
@@ -73,20 +67,17 @@ This document specifies the technology stack and infrastructure requirements for
 
 | Component | CPU | Memory | Scaling Strategy |
 |-----------|-----|--------|------------------|
-| **Medusa.js** | 2+ vCPUs | 4+ GB RAM | Horizontal (multiple instances) |
-| **Strapi** | 2+ vCPUs | 4+ GB RAM | Horizontal (multiple instances) |
+| **Saleor Core** | 2+ vCPUs | 4+ GB RAM | Horizontal (multiple instances) |
 | **Next.js Frontend** | 1+ vCPUs | 2+ GB RAM | Horizontal with edge caching |
-| **PostgreSQL (Commerce)** | 4+ vCPUs | 8+ GB RAM | Vertical with read replicas |
-| **PostgreSQL (Content)** | 2+ vCPUs | 4+ GB RAM | Vertical with read replicas |
-| **MeiliSearch** | 2+ vCPUs | 4+ GB RAM | Vertical scaling |
+| **PostgreSQL (Saleor)** | 4+ vCPUs | 8+ GB RAM | Vertical with read replicas |
+| **Search Engine (Optional)** | 2+ vCPUs | 4+ GB RAM | Vertical scaling |
 | **Redis** | 1+ vCPUs | 2+ GB RAM | Vertical scaling |
 
 ### Storage Requirements
 
 | Storage Type | Initial Size | Growth Projection | Backup Strategy |
 |--------------|--------------|-------------------|----------------|
-| **Commerce Database** | 10 GB | 20% yearly | Daily snapshots, point-in-time recovery |
-| **Content Database** | 5 GB | 30% yearly | Daily snapshots, point-in-time recovery |
+| **Saleor Database** | 15 GB | 25% yearly | Daily snapshots, point-in-time recovery |
 | **Media Storage** | 50 GB | 40% yearly | Redundant storage with versioning |
 | **Log Storage** | 20 GB | 25% yearly | Rotation with archive to cold storage |
 
@@ -102,45 +93,43 @@ This document specifies the technology stack and infrastructure requirements for
 
 ### Multi-Region Architecture
 
-The system will be deployed with the following region-specific considerations:
+The system will be deployed with the following region-specific considerations using Saleor Channels:
 
-1. **Centralized Database with Region Partitioning**
-   - Single PostgreSQL instance with logical separation for regions
-   - Region-specific data marked with region identifiers
-   - Query optimization for region-specific data access
+1. **Centralized Database**
+   - Single PostgreSQL instance serving all regions.
+   - Data isolation achieved via Saleor's Channel filtering.
 
 2. **Region-Specific Content Delivery**
-   - CDN edge locations in each target region
-   - Content cached at edge locations based on language/region
-   - Origin shield to reduce backend load
+   - CDN edge locations in each target region.
+   - Content cached at edge locations based on language/channel.
+   - Origin shield to reduce backend load.
 
 3. **Domain Structure**
-   - Region-specific domains (nl.example.com, be.example.com, de.example.com)
-   - Consistent URL structure across regions
-   - Region detection and redirection based on user location
+   - Region-specific domains (nl.example.com, be.example.com, de.example.com).
+   - Consistent URL structure across regions managed by Next.js.
+   - Region detection and redirection based on user location/domain.
 
 ## Application Configuration
 
 ### Environment Variables
 
-Each component requires specific environment variables for configuration. The table below outlines the key environment variables needed:
+Each component requires specific environment variables. Key examples:
 
 | Component | Environment Variables | Purpose |
 |-----------|----------------------|---------|
-| **Medusa.js** | `DATABASE_URL`<br>`REDIS_URL`<br>`JWT_SECRET`<br>`COOKIE_SECRET`<br>`STORE_CORS`<br>`ADMIN_CORS` | Core connection strings and security keys |
-| **Strapi** | `DATABASE_URL`<br>`JWT_SECRET`<br>`ADMIN_JWT_SECRET`<br>`API_TOKEN_SALT`<br>`APP_KEYS` | Database and security configuration |
-| **Next.js** | `NEXT_PUBLIC_API_URL`<br>`NEXT_PUBLIC_MEDUSA_BACKEND_URL`<br>`NEXT_PUBLIC_STRAPI_API_URL`<br>`REVALIDATE_SECRET` | API endpoints and revalidation |
-| **MeiliSearch** | `MEILI_MASTER_KEY`<br>`MEILI_HOST` | Search engine configuration |
+| **Saleor Core** | `DATABASE_URL`<br>`REDIS_URL`<br>`SECRET_KEY`<br>`ALLOWED_HOSTS` | Core connection strings and security keys |
+| **Next.js** | `NEXT_PUBLIC_API_URL`<br>`SALEOR_API_URL`<br>`REVALIDATE_SECRET` | API endpoints and revalidation |
+| **Search App (Optional)** | `SEARCH_PROVIDER_URL`<br>`SEARCH_API_KEY` | Search engine connection |
 
-### Region-Specific Configuration
+### Region-Specific Configuration (via Saleor Channels)
 
-Each region requires specific configuration:
+Saleor Channels manage region-specific settings:
 
-| Region | Language Codes | Currency | Tax Rates | Payment Methods |
-|--------|---------------|----------|-----------|----------------|
-| **Netherlands** | nl_NL (primary)<br>en_US (fallback) | EUR | 21% standard<br>9% reduced | iDEAL, Credit Card, PayPal |
-| **Belgium** | nl_BE, fr_BE (primary)<br>en_US (fallback) | EUR | 21% standard<br>12% reduced<br>6% special | Bancontact, Credit Card, PayPal |
-| **Germany** | de_DE (primary)<br>en_US (fallback) | EUR | 19% standard<br>7% reduced | SOFORT, Credit Card, PayPal |
+| Region (Channel Slug) | Language Codes | Currency | Tax Strategy | Payment Methods | Shipping Zones |
+|---|---|---|---|---|---|
+| `nl` | nl_NL (primary), en_US | EUR | NL VAT | iDEAL, CC, PayPal | NL Zone |
+| `be` | nl_BE, fr_BE (primary), en_US | EUR | BE VAT | Bancontact, CC, PayPal | BE Zone |
+| `de` | de_DE (primary), en_US | EUR | DE VAT | SOFORT, CC, PayPal | DE Zone |
 
 ### Feature Flags
 
@@ -158,33 +147,27 @@ Feature flags will be used to control the rollout of functionality across region
 
 ### Container Structure
 
-The application will be containerized with the following Docker containers:
+The application will be containerized, typically including:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                      API Gateway                         │
+│                      API Gateway / LB                    │
 └───────────────────────────┬─────────────────────────────┘
                             │
          ┌─────────────────┴─────────────────┐
          │                                   │
 ┌────────▼───────┐                ┌──────────▼─────────┐
 │                │                │                    │
-│   Medusa.js    │                │      Strapi        │
+│  Saleor Core   │                │   Next.js Frontend │
+│   (API/Worker) │                │     (Optional SSR) │
 │                │                │                    │
-└────────┬───────┘                └──────────┬─────────┘
-         │                                   │
-         │                                   │
-┌────────▼───────┐                ┌──────────▼─────────┐
-│                │                │                    │
-│   PostgreSQL   │                │     PostgreSQL     │
-│   (Commerce)   │                │     (Content)      │
-│                │                │                    │
-└────────────────┘                └────────────────────┘
+└────────┬───────┘                └────────────────────┘
          │
          │
 ┌────────▼───────┐                ┌────────────────────┐
 │                │                │                    │
-│  MeiliSearch   │◄───────────────│      Redis         │
+│  PostgreSQL    │                │      Redis         │
+│   (Saleor DB)  │                │     (Cache/Queue)  │
 │                │                │                    │
 └────────────────┘                └────────────────────┘
 ```
@@ -224,11 +207,10 @@ The application will be containerized with the following Docker containers:
 
 | Component | Health Check Endpoint | Frequency | Recovery Action |
 |-----------|----------------------|-----------|----------------|
-| **Medusa.js** | `/health` | 30s | Container restart |
-| **Strapi** | `/healthcheck` | 30s | Container restart |
-| **Next.js** | `/api/healthcheck` | 30s | Container restart |
+| **Saleor Core** | `/health/` | 30s | Container restart |
+| **Next.js (if SSR)** | `/api/healthcheck` | 30s | Container restart |
 | **PostgreSQL** | Connection test | 60s | Failover to replica |
-| **MeiliSearch** | `/health` | 60s | Container restart |
+| **Redis** | Ping | 60s | Container restart |
 
 ### Alerting Rules
 
@@ -245,8 +227,7 @@ The application will be containerized with the following Docker containers:
 
 | Data Type | Backup Frequency | Retention Period | Storage Location |
 |-----------|-----------------|------------------|------------------|
-| **Commerce Database** | Daily full, hourly incremental | 30 days | Cloud storage with encryption |
-| **Content Database** | Daily full, hourly incremental | 30 days | Cloud storage with encryption |
+| **Saleor Database** | Daily full, hourly incremental | 30 days | Cloud storage with encryption |
 | **Media Assets** | Weekly full, daily incremental | 90 days | Cloud storage with versioning |
 | **Configuration** | On every change | 1 year | Version controlled repository |
 
@@ -264,10 +245,10 @@ The application will be containerized with the following Docker containers:
 
 | Security Aspect | Implementation |
 |-----------------|---------------|
-| **User Authentication** | JWT-based with secure HTTP-only cookies |
-| **Admin Authentication** | Two-factor authentication for all admin users |
-| **API Security** | API keys with scope limitations and rate limiting |
-| **Authorization Model** | Role-based access control with fine-grained permissions |
+| **User Authentication** | Saleor JWT-based authentication |
+| **Admin Authentication** | Saleor Dashboard login with 2FA options |
+| **API Security** | Saleor Apps / Service Accounts with fine-grained permissions |
+| **Authorization Model** | Saleor's permission group system |
 
 ### Data Protection
 
@@ -289,4 +270,4 @@ The application will be containerized with the following Docker containers:
 
 ## Conclusion
 
-This technology stack and infrastructure requirements document provides a comprehensive specification for implementing the Statamic to Medusa.js migration project. The technologies and configurations outlined here are specifically chosen to support the multi-region and multi-language requirements of the project, ensuring a scalable, performant, and maintainable solution. 
+This technology stack and infrastructure requirements document provides a comprehensive specification for implementing the Statamic to Saleor migration project. The technologies and configurations outlined here are specifically chosen to support the multi-region and multi-language requirements of the project using Saleor, ensuring a scalable, performant, and maintainable solution. 

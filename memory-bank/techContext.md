@@ -1,334 +1,445 @@
-# Technical Context: Statamic to Medusa.js Migration
+# Technical Context
+
+This document outlines the technical context for the Statamic to Saleor migration project, including the technology stack, development environment, and technical constraints.
 
 ## Current Technology Stack
 
-### CMS Platform
-- **Statamic CMS**: PHP-based flat-file CMS
-- **Version**: 3.x
-- **Hosting**: Traditional shared hosting environment
-- **Server Configuration**: Apache with PHP 7.4
-- **Content Structure**: Flat-file based collections and blueprints
-- **Templating**: Antlers templating engine
-- **Multi-language Support**: Limited support through separate content files
+### Production System (Statamic)
+- **CMS**: Statamic 3 (PHP-based, flat-file CMS)
+- **Ecommerce**: Simple Commerce (Statamic addon)
+- **Frontend**: Laravel Blade templates with Vue.js components
+- **Database**: File-based with optional MySQL for specific features
+- **Hosting**: Traditional PHP hosting environment
 
-### E-commerce Functionality
-- **Simple Commerce**: Statamic add-on for basic e-commerce
-- **Payment Processors**: Mollie integration
-- **Order Management**: Basic order tracking and history
-- **Product Management**: Statamic collections and blueprints
-- **Cart Implementation**: Session-based shopping cart
-- **Checkout Process**: Basic single-page checkout
-- **Product Variants**: Limited support through blueprint fields
-
-### Frontend
-- **Rendering Engine**: Antlers (Statamic templating)
-- **CSS Framework**: Tailwind CSS
-- **JavaScript**: Alpine.js for interactivity
-- **Build Tools**: Laravel Mix
-- **Responsive Design**: Mobile-first approach with Tailwind
-
-### Deployment
-- **Environment**: Shared hosting
-- **Deployment Method**: Manual FTP uploads
-- **Environments**: Production only (no staging)
-- **Domain Structure**: Multiple domains pointing to same codebase with different configuration
-
-### Monitoring & Analytics
-- **Analytics**: Google Analytics
-- **Error Tracking**: None
-- **Performance Monitoring**: None
-
-## Target Technology Stack
-
-### Commerce Platform
-- **Medusa.js**: Headless commerce platform
-- **Version**: Latest stable (currently 1.x)
-- **Configuration**: Single instance with Region Module for multi-store support
-- **Core Extensions**:
-  - Region Module for multi-domain support
-  - Sales Channels for product availability per store
-  - Admin dashboard for product management
-- **Architecture**: API-first, microservices-based commerce engine
-
-### Content Management
-- **Strapi**: Headless CMS
-- **Version**: Latest stable (currently 4.x)
-- **Core Extensions**:
-  - i18n plugin for multi-language support
-  - Multi-site configuration for domain-specific content
-  - Roles & permissions for content management workflows
-- **Content Structure**: Relational database with flexible content types
-
-### Frontend
-- **Framework**: Next.js (React)
-- **Styling**: Tailwind CSS
-- **State Management**: React Context or Redux
-- **Build & Bundling**: Webpack through Next.js
-- **Edge Caching**: CDN configuration for region-specific performance
-
-### Data Storage
-- **Database**: PostgreSQL 14+
-- **File Storage**: AWS S3 or similar
-- **Search**: MeiliSearch or Algolia
-
-### API Architecture
-- **Commerce API**: Medusa.js RESTful API
-- **Content API**: Strapi GraphQL and REST
-- **Authentication**: JWT-based auth
-- **API Gateway**: For unified access and routing
-
-### Infrastructure
-- **Hosting**: Docker containers on cloud platform
-- **Environments**: Development, Staging, Production
-- **Scaling**: Horizontal scaling for application tiers
-- **CDN**: For static assets and edge caching
-- **Region-Based Routing**: Domain-specific configurations
-
-### DevOps
-- **CI/CD**: GitHub Actions or similar
-- **Monitoring**: Prometheus and Grafana
-- **Logging**: ELK Stack
-- **Error Tracking**: Sentry
-- **Performance**: New Relic or Datadog
-- **Testing**: 
-  - Cypress for E2E testing with region/language parameterization
-  - Jest for unit testing
-  - BDD approach for business-readable test scenarios
-  - Visual regression testing for UI validation
-
-## Migration-Specific Considerations
-
-### Statamic to Medusa.js Migration Challenges
-- **Flat File to Database**: Moving from Statamic's flat file structure to Medusa's PostgreSQL database
-- **Content Model Translation**: Mapping Statamic blueprints to Medusa entities and Strapi content types
-- **E-commerce Functionality Expansion**: Extending Simple Commerce's basic functionality to Medusa's more robust offerings
-- **Template Conversion**: Converting Antlers templates to React/Next.js components
-- **Alpine.js to React**: Transitioning from Alpine.js to React for frontend interactivity
-- **URL Structure Preservation**: Maintaining existing URL patterns for SEO purposes
-- **Performance Expectations**: Meeting or exceeding current site performance metrics
-- **Multi-domain Handling**: Migrating from single codebase with configuration to region-based architecture
-
-### Simple Commerce to Medusa.js Specific Considerations
-- **Product Structure**: Mapping Simple Commerce product structure to Medusa's product model
-- **Inventory Management**: Enhancing inventory tracking capabilities
-- **Order History**: Preserving customer order history across systems
-- **Payment Gateway Migration**: Moving from Simple Commerce's payment integrations to Medusa's providers
-- **Shopping Cart Data**: Transitioning cart implementation from session-based to API-based
-- **Customer Accounts**: Migrating customer data with security considerations
-- **Tax and Shipping Logic**: Transferring and enhancing region-specific tax and shipping rules
-
-## Development Environment
-
-### Local Development
-- **Node.js**: v16+ for Medusa.js and Strapi
-- **Package Manager**: yarn
-- **Docker**: For containerized development
-- **Database**: Local PostgreSQL instance
-
-### Code Management
-- **Version Control**: Git (GitHub)
-- **Branching Strategy**: Gitflow or similar
-- **Code Review**: Pull request workflow
-- **Documentation**: Markdown in repository
-
-### Quality Assurance
-- **Linting**: ESLint
-- **Formatting**: Prettier
-- **Testing**: Jest for unit tests, Cypress for E2E
-- **Region/Language Testing**: Parameterized test matrix covering all combinations
+### Target System (Saleor)
+- **Ecommerce Platform**: Saleor (Python-based headless commerce)
+- **API**: GraphQL API for data access and management
+- **Frontend**: Next.js React application
+- **Database**: PostgreSQL for structured data
+- **Deployment**: Docker containerization
 
 ## Technical Constraints
 
-### Performance Requirements
-- **Page Load Time**: < 2 seconds (matching or improving current Statamic performance)
-- **Time to Interactive**: < 3 seconds
-- **API Response Time**: < 200ms
-- **Performance across Regions**: Consistent experience in all domains
+### Current System Limitations
+- Limited scalability of the file-based CMS
+- Performance bottlenecks with complex commerce operations
+- Challenges with multi-region and multi-language implementation
+- Limited API capabilities for headless operations
+- Maintenance becoming increasingly complex
 
-### SEO Requirements
-- **URL Structure**: Maintain current patterns with language prefixes
-- **Metadata**: Support for per-language metadata
-- **Redirects**: Implement 301 redirects for all legacy URLs
-- **Sitemap**: Generate region and language specific sitemaps
-- **Preserve Rankings**: Maintain current search engine positioning during migration
+### Target System Requirements
+- Must support multiple domains/storefronts (3 separate regions)
+- Must handle multiple languages across all stores
+- Must provide high-performance API access
+- Must enable flexible content management
+- Must support all existing ecommerce functionality
+- Must be containerized for easier deployment and scaling
 
-### Compatibility
-- **Browser Support**: Latest 2 versions of major browsers + IE11
-- **Mobile Support**: Responsive design for all device sizes
-- **Accessibility**: WCAG 2.1 AA compliance
+## Development Environment
 
-### Security
-- **Authentication**: Secure login and session management
-- **Data Protection**: GDPR compliance
+### Local Development Setup
+- **Node.js**: v18.x or higher
+- **Docker**: Latest version with Docker Compose
+- **Git**: For version control
+- **Code Editor**: VS Code with recommended extensions
+- **API Testing**: GraphQL Playground or Insomnia
+
+### Required Tools
+- Docker Desktop for containerization
+- Git for version control
+- Node.js and NPM for frontend development
+- Python for backend development (if needed)
+- Database management tools (e.g., pgAdmin for PostgreSQL)
+
+## Architecture Overview
+
+### Saleor Architecture
+- Saleor Core: Python-based headless commerce platform
+- Saleor Dashboard: Admin interface for managing the store
+- PostgreSQL: Primary database for structured data
+- GraphQL API: Main interface for data exchange
+
+### Storefront Architecture
+- Next.js: React framework for building the storefront
+- React: Frontend library for UI components
+- Apollo Client: For GraphQL communication with Saleor
+- Tailwind CSS: For styling components
+- TypeScript: For type-safe development
+
+## Multi-Region Implementation
+
+### Saleor Channel System
+- Each region implemented as a separate Saleor Channel
+- Channel-specific product availability and pricing
+- Channel-specific payment methods
+- Channel-specific shipping options
+- Channel-specific tax configurations
+
+### Domain Setup
+- Separate domains for each region:
+  - Netherlands: nl.domain.com
+  - Belgium: be.domain.com
+  - Germany: de.domain.com
+- Domain-specific configuration in Next.js
+- Proper routing and redirection rules
+
+## Multi-Language Implementation
+
+### Translation Strategy
+- Saleor's translation capabilities for product data
+- Translation objects for all content models
+- Language detection based on domain/user preference
+- Fallback mechanisms for missing translations
+
+### SEO Considerations
+- Language-specific metadata
+- Proper hreflang tags
+- Canonical URLs for language variants
+- Structured data in multiple languages
+
+## Integration Points
+
+### Payment Gateways
+- Integration with region-specific payment providers
+- Unified payment processing flow
+- Handling multi-currency payments
+
+### Shipping Providers
+- Integration with region-specific shipping services
+- Shipping rate calculations by region
+- Address validation by country
+
+### External Systems
+- ERP integration if applicable
+- Marketing automation tools
+- Analytics and tracking
+
+## Data Migration Approach
+
+### Data Export from Statamic
+- Custom scripts to extract data from Statamic files
+- Transformation of data to match Saleor models
+- Preservation of relationships and metadata
+
+### Data Import to Saleor
+- GraphQL mutations for importing data
+- Batch processing for large datasets
+- Validation and error handling
+- Media file migration
+
+## Testing Strategy
+
+### Test Environments
+- Local development environment
+- Staging environment that mirrors production
+- Automated testing in CI/CD pipeline
+
+### Testing Types
+- Unit testing for core functions
+- Integration testing for API endpoints
+- End-to-end testing for critical user flows
+- Performance testing for API and frontend
+- Multi-region testing across all domains
+- Multi-language testing across all content
+
+## Deployment Strategy
+
+### CI/CD Pipeline
+- Automated testing on code commits
+- Docker image building and versioning
+- Deployment to staging environments
+- Production deployment process
+
+### Infrastructure
+- Containerized services with Docker
+- Load balancing for high availability
+- CDN for static assets and media
+- Database backup and recovery procedures
+
+## Performance Optimization
+
+### API Performance
+- GraphQL query optimization
+- Caching strategies for common queries
+- Rate limiting and security measures
+
+### Frontend Performance
+- Server-side rendering (SSR) for critical pages
+- Static generation for content-heavy pages
+- Code splitting and lazy loading
+- Image optimization and CDN usage
+
+## Security Considerations
+
+### Data Protection
+- PII handling in compliance with GDPR
+- Secure storage of customer data
+- Payment information security (PCI compliance)
+
+### Authentication & Authorization
+- Secure user authentication
+- Role-based access control
+- API security and rate limiting
+
+## Documentation Requirements
+
+### System Documentation
+- Architecture diagrams and descriptions
+- API documentation using GraphQL introspection
+- Deployment and infrastructure documentation
+- Database schema documentation
+
+### User Documentation
+- Admin user guides for Saleor Dashboard
+- Content management guidelines
+- Technical reference for developers
+
+## Current Status & Next Steps
+
+The technical implementation is in the **Proof of Concept** phase, focusing on:
+1. Setting up Saleor with Channel system for multi-region support
+2. Configuring Next.js for multi-domain and multi-language frontend
+3. Testing data migration approaches for Statamic to Saleor
+4. Validating the architecture against performance requirements
+
+## Technology Stack
+
+### Current System
+
+- **Statamic CMS**: PHP-based flat-file CMS
+  - Version: 3.x
+  - Serves as current content management system and website platform
+  
+- **Simple Commerce**: Statamic e-commerce addon
+  - Provides basic e-commerce functionality
+  - Handles products, cart, and checkout
+  
+- **Laravel**: PHP framework underlying Statamic
+  - Version: 8.x
+  - Handles routing, database operations, and business logic
+  
+- **Vue.js**: Frontend framework for Statamic admin and components
+  - Version: 2.x
+  - Used for interactive elements in the current storefront
+  
+- **MySQL**: Database for current implementation
+  - Stores product data, user information, and order details
+
+### Target System
+
+- **Saleor**: Headless e-commerce platform
+  - Version: Latest (3.x)
+  - Core commerce functionality (products, cart, orders, checkout)
+  - Multi-region support through Channels
+  - Built-in content management capabilities
+  - GraphQL API
+  
+- **Next.js**: React framework for frontend
+  - Version: 13.x
+  - Server-side rendering for SEO
+  - API routes for backend functionality
+  - Support for TypeScript
+  - Internationalization capabilities
+  
+- **PostgreSQL**: Database for Saleor
+  - Version: 14.x
+  - Stores product data, content, and order information
+  
+- **TypeScript**: Programming language for frontend and scripts
+  - Version: 5.x
+  - Type safety for development
+  
+- **Docker**: Container platform for development and deployment
+  - Used for local development environments
+  - Ensures consistency across environments
+
+## Development Environment
+
+### Local Development Setup
+
+- **Docker Compose**: For managing development environment containers
+  - Saleor services
+  - PostgreSQL database
+  - Next.js development server
+  
+- **Node.js**: Runtime for JavaScript/TypeScript
+  - Version: 18.x LTS
+  - Required for Next.js development
+
+- **Git**: Version control
+  - GitHub for repository hosting
+  - Branch strategy: feature branches with PR workflow
+
+- **VSCode**: Recommended IDE with extensions:
+  - ESLint
+  - Prettier
+  - TypeScript
+  - GraphQL
+
+### Testing Frameworks
+
+- **Jest**: JavaScript testing framework
+  - Unit tests for utility functions and components
+  
+- **Cypress**: End-to-end testing
+  - Testing critical user flows
+  - Cross-browser verification
+  
+- **React Testing Library**: Component testing
+  - Testing UI components in isolation
+
+- **GraphQL Code Generator**: For TypeScript types from GraphQL schema
+  - Ensures type safety when working with Saleor API
+
+## Integration Points
+
+- **GraphQL API**: Primary communication method with Saleor
+  - All commerce operations (products, cart, checkout)
+  - Content management operations
+
+- **Payment Gateways**:
+  - Mollie for Netherlands and Belgium
+  - Stripe for all regions
+  - Region-specific payment methods (iDEAL, Bancontact, etc.)
+
+- **Shipping Providers**:
+  - PostNL for Netherlands
+  - bpost for Belgium
+  - DHL for Germany
+
+- **Analytics and Tracking**:
+  - Google Analytics 4
+  - Facebook Pixel
+  - Region-specific tracking requirements
+
+## Technical Constraints
+
+- **Multi-Region Requirements**:
+  - Three separate regional domains:
+    - Netherlands: nl.domain.com
+    - Belgium: be.domain.com
+    - Germany: de.domain.com
+  - Region-specific pricing, taxation, and shipping
+  - Single Saleor instance with Channel configuration
+
+- **Multi-Language Requirements**:
+  - Two languages across stores:
+    - Dutch (nl)
+    - English (en)
+  - Germany currently only English, may add German later
+  - Content needs to be managed in multiple languages
+  - URL structures should include language indicators
+
+- **SEO Requirements**:
+  - Server-side rendering for all pages
+  - Language-specific metadata
+  - Region-specific sitemaps
+  - Canonical URLs for language variants
+
+- **Performance Requirements**:
+  - Page load time under 2 seconds
+  - First contentful paint under 1 second
+  - Core Web Vitals compliance
+  - Mobile-friendly design and performance
+
+## Data Migration Strategy
+
+### Migration Approach
+
+1. **Data Extraction**: Custom scripts to extract data from Statamic
+   - Products, categories, and attributes
+   - Customer data (with GDPR compliance)
+   - Order history
+   - Content pages and assets
+
+2. **Data Transformation**: Processing extracted data
+   - Mapping to Saleor data models
+   - Handling language variations
+   - Preparing region-specific configurations
+
+3. **Data Loading**: Scripts to import data into Saleor
+   - Creating products with translations
+   - Setting up channels for regions
+   - Configuring pricing and availability
+   - Importing media assets
+
+4. **Verification**: Testing imported data
+   - Automated validation scripts
+   - Manual spot checks
+   - Testing regional configurations
+
+## Security Considerations
+
+- **Authentication**: JWT-based authentication for API
+- **Authorization**: Role-based access control
+- **Data Protection**: GDPR compliance measures
+- **API Security**: Rate limiting and proper authentication
 - **PCI Compliance**: For payment processing
-- **Region-Specific Regulations**: Support for local requirements
 
-## Dependencies
+## Performance Optimization
 
-### External Services
-- **Payment Gateways**: Mollie, iDEAL, Bancontact, etc.
-- **Shipping Providers**: Region-specific carriers
-- **Email Service**: Transactional email provider
-- **Analytics**: Google Analytics or similar
-- **Maps**: Google Maps or similar
+- **Image Optimization**: Next.js image optimization
+- **Code Splitting**: For efficient loading
+- **GraphQL Query Optimization**: Requesting only needed fields
+- **Caching Strategy**:
+  - Static generation for product pages
+  - Incremental Static Regeneration for changing content
+  - API response caching
+  - Database query optimization
 
-### Third-Party Libraries
-- **UI Components**: Potentially Chakra UI, Material UI, or similar
-- **Form Handling**: React Hook Form
-- **Data Fetching**: SWR or React Query
-- **Internationalization**: i18next or similar
-- **Testing Framework**: Cypress with Cucumber for BDD testing
+## Deployment Architecture
 
-## Migration Approach
+```
+┌───────────────────┐     ┌───────────────────┐     ┌───────────────────┐
+│                   │     │                   │     │                   │
+│  Next.js          │     │  Saleor           │     │  PostgreSQL       │
+│  Storefronts      │     │  API Server       │     │  Database         │
+│                   │     │                   │     │                   │
+└─────────┬─────────┘     └─────────┬─────────┘     └─────────┬─────────┘
+          │                         │                         │
+          │                         │                         │
+┌─────────▼─────────┐     ┌─────────▼─────────┐     ┌─────────▼─────────┐
+│                   │     │                   │     │                   │
+│  CDN              │     │  Load Balancer    │     │  Backup System    │
+│                   │     │                   │     │                   │
+└───────────────────┘     └───────────────────┘     └───────────────────┘
+```
 
-### Phase 1: Assessment and Planning
-- Inventory current site structure and functionality in Statamic
-- Document existing Simple Commerce implementation and customizations
-- Create inventory of all content collections, blueprints, and templates
-- Document region and language requirements
-- Map data models between systems (Statamic → Medusa/Strapi)
-- Create migration scripts for products and content
-- Plan URL structure and redirects
-- Document all customizations that need special handling
+- **Hosting**: Cloud-based infrastructure
+- **Scaling**: Horizontal scaling for API servers
+- **Redundancy**: Database replication and failover
+- **Monitoring**: Comprehensive logging and alerting
+- **Backups**: Regular database backups
 
-### Phase 2: Setup and Configuration
-- Set up Medusa.js with Region Module configuration
-- Configure Strapi with multi-site and i18n capabilities
-- Establish API communication between systems
-- Set up database schemas with region and language fields
-- Configure authentication and user migration approach
-- Create test instances that mirror production environment
-- Develop and test data migration scripts with sample data
+## Technical Roadmap
 
-### Phase 3: Data Validation and Migration
-- **Validation Framework**: Node.js based validation system with the following features:
-  - Entity-specific validation rules (products, categories, customers, orders, etc.)
-  - Format validation for common data types (email, URL, currency, etc.)
-  - Region-specific validation rules for NL, BE, DE
-  - Multi-language content validation
-  - Comprehensive reporting with JSON and text output
-  - Command-line interface with configurable options
-  - Integration with migration pipeline for pre-import validation
-  - Support for both single file and directory-based batch validation
-  - Customizable strictness levels for different migration phases
-- **Transformation Rules**: Enforced during validation
-  - Direct field mapping for simple fields
-  - Currency transformations (ensuring integer cents format)
-  - Slug transformations with proper formatting
-  - Media/asset path transformations
-  - Object and array transformations for complex data
-  - Region-specific transformations based on target market
-  - Relationship mapping between entities
-- **Validation Reports**: Generated for each entity type
-  - Summary statistics (valid vs. invalid entities)
-  - Detailed error listings with field-level context
-  - Warnings for potential issues that aren't blocking
-  - Structured JSON output for programmatic processing
-  - Human-readable text reports for review
-- **Error Handling**: 
-  - Graceful error handling during validation
-  - Context-specific error messages with field and entity information
-  - Batch processing that continues despite individual entity failures
-  - Configurable strictness level for blocking vs. warning errors
-  - Integration with import process to prevent invalid data imports
+1. **Phase 1: Proof of Concept** (Current)
+   - Set up Saleor with basic functionality
+   - Test multi-region support using Channels
+   - Validate language translation workflows
+   - Create Next.js storefront with core features
 
-### Phase 4: Frontend Development
-- Develop Next.js application with region/language routing
-- Convert Antlers templates to React components
-- Migrate Alpine.js functionality to React hooks
-- Implement shared components and layouts
-- Create region and language selection interface
-- Build product browsing and detail pages
-- Implement cart and checkout flow with region-specific logic
-- Add content pages with language-specific rendering
-- Preserve SEO elements and URL structure
+2. **Phase 2: Development**
+   - Complete storefront implementation
+   - Develop data migration scripts
+   - Set up testing infrastructure
+   - Implement CI/CD pipelines
 
-### Phase 5: Testing and Optimization
-- Unit test core functionality
-- Run parameterized E2E tests across all region/language combinations
-- Perform visual regression testing
-- Conduct load testing for each region
-- Verify SEO elements and redirects
-- Test payment flows for each region
-- Compare performance metrics with original Statamic site
-- Test all customer journeys that existed in the original site
+3. **Phase 3: Testing and Refinement**
+   - Execute comprehensive testing
+   - Performance optimization
+   - Security auditing
+   - Data migration rehearsals
 
-### Phase 6: Deployment and Launch
-- Set up production infrastructure
-- Configure CDN and edge caching
-- Implement monitoring and alerting
-- Create deployment pipelines
-- Plan cutover strategy with SEO preservation
-- Create data migration rehearsal plan
-- Launch with staged rollout by region
-- Monitor post-launch metrics and SEO impact
+4. **Phase 4: Deployment**
+   - Staged rollout by region
+   - Monitoring and issue resolution
+   - Support and training
 
-## Multi-Region and Multi-Language Requirements
+## References
 
-### Region-Specific Considerations
-- **Domains**: 3 separate domains (nl.example.com, be.example.com, de.example.com)
-- **Currencies**: EUR for all regions (but potentially different formatting)
-- **Tax Rates**: Different VAT rates per country
-- **Payment Methods**: Region-specific payment providers
-- **Shipping**: Local shipping options and carriers
-- **Legal**: Region-specific terms and compliance
-
-### Language Considerations
-- **Languages**: 2 languages (nl, en) with nl.example.com and be.example.com supporting both, de.example.com supporting en only
-- **URL Structure**: Language prefixes in URLs
-- **Content**: Localized content for all pages
-- **Products**: Consistent product data with localized descriptions
-- **Emails**: Templates in multiple languages
-- **Search**: Language-specific search indexes
-
-### Technology Configuration
-- **Medusa Region Module**: Configuration for 3 separate regions
-- **Strapi i18n Plugin**: Setup for 2 languages
-- **Frontend Routing**: Support for region and language paths
-- **Testing Framework**: Parameterized tests for all region/language combinations
-- **SEO**: Language annotations and hreflang tags
-
-## Known Technical Challenges
-
-1. **Data Model Differences**: Mapping Statamic's flat-file structure to Medusa.js and Strapi database models
-2. **Order History Migration**: Preserving customer purchase history across the migration
-3. **URL Structure**: Maintaining SEO value through proper redirects
-4. **Authentication**: Migrating user accounts and passwords securely
-5. **Payment Integration**: Configuring region-specific payment providers
-6. **Performance**: Ensuring consistent performance across all regions
-7. **Testing Complexity**: Validating functionality across multiple region/language combinations
-8. **Custom Functionality**: Recreating any custom Statamic/Simple Commerce functionality in the new stack
-9. **Content Relations**: Preserving relationships between content items during migration
-10. **Asset Migration**: Transferring and optimizing all media assets from Statamic to Strapi
-
-## Statamic-Specific Migration Tasks
-
-1. **Blueprint Analysis**: Document all Statamic blueprints and their field structures
-2. **Collection Migration**: Map Statamic collections to appropriate data structures in target systems
-3. **Asset Migration**: Transfer all assets from Statamic's asset container to cloud storage
-4. **User Migration**: Securely migrate user accounts while preserving passwords
-5. **Template Analysis**: Document all Antlers templates and their corresponding frontend components
-6. **URL Mapping**: Create comprehensive mapping between Statamic URLs and new system routes
-7. **Custom Tags/Modifiers**: Identify any custom Statamic tags or modifiers and plan replacements
-8. **Simple Commerce Data Extraction**: Create specialized scripts for Simple Commerce data
-
-## Simple Commerce Migration Specifics
-
-1. **Product Data**: Extract and transform product data with all variants and options
-2. **Customer Orders**: Export and transform order history with all line items and statuses
-3. **Payment Methods**: Map and configure equivalent payment methods in Medusa.js
-4. **Custom Checkout Fields**: Identify and recreate any custom checkout fields
-5. **Tax and Shipping Rules**: Extract and recreate all tax and shipping configurations
-6. **Discount Codes**: Migrate any existing discount codes and promotions
-7. **Customer Profiles**: Securely transfer customer profile data
-8. **Order Notifications**: Recreate order notification templates in the new system
-
-## References and Resources
-
-- [Medusa.js Documentation](https://docs.medusajs.com/)
-- [Strapi Documentation](https://docs.strapi.io/)
+- [Saleor Documentation](https://docs.saleor.io/)
 - [Next.js Documentation](https://nextjs.org/docs)
-- [Solace Medusa Starter](https://github.com/rigby-sh/solace-medusa-starter)
-- [Medusa Region Module Guide](https://docs.medusajs.com/modules/region)
-- [Statamic Documentation](https://statamic.dev/)
-- [Simple Commerce Documentation](https://simple-commerce.duncanmcclean.com/) 
+- [GraphQL Documentation](https://graphql.org/learn/)
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [Statamic Documentation](https://statamic.dev/) 

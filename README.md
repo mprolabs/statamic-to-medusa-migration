@@ -1,12 +1,12 @@
-# Statamic to Medusa.js Migration
+# Statamic to Saleor Migration
 
-A comprehensive migration project for converting a Statamic CMS with Simple Commerce to Medusa.js and Strapi CMS with multi-region and multi-language support.
+A comprehensive migration project for converting a Statamic CMS with Simple Commerce to Saleor with multi-region and multi-language support.
 
 ## Project Overview
 
-This project focuses on migrating an existing e-commerce site from Statamic CMS to Medusa.js while preserving essential functionality and adding new capabilities:
+This project focuses on migrating an existing e-commerce site from Statamic CMS to Saleor while preserving essential functionality and adding new capabilities:
 
-- **Multi-region support**: Localized pricing, shipping, and tax calculations
+- **Multi-region support**: Localized pricing, shipping, and tax calculations via Saleor Channels
 - **Multi-language support**: Content translation across all supported regions
 - **Headless architecture**: Separation of frontend and backend concerns
 
@@ -18,8 +18,7 @@ This project focuses on migrating an existing e-commerce site from Statamic CMS 
 - **Frontend**: Vue.js-based frontend integrated with Statamic
 
 ### Target (Destination)
-- **Medusa.js**: Headless commerce platform
-- **Strapi CMS**: Content management
+- **Saleor**: Headless GraphQL commerce platform with built-in CMS capabilities
 - **Frontend**: Next.js-based storefront
 
 ## Documentation
@@ -50,6 +49,8 @@ This will start a local server at http://localhost:4000 where you can preview ch
 - `/src`: Source code for migration scripts and utilities
 - `/memory-bank`: Project context and progress information
 - `/tasks`: Structured task definitions and implementation plans
+- `/core`: Saleor core instance
+- `/storefront`: Next.js Saleor storefront
 
 ## Project Status
 
@@ -59,17 +60,27 @@ The project is currently in the proof of concept phase, with a focus on validati
 
 ### Prerequisites
 
-- Node.js (v14+)
+- Python 3.9+
 - PostgreSQL
-- Redis
-- Ruby (for documentation site)
+- Docker & Docker Compose
+- Node.js v16+ (for storefront)
 
 ### Getting Started
 
 1. Clone this repository
-2. Install dependencies: `npm install`
-3. Configure environment variables (see `.env.example`)
-4. Review the [technical context](memory-bank/techContext.md) for implementation details
+2. Set up Saleor core using Docker:
+   ```bash
+   cd core
+   docker-compose up
+   ```
+3. Set up the storefront:
+   ```bash
+   cd storefront
+   npm install
+   npm run dev
+   ```
+4. Configure environment variables (see `.env.example`)
+5. Review the [technical context](memory-bank/techContext.md) for implementation details
 
 ## Diagrams
 
@@ -77,13 +88,6 @@ Architecture diagrams are available in both source and rendered formats:
 
 - Source: `/src/architecture/diagrams/*.puml`
 - Rendered: `/docs/architecture/diagrams/` (PNG/SVG)
-
-To update diagrams:
-
-```bash
-cd src/architecture/diagrams
-./render.sh
-```
 
 ## Contributing
 

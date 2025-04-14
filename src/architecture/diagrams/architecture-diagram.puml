@@ -1,5 +1,5 @@
 @startuml
-title Medusa Architecture Diagram
+title Saleor Architecture Diagram
 
 ' Styling
 skinparam backgroundColor white
@@ -9,13 +9,14 @@ skinparam componentStyle rectangle
 actor "Storefront" as storefront
 actor "Admin Dashboard" as admin
 
-' HTTP Layer
-package "HTTP Layer" {
-  component "API Routes (Express.js)" as api
+' GraphQL API Layer
+package "API Layer" {
+  component "GraphQL API" as api
+  component "Session Management (JWT)" as session
 }
 note bottom of api
-  Express.js-based API handling
-  REST endpoints for commerce operations
+  GraphQL-based API handling
+  Domain-specific API operations
 end note
 
 ' Workflow Layer
@@ -53,17 +54,26 @@ note right of postgres
   commerce data
 end note
 note right of redis
-  Session storage and
-  caching service
+  Caching and task queuing
 end note
 
 ' Content Management
-package "Content Platform" {
-  component "Strapi CMS" as strapi
+package "Content Management" {
+  component "Saleor Content" as content
+  component "Translation API" as translations
 }
-note right of strapi
-  Headless CMS for managing
-  content & media
+note right of content
+  Built-in content management
+  for products and media
+end note
+
+' Channel Management
+package "Multi-Region Support" {
+  component "Channel System" as channels
+}
+note right of channels
+  Region-specific settings
+  for NL, BE, and DE domains
 end note
 
 ' Data Migration
@@ -72,8 +82,8 @@ package "Data Migration" {
 }
 
 ' Connections
-storefront --> api : HTTP Requests
-admin --> api : HTTP Requests
+storefront --> api : GraphQL Requests
+admin --> api : GraphQL Requests
 
 api --> product_wf : Execute
 api --> order_wf : Execute
@@ -91,10 +101,14 @@ customer_mod --> postgres : Query/Store
 payment_mod --> postgres : Query/Store
 inventory_mod --> postgres : Query/Store
 
-api --> redis : Session Management
-api --> strapi : Content API Calls
+api --> redis : Caching
+session --> redis : Store Sessions
+
+product_mod --> content : Product Content
+content --> translations : Localize Content
+channels --> product_mod : Region Config
 
 migration --> postgres : Migrate Data
-migration --> strapi : Migrate Content
+migration --> content : Migrate Content
 
 @enduml 

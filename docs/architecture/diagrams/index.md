@@ -1,65 +1,274 @@
-# System Diagrams
+---
+layout: default
+title: Architecture Diagrams
+description: Visual representations of the Saleor-based architecture with multi-region and multi-language support
+parent: Architecture
+---
 
-This section contains visual representations of the system architecture and components.
+# Architecture Diagrams
 
-## Main Architecture Diagram
+This page provides visual representations of the architecture for the Statamic to Saleor migration project, with a focus on multi-region and multi-language capabilities.
 
-![Architecture Diagram](architecture-diagram.png)
+## System Overview Diagram
 
-The main architecture diagram illustrates the high-level structure of the Statamic to Medusa.js migration project, including all major components and their relationships.
+The following diagram shows the high-level system architecture:
 
-[View SVG version](architecture-diagram.svg) | [View Source](https://github.com/yourusername/yourrepo/blob/main/src/architecture/diagrams/architecture-diagram.puml)
+```mermaid
+flowchart TD
+    Customer([Customer])
+    Admin([Admin User])
+    
+    subgraph "Saleor Core"
+        Dashboard[Saleor Dashboard]
+        API[GraphQL API]
+        Channels[Channel Management]
+        Products[Product Management]
+        Orders[Order Management]
+        Checkout[Checkout System]
+        Payments[Payment Integrations]
+        Translations[Translation System]
+        
+        Dashboard --- API
+        API --- Channels
+        API --- Products
+        API --- Orders
+        API --- Checkout
+        API --- Payments
+        Products --- Translations
+    end
+    
+    subgraph "Next.js Storefront"
+        Pages[Next.js Pages]
+        Components[React Components]
+        Hooks[Custom Hooks]
+        API_Routes[API Routes]
+        i18n[Internationalization]
+        
+        Pages --- Components
+        Components --- Hooks
+        Pages --- API_Routes
+        Components --- i18n
+    end
+    
+    Customer --> Pages
+    Admin --> Dashboard
+    API_Routes --> API
+    Hooks --> API
+```
 
-## Component Descriptions
+## Multi-Region Architecture
 
-### Frontend Tier
-The user-facing application built with Next.js that provides a responsive, fast-loading interface for customers. It communicates with the backend through the API Gateway.
+The following diagram illustrates the multi-region architecture using Saleor Channels:
 
-### API Gateway
-Acts as a unified entry point for all client requests, routing them to the appropriate services (Commerce Platform or Content Platform) based on the request type.
+```mermaid
+flowchart TD
+    Customer([Customer])
+    
+    subgraph "Domain Routing"
+        NL[domain-nl.com]
+        BE[domain-be.com]
+        DE[domain-de.com]
+    end
+    
+    subgraph "Next.js Storefront"
+        Router[Domain/Region Router]
+        NL_Store[NL Specific UI]
+        BE_Store[BE Specific UI]
+        DE_Store[DE Specific UI]
+        
+        Router --- NL_Store
+        Router --- BE_Store
+        Router --- DE_Store
+    end
+    
+    subgraph "Saleor Core"
+        API[GraphQL API]
+        Channels[Channels]
+        NL_Channel[Netherlands Channel]
+        BE_Channel[Belgium Channel]
+        DE_Channel[Germany Channel]
+        
+        API --- Channels
+        Channels --- NL_Channel
+        Channels --- BE_Channel
+        Channels --- DE_Channel
+    end
+    
+    Customer --> NL
+    Customer --> BE
+    Customer --> DE
+    
+    NL --> Router
+    BE --> Router
+    DE --> Router
+    
+    NL_Store --> API
+    BE_Store --> API
+    DE_Store --> API
+```
 
-### Commerce Platform (Medusa.js)
-Handles all e-commerce functionality, including:
-- Product catalog management
-- Cart and checkout processing
-- Order management
-- Inventory tracking
-- Payment processing
-- Shipping options
+## Technology Stack Diagram
 
-### Content Platform (Strapi)
-Manages all content-related functionality:
-- CMS capabilities
-- Blog posts and articles
-- Marketing content
-- Media assets
-- SEO metadata
+This diagram shows the technology stack and relationships between components:
 
-### Data Layer
-Includes databases and storage systems that persist all application data:
-- PostgreSQL for structured data
-- Redis for caching
-- File storage for media and assets
+```mermaid
+flowchart TD
+    subgraph "Backend"
+        Saleor[Saleor Core]
+        GraphQL[GraphQL API]
+        Channels[Multi-Channel Support]
+        DB[PostgreSQL]
+        
+        Saleor --- GraphQL
+        Saleor --- Channels
+        Saleor --- DB
+    end
+    
+    subgraph "Frontend"
+        Next[Next.js]
+        React[React]
+        Apollo[Apollo Client]
+        
+        Next --- React
+        Next --- Apollo
+    end
+    
+    subgraph "Infrastructure"
+        Docker[Docker]
+        AWS[AWS]
+        CDN[Content Delivery Network]
+        
+        Docker --- AWS
+        AWS --- CDN
+    end
+    
+    Apollo --> GraphQL
+    CDN --> Next
+```
 
-### Infrastructure
-Cloud services and supporting infrastructure:
-- Containerized deployment
-- Load balancing
-- CDN integration
-- Monitoring and logging
+## Data Migration Flow
 
-### Data Migration
-Components responsible for transferring data from the legacy Statamic system to the new Medusa.js and Strapi platforms:
-- Data extraction scripts
-- Transformation utilities
-- Validation tools
-- Import processes
+This diagram illustrates the data migration process from Statamic to Saleor:
 
-## Additional Diagrams
+```mermaid
+flowchart LR
+    subgraph "Source"
+        Statamic[Statamic CMS]
+        SC[Simple Commerce]
+        
+        Statamic --- SC
+    end
+    
+    subgraph "Migration Tools"
+        Scripts[Migration Scripts]
+        Transform[Data Transformation]
+        
+        Scripts --- Transform
+    end
+    
+    subgraph "Target"
+        Saleor[Saleor Core]
+        API[GraphQL API]
+        
+        Saleor --- API
+    end
+    
+    SC --> Scripts
+    Statamic --> Scripts
+    Transform --> API
+```
 
-The following additional diagrams will be added as they are developed:
+## Multi-Language Support
 
-- Data Flow Diagram
-- Deployment Architecture
-- Sequence Diagrams for Key Processes
-- Entity Relationship Diagram 
+This diagram shows how multi-language support is implemented:
+
+```mermaid
+flowchart TD
+    subgraph "Saleor"
+        Products[Products]
+        Translations[Translations]
+        
+        Products --- Translations
+    end
+    
+    subgraph "Next.js"
+        i18n[Next.js i18n]
+        UI[UI Components]
+        
+        i18n --- UI
+    end
+    
+    Translations --> i18n
+```
+
+## Data Flow Diagram
+
+This diagram illustrates the flow of data during customer interactions:
+
+```mermaid
+sequenceDiagram
+    Customer->>Next.js: Visit website
+    Next.js->>Saleor: GraphQL Query (with channel context)
+    Saleor->>Next.js: Return data (with translations)
+    Next.js->>Customer: Render page
+    
+    Customer->>Next.js: Add to cart
+    Next.js->>Saleor: Create/Update Cart (channel-specific)
+    Saleor->>Next.js: Updated Cart data
+    Next.js->>Customer: Updated Cart UI
+    
+    Customer->>Next.js: Checkout
+    Next.js->>Saleor: Process Checkout (channel-specific)
+    Saleor->>Payment Provider: Process Payment
+    Payment Provider->>Saleor: Payment Confirmation
+    Saleor->>Next.js: Order Confirmation
+    Next.js->>Customer: Order Confirmation Page
+```
+
+## Deployment Architecture
+
+This diagram shows the deployment architecture for the system:
+
+```mermaid
+flowchart TD
+    subgraph "Production Environment"
+        LB[Load Balancer]
+        
+        subgraph "Frontend"
+            NL_Frontend[NL Frontend]
+            BE_Frontend[BE Frontend]
+            DE_Frontend[DE Frontend]
+        end
+        
+        subgraph "Backend"
+            Saleor_API[Saleor API]
+            Saleor_Dashboard[Saleor Dashboard]
+            DB[PostgreSQL]
+            Cache[Redis]
+        end
+        
+        LB --> NL_Frontend
+        LB --> BE_Frontend
+        LB --> DE_Frontend
+        
+        NL_Frontend --> Saleor_API
+        BE_Frontend --> Saleor_API
+        DE_Frontend --> Saleor_API
+        
+        Saleor_API --- DB
+        Saleor_API --- Cache
+        Saleor_Dashboard --- DB
+    end
+    
+    subgraph "DNS"
+        NL_Domain[domain-nl.com]
+        BE_Domain[domain-be.com]
+        DE_Domain[domain-de.com]
+        
+        NL_Domain --> LB
+        BE_Domain --> LB
+        DE_Domain --> LB
+    end
+```
+
+This architecture is designed to leverage Saleor's Channel feature for comprehensive multi-region support, while providing a flexible and performant framework for multi-language capabilities across all storefronts. 

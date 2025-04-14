@@ -1,9 +1,9 @@
-# Updated: $(date +%Y-%m-%d-%H:%M:%S)
+# Updated: 2024-06-25
 # Site settings
-title: Statamic to Medusa.js Migration
-description: Technical documentation for the Statamic to Medusa.js migration project
-baseurl: "/statamic-to-medusa-migration"
-repository: mprolabs/statamic-to-medusa-migration
+title: Statamic to Saleor Migration
+description: Technical documentation for the Statamic to Saleor migration project with multi-region and multi-language support
+baseurl: "/bolen-ana-pro"
+repository: mprolabs/statamic-to-saleor-migration
 
 # Build settings
 markdown: kramdown
@@ -32,7 +32,7 @@ search_enabled: true
 # Aux links for the upper right navigation
 aux_links:
   "Project Repository":
-    - "https://github.com/mprolabs/statamic-to-medusa-migration"
+    - "https://github.com/mprolabs/statamic-to-saleor-migration"
 
 # Makes Aux links open in a new tab
 aux_links_new_tab: true
@@ -41,7 +41,7 @@ aux_links_new_tab: true
 heading_anchors: true
 
 # Footer content
-footer_content: "Copyright &copy; 2023. All rights reserved."
+footer_content: "Copyright &copy; 2024. All rights reserved."
 
 # Navigation structure
 # Navigation structure configuration can be added here if needed
@@ -74,7 +74,8 @@ exclude:
 # Navigation
 header_pages:
   - architecture/index.md
-  - guides/index.md
+  - migration/index.md
+  - multi-region-language/index.md
   - development/index.md
 
 # Include additional directories

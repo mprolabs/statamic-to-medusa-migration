@@ -1,74 +1,92 @@
-# Statamic to Medusa.js Migration Project Brief
+# Project Brief: Statamic to Saleor Migration
 
-## Project Overview
-This project involves migrating an existing Statamic CMS website with Simple Commerce functionality to a modern headless commerce solution using Medusa.js for ecommerce and Strapi as the headless CMS. The goal is to create a faster, more scalable, and better-performing solution while maintaining all existing functionality.
+## Overview
+This project involves migrating from our current Statamic CMS with Simple Commerce to Saleor, focusing on multi-region and multi-language support. The project aims to preserve the existing functionality while adding new capabilities through the transition to a headless commerce architecture.
 
-## Current System
-- Statamic CMS-based website (PHP)
-- Simple Commerce for ecommerce functionality
-- Located in the `/public_html` directory
-- Standard Laravel-based architecture
-- Current website includes products, categories, user accounts, and checkout functionality
+## Key Requirements
 
-## Target Solution
-- Medusa.js headless commerce engine
-- Strapi headless CMS for content management
-- Solace Medusa Starter as potential foundation (https://github.com/rigby-sh/solace-medusa-starter)
-- Modern, API-first architecture
-- Improved performance and user experience
-- Multi-region support for 3 separate domains/stores
-- Multi-language support for 2 languages across all stores
+### Multi-Region Support
+- Support for 3 separate domains/stores:
+  - Netherlands (nl.domain.com)
+  - Belgium (be.domain.com)
+  - Germany (de.domain.com)
+- Region-specific configurations for:
+  - Currencies (EUR)
+  - Tax rates and rules
+  - Payment providers
+  - Shipping options
+  - Product availability
+  - Pricing
 
-## Core Requirements
+### Multi-Language Support
+- Support for content in multiple languages:
+  - Dutch (primary for NL/BE)
+  - German (primary for DE)
+  - Language variants should be maintained across regions
+- Language-specific URLs and SEO optimization
+- Ability to add more languages in the future
+
+### Headless Architecture
+- Clear separation between frontend and backend
+- API-first approach with GraphQL
+- Scalable infrastructure that can handle region-specific traffic
 
 ### Data Migration
-- Migrate all product data from Statamic/Simple Commerce to Medusa.js
-- Transfer content (pages, blog posts, etc.) to Strapi CMS
-- Preserve user accounts and order history
-- Maintain SEO values (URLs, metadata, etc.)
-- Ensure data integrity throughout the migration process
-- Preserve language variants from existing content
+- Complete migration of all product data from Statamic/Simple Commerce
+- Preservation of all product relationships, variants, and attributes
+- Migration of customer data and order history
+- Support for historical order viewing
 
-### Functionality
-- Implement comprehensive ecommerce features with Medusa.js
-- Set up content management in Strapi
-- Recreate all existing user-facing features
-- Maintain or improve current checkout flow
-- Integrate payment providers currently used on the site
-- Support region-specific configurations (currencies, taxes, payment providers)
-- Enable language switching across all storefronts
+## Technical Stack
 
-### Multi-Region and Multi-Language Support
-- Support 3 distinct domains with separate ecommerce stores
-- Enable 2 languages across all stores
-- Implement region-specific configurations for each domain
-- Set up localized content management in Strapi
-- Configure sales channels for product availability per store
-- Maintain SEO value across all domains and language variants
+### Backend
+- **Saleor**: Headless commerce platform with built-in content management
+  - Channel system for multi-region implementation
+  - Translation API for multi-language support
+  - GraphQL API for data access
 
-### Technical Implementation
-- Node.js-based backend (Medusa.js)
-- Modern frontend framework (likely React-based)
-- RESTful or GraphQL API architecture
-- Proper data modeling across both systems
-- Efficient database design
-- Leveraging Medusa's Region Module and Sales Channels
-- Implementing Strapi's multi-site capability and localization
+### Frontend
+- **Next.js**: React framework for building the storefront
+  - App Router for modern routing capabilities
+  - Server Components for improved performance
+  - Support for multiple domains
 
-## Project Goals
-- Create a faster, more responsive user experience
-- Improve site performance metrics
-- Enable more flexible content management
-- Provide better ecommerce capabilities
-- Ensure seamless migration with minimal disruption
-- Set up a more maintainable and scalable architecture
-- Support multi-region and multi-language commerce
+### Deployment
+- **Docker**: Containerization for consistent deployment
+- **CI/CD**: Automated testing and deployment pipeline
+- **CDN**: Content delivery network for static assets
 
-## Success Criteria
-- All existing data successfully migrated
-- Feature parity with current site
-- Improved performance metrics (load times, Time to Interactive)
-- Successful integration between Medusa.js and Strapi
-- Complete documentation of the new system
-- Smooth transition for both administrators and end users
-- Fully functional multi-region and multi-language support 
+## Project Phases
+
+### Phase 1: Proof of Concept
+- Validate Saleor's capability to handle multi-region and multi-language requirements
+- Test Next.js integration with Saleor
+- Create sample data migration scripts
+
+### Phase 2: Development Environment Setup
+- Configure Saleor with full region and language support
+- Set up Next.js development environment
+- Establish build and deployment pipelines
+
+### Phase 3: Data Migration
+- Develop comprehensive data extraction scripts
+- Create transformation logic for all data types
+- Implement data loading into Saleor
+
+### Phase 4: Frontend Development
+- Build Next.js storefront with all required features
+- Implement authentication and user management
+- Create comprehensive testing suite
+
+### Phase 5: Testing and Optimization
+- Perform user acceptance testing across all regions
+- Optimize performance for all user scenarios
+- Address region-specific edge cases
+
+### Phase 6: Deployment and Launch
+- Setup production environments
+- Execute phased rollout by region
+- Monitor and support post-launch
+
+## Current Status
+The project is currently in the **Proof of Concept** phase, focusing on validating Saleor's capabilities for our multi-region and multi-language requirements. 

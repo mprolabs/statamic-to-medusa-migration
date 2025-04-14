@@ -1,298 +1,179 @@
 # Component Interfaces and Communication Patterns
 
-This document defines the interfaces and communication patterns between all system components for the Statamic to Medusa.js migration project, with a focus on supporting multi-region and multi-language requirements.
+This document defines the interfaces and communication patterns between system components for the Statamic to Saleor migration project, focusing on multi-region (Channels) and multi-language support.
 
 ## Communication Styles
 
-The system employs several communication styles depending on the requirements:
+The system primarily employs:
 
-1. **REST API** - Synchronous request-response pattern for core business operations
-2. **GraphQL** - Flexible query-based communication for content retrieval
-3. **Event-Driven** - Asynchronous communication for loosely coupled components
-4. **Webhook** - Push-based notifications for external system integration
-5. **Message Queue** - Reliable asynchronous communication for critical operations
+1.  **GraphQL** - Flexible query-based communication for core commerce and content operations via Saleor API.
+2.  **Event-Driven** - Asynchronous communication using Saleor's event system for webhooks and internal decoupling.
+3.  **Webhook** - Push-based notifications for external system integration (e.g., payment providers, fulfillment).
 
 ## Core Interface Definitions
 
-### 1. Frontend to Commerce (Next.js → Medusa.js)
+### 1. Frontend to Backend (Next.js → Saleor)
 
-**Interface Type**: REST API
+**Interface Type**: GraphQL API (Saleor)
 
-**Key Endpoints**:
-- `GET /products` - List products with filtering and pagination
-- `GET /products/:id` - Get product details
-- `POST /carts` - Create new cart
-- `POST /carts/:id/line-items` - Add items to cart
-- `POST /carts/:id/checkout` - Convert cart to order
-- `GET /customers/:id/orders` - Retrieve customer order history
+**Key Operations (Examples)**:
+- Query products with filters (channel, category, attributes)
+- Fetch product details with translations
+- Create/update shopping cart (checkout in Saleor)
+- Process checkout with payment
+- Manage customer accounts and order history
+- Fetch localized content (pages, product descriptions)
 
-**Authentication**: JWT token or session cookie
+**Authentication**: JWT token (Saleor)
 
 **Data Format**: JSON
 
 **Multi-Region Considerations**:
-- Region identifier in request headers or URL
-- Region-specific pricing and availability in responses
-- Region-specific validation on cart operations
+- `channel` slug provided in GraphQL requests to target specific regions.
+- Responses automatically filtered by channel (pricing, availability, shipping).
 
 **Language Considerations**:
-- Language code in request headers or URL
-- Translated product information in responses
-- Language-specific validation messages
+- `languageCode` argument in GraphQL queries for translations.
+- Responses include translated fields where available.
+- Fallback language handling configured in Saleor.
 
-**Example Request**:
-```http
-GET /products?region=nl&language=nl_NL&category=clothing
-Authorization: Bearer <jwt_token>
-```
-
-**Example Response**:
-```json
-{
-  "products": [
-    {
-      "id": "prod_01",
-      "title": "Blauwe trui",
-      "description": "Een warme trui voor de winter",
-      "price": {
-        "value": 4995,
-        "currency_code": "EUR",
-        "formatted": "€49,95"
-      },
-      "variants": [...]
-    },
-    ...
-  ],
-  "count": 20,
-  "offset": 0,
-  "limit": 10
-}
-```
-
-### 2. Frontend to Content (Next.js → Strapi)
-
-**Interface Type**: GraphQL / REST API
-
-**Key GraphQL Queries**:
+**Example Query**: 
 ```graphql
-query GetPage($slug: String!, $locale: String!) {
-  pages(where: { slug: $slug }, locale: $locale) {
-    id
-    title
-    content
-    seo {
-      metaTitle
-      metaDescription
-    }
-    sections {
-      __typename
-      ... on ComponentHeroBanner {
-        title
-        description
-        image {
-          url
-          alternativeText
+query GetProducts($channel: String!, $locale: LanguageCodeEnum!, $category: String) {
+  products(channel: $channel, filter: { categories: [$category] }, first: 10) {
+    edges {
+      node {
+        id
+        name
+        translation(languageCode: $locale) {
+          name
+          descriptionJson
         }
-      }
-      ... on ComponentProductGrid {
-        title
-        products
-      }
-    }
-  }
-}
-```
-
-**Key REST Endpoints**:
-- `GET /api/pages?locale=nl_NL` - List pages for a locale
-- `GET /api/pages/:id` - Get page details
-- `GET /api/navigation?locale=nl_NL` - Get navigation structure for a locale
-
-**Authentication**: JWT token for admin operations, public API for content retrieval
-
-**Data Format**: JSON
-
-**Multi-Region Considerations**:
-- Region-specific content schemas
-- Content filtering by region tag or category
-
-**Language Considerations**:
-- Content localization through Strapi's i18n system
-- Language-specific slugs and URLs
-- Fallback languages when content not available in requested language
-
-**Example Request**:
-```http
-GET /api/pages/home?locale=nl_NL
-```
-
-**Example Response**:
-```json
-{
-  "data": {
-    "id": "1",
-    "attributes": {
-      "title": "Welkom bij onze winkel",
-      "slug": "home",
-      "content": "Ontdek onze nieuwste producten...",
-      "locale": "nl_NL",
-      "localizations": {
-        "data": [
-          {
-            "attributes": {
-              "locale": "en_US"
+        pricing {
+          priceRange {
+            start {
+              gross {
+                amount
+                currency
+              }
             }
           }
-        ]
-      },
-      "sections": [...]
+        }
+        variants {
+          # ... variant details
+        }
+      }
     }
   }
 }
 ```
 
-### 3. Commerce to Content (Medusa.js → Strapi)
+### 2. Internal Saleor Communication
 
-**Interface Type**: REST API / Webhook
+**Interface Type**: Internal Function Calls / Event-Driven (Saleor Events/Webhooks)
 
-**Key Operations**:
-- Update product-related content when products change
-- Notify content system of commerce events
-- Sync product availability across systems
+**Key Events**: 
+- `ORDER_CREATED`
+- `PRODUCT_UPDATED`
+- `CHECKOUT_UPDATED`
+- `CUSTOMER_CREATED`
+- `PAYMENT_CONFIRMED`
 
-**Authentication**: API Key
-
-**Data Format**: JSON
-
-**Example Integration Flow**:
-1. Product is updated in Medusa.js
-2. Webhook is triggered to Strapi endpoint
-3. Strapi updates related content components
-4. Content cache is invalidated
-
-### 4. Internal Commerce Communication (Medusa.js Services)
-
-**Interface Type**: Internal API / Event-Driven
-
-**Key Events**:
-- `order.created` - New order has been created
-- `product.updated` - Product information has changed
-- `cart.updated` - Shopping cart has been modified
-- `customer.created` - New customer account created
-
-**Event Schema Example**:
+**Event Schema Example**: (Refer to Saleor Webhook documentation for exact structure)
 ```json
 {
-  "event_name": "order.created",
-  "id": "evt_123",
-  "created_at": "2023-10-15T13:25:00Z",
-  "data": {
-    "order_id": "order_123",
-    "customer_id": "cus_456",
-    "region_id": "reg_nl",
-    "total": 12995,
-    "currency_code": "EUR",
-    "items": [...]
+  "event_type": "ORDER_CREATED",
+  "issued_at": "2023-10-15T13:25:00+00:00",
+  "version": "3.x",
+  "recipient": { ... }, 
+  "order": {
+    "id": "T3JkZXI6MTIz",
+    "channel": { "slug": "nl" },
+    "languageCode": "NL",
+    "user": { ... },
+    "total": { "gross": { "amount": 129.95, "currency": "EUR" } },
+    "lines": [ ... ]
   }
 }
 ```
 
-**Service Discovery**: Configuration-based service registry
+**Failure Handling**: Configurable webhook retries in Saleor.
 
-**Failure Handling**: Event persistence with retry mechanism
+### 3. Data Migration Interface
 
-### 5. Data Migration Interface
+**Interface Type**: CLI / Saleor API (GraphQL Mutations)
 
-**Interface Type**: CLI / Batch Processing
+**Key Operations**:
+- Extract Statamic data (products, customers, orders, content)
+- Transform data to Saleor format (including Channel and Translation structure)
+- Use Saleor GraphQL mutations (`productCreate`, `customerCreate`, `orderCreate`, etc.) to import data.
+- Use Saleor CLI or custom scripts for batch processing.
 
-**Key Commands**:
-- `extract-collections --source=/path/to/statamic --output=/path/to/output`
-- `transform-products --input=/path/to/data --output=/path/to/transformed`
-- `import-products --input=/path/to/transformed --target=medusa`
-- `validate-migration --source=/path/to/statamic --target=medusa --type=products`
-
-**Data Format**: JSON / YAML transformation
+**Data Format**: JSON/CSV input, GraphQL variables for import.
 
 **Multi-Region Handling**:
-- Region mapping configuration
-- Region-specific data extraction flags
-- Region validation reports
+- Assign imported products/data to appropriate Saleor Channels.
 
 **Language Handling**:
-- Language mapping configuration
-- Content translation validation
-- Missing translation reports
+- Import translated fields using Saleor's translation mutations.
 
 ## Communication Sequence Diagrams
 
-### 1. Product Browsing Flow
+### 1. Product Browsing Flow (Saleor)
 
 ```
 ┌─────────┐          ┌────────────┐          ┌───────────┐          ┌────────┐
-│  User   │          │  Frontend  │          │API Gateway│          │Medusa.js│
+│  User   │          │  Frontend  │          │API Gateway│          │ Saleor │
 └────┬────┘          └─────┬──────┘          └─────┬─────┘          └────┬───┘
      │      Request        │                       │                     │
      │─────Product Page────►                       │                     │
      │                     │                       │                     │
-     │                     │      GET /products    │                     │
-     │                     │──────with region──────►                     │
+     │                     │   GraphQL Product     │                     │
+     │                     │─ Query (channel, lang)►                     │
      │                     │                       │                     │
-     │                     │                       │    GET /products    │
-     │                     │                       │────with region─────►│
+     │                     │                       │  GraphQL Product    │
+     │                     │                       │── Query────────────►│
      │                     │                       │                     │
-     │                     │                       │   Products JSON     │
-     │                     │                       │◄────with prices────┘
+     │                     │                       │   Product Data      │
+     │                     │                       │◄(incl. translations)┘
      │                     │                       │                     │
-     │                     │   Products JSON       │                     │
-     │                     │◄──with region prices──┘                     │
-     │                     │                       │                     │
-     │                     │  GET /api/product-    │                     │
-     │                     │ content?locale=nl_NL  │                     │
-     │                     │─────────────────────►│                     │
-     │                     │                       │                     │
-     │                     │                       │   GET /api/product  │
-     │                     │                       │──content?locale=nl_NL─►
-     │                     │                       │                     │
-     │                     │                       │  Localized Content  │
-     │                     │                       │◄────────JSON───────┘
-     │                     │                       │                     │
-     │                     │  Localized Content    │                     │
-     │                     │◄────────JSON─────────┘                     │
+     │                     │   Product Data        │                     │
+     │                     │◄──(incl. translations)┘                     │
      │                     │                       │                     │
      │    Render Page      │                       │                     │
      │◄────with Products───┘                       │                     │
      │                     │                       │                     │
 ┌────┴────┐          ┌─────┴──────┐          ┌─────┴─────┐          ┌────┴───┐
-│  User   │          │  Frontend  │          │API Gateway│          │Medusa.js│
+│  User   │          │  Frontend  │          │API Gateway│          │ Saleor │
 └─────────┘          └────────────┘          └───────────┘          └────────┘
 ```
 
-### 2. Checkout Flow
+### 2. Checkout Flow (Saleor)
 
 ```
 ┌─────────┐          ┌────────────┐          ┌───────────┐          ┌────────┐          ┌───────────┐
-│  User   │          │  Frontend  │          │API Gateway│          │Medusa.js│          │  Payment  │
+│  User   │          │  Frontend  │          │API Gateway│          │ Saleor │          │  Payment  │
 └────┬────┘          └─────┬──────┘          └─────┬─────┘          └────┬───┘          └─────┬─────┘
      │  Initiate Checkout   │                       │                     │                    │
      │────────────────────►│                       │                     │                    │
      │                     │                       │                     │                    │
-     │                     │  POST /carts/:id/     │                     │                    │
-     │                     │────checkout──────────►│                     │                    │
+     │                     │   GraphQL Checkout    │                     │                    │
+     │                     │──── Mutations────────►│                     │                    │
      │                     │                       │                     │                    │
-     │                     │                       │  POST /carts/:id/   │                    │
-     │                     │                       │──────checkout──────►│                    │
+     │                     │                       │ GraphQL Checkout    │                    │
+     │                     │                       │──── Mutations──────►│                    │
      │                     │                       │                     │                    │
      │                     │                       │                     │  Initialize        │
-     │                     │                       │                     │───Payment Intent───►
+     │                     │                       │                     │───Payment──────────►
      │                     │                       │                     │                    │
-     │                     │                       │                     │  Payment Intent    │
-     │                     │                       │                     │◄─────Created──────┘
+     │                     │                       │                     │  Payment Details   │
+     │                     │                       │                     │◄───────────────────┘
      │                     │                       │                     │                    │
-     │                     │                       │     Order with      │                    │
-     │                     │                       │◄───Payment Intent───┘                    │
+     │                     │                       │   Checkout Data     │                    │
+     │                     │                       │◄─(incl. payment)────┘                    │
      │                     │                       │                     │                    │
-     │                     │     Order with        │                     │                    │
-     │                     │◄───Payment Intent─────┘                     │                    │
+     │                     │   Checkout Data       │                     │                    │
+     │                     │◄──(incl. payment)─────┘                     │                    │
      │                     │                       │                     │                    │
      │   Redirect to       │                       │                     │                    │
      │◄──Payment Page──────┘                       │                     │                    │
@@ -303,145 +184,132 @@ GET /api/pages/home?locale=nl_NL
      │                     │                       │                     │  Payment Webhook   │
      │                     │                       │                     │◄───Confirmation────┘
      │                     │                       │                     │                    │
-     │                     │                       │                     │  Update Order      │
-     │                     │                       │                     │──Status──────────►│
+     │                     │                       │ Create/Update Order │                    │
+     │                     │                       │───────────────────►│                    │
      │                     │                       │                     │                    │
      │  Redirect to        │                       │                     │                    │
      │◄─Order Confirmation─┘                       │                     │                    │
      │                     │                       │                     │                    │
 ┌────┴────┐          ┌─────┴──────┐          ┌─────┴─────┐          ┌────┴───┐          ┌─────┴─────┐
-│  User   │          │  Frontend  │          │API Gateway│          │Medusa.js│          │  Payment  │
+│  User   │          │  Frontend  │          │API Gateway│          │ Saleor │          │  Payment  │
 └─────────┘          └────────────┘          └───────────┘          └────────┘          └───────────┘
 ```
 
-### 3. Region/Language Selection
+### 3. Region/Language Selection (Saleor)
 
 ```
-┌─────────┐          ┌────────────┐          ┌───────────┐          ┌────────┐          ┌────────┐
-│  User   │          │  Frontend  │          │API Gateway│          │Medusa.js│          │ Strapi │
-└────┬────┘          └─────┬──────┘          └─────┬─────┘          └────┬───┘          └────┬───┘
-     │  Select Region/Lang  │                       │                     │                    │
-     │────────────────────►│                       │                     │                    │
-     │                     │                       │                     │                    │
-     │                     │  Store Preference     │                     │                    │
-     │                     │──in Cookie/LocalStorage                     │                    │
-     │                     │                       │                     │                    │
-     │                     │  GET /regions/:id     │                     │                    │
-     │                     │─────────────────────►│                     │                    │
-     │                     │                       │                     │                    │
-     │                     │                       │  GET /regions/:id   │                    │
-     │                     │                       │───────────────────►│                    │
-     │                     │                       │                     │                    │
-     │                     │                       │   Region Settings   │                    │
-     │                     │                       │◄───────────────────┘                    │
-     │                     │                       │                     │                    │
-     │                     │    Region Settings    │                     │                    │
-     │                     │◄─────────────────────┘                     │                    │
-     │                     │                       │                     │                    │
-     │                     │  GET /api/site-config │                     │                    │
-     │                     │────?locale=nl_NL─────►│                     │                    │
-     │                     │                       │                     │                    │
-     │                     │                       │ GET /api/site-config│                    │
-     │                     │                       │─────?locale=nl_NL───────────────────────►
-     │                     │                       │                     │                    │
-     │                     │                       │  Localized Settings │                    │
-     │                     │                       │◄────────────────────────────────────────┘
-     │                     │                       │                     │                    │
-     │                     │   Localized Settings  │                     │                    │
-     │                     │◄─────────────────────┘                     │                    │
-     │                     │                       │                     │                    │
-     │  Reload Page with   │                       │                     │                    │
-     │◄─New Region/Lang────┘                       │                     │                    │
-     │                     │                       │                     │                    │
-┌────┴────┐          ┌─────┴──────┐          ┌─────┴─────┐          ┌────┴───┐          ┌────┴───┐
-│  User   │          │  Frontend  │          │API Gateway│          │Medusa.js│          │ Strapi │
-└─────────┘          └────────────┘          └───────────┘          └────────┘          └────────┘
+┌─────────┐          ┌────────────┐          ┌───────────┐          ┌────────┐
+│  User   │          │  Frontend  │          │API Gateway│          │ Saleor │
+└────┬────┘          └─────┬──────┘          └─────┬─────┘          └────┬───┘
+     │  Select Region/Lang  │                       │                     │
+     │────────────────────►│                       │                     │
+     │                     │                       │                     │
+     │                     │  Store Preference     │                     │
+     │                     │──in Cookie/LocalStorage                     │
+     │                     │                       │                     │
+     │                     │  Fetch Data with New  │                     │
+     │                     │───Channel/Lang─────►│                     │
+     │                     │                       │                     │
+     │                     │                       │ Fetch Data with New │
+     │                     │                       │── Channel/Lang────►│
+     │                     │                       │                     │
+     │                     │                       │  Region/Lang Data   │
+     │                     │                       │◄───────────────────┘
+     │                     │                       │                     │
+     │                     │  Region/Lang Data     │                     │
+     │                     │◄─────────────────────┘                     │
+     │                     │                       │                     │
+     │  Reload Page with   │                       │                     │
+     │◄─New Region/Lang────┘                       │                     │
+     │                     │                       │                     │
+┌────┴────┐          ┌─────┴──────┐          ┌─────┴─────┐          ┌────┴───┐
+│  User   │          │  Frontend  │          │API Gateway│          │ Saleor │
+└─────────┘          └────────────┘          └───────────┘          └────────┘
 ```
 
 ## Error Handling Patterns
 
-### 1. API Error Responses
+### 1. API Error Responses (GraphQL)
 
-All REST API errors follow this standardized format:
+GraphQL errors are returned in the `errors` array of the response:
 
 ```json
 {
-  "status_code": 400,
-  "error": "invalid_request",
-  "message": "Invalid product ID format",
-  "details": [
+  "errors": [
     {
-      "field": "product_id",
-      "message": "Must be a valid UUID"
+      "message": "Invalid product ID.",
+      "locations": [ { "line": 2, "column": 3 } ],
+      "path": [ "product" ],
+      "extensions": {
+        "code": "INVALID",
+        "field": "id"
+      }
     }
   ],
-  "request_id": "req_123456"
+  "data": null
 }
 ```
 
 Important considerations for multi-region and multi-language:
-- Error messages should be localized based on the request language
-- Region-specific validation errors should be clearly identified
-- Request IDs should be included for troubleshooting
+- Error messages can be localized using Saleor Apps or custom logic.
+- Channel/language context should be included in logs for troubleshooting.
 
 ### 2. Event Processing Errors
 
-For event-driven communication, error handling includes:
+For event-driven communication via Saleor Webhooks:
 
-- Dead letter queues for failed event processing
-- Event replay capabilities
-- Structured error logging with correlation IDs
-- Alerting for critical event failures
+- Configurable retry policies within Saleor.
+- Detailed logs accessible in Saleor Dashboard/API.
+- Potential use of external message queues for guaranteed delivery if needed.
 
 ### 3. Frontend Error Handling
 
 The frontend application implements:
 
-- Global error boundaries with fallback UI
-- Localized error messages
-- Automatic retry for transient API errors
-- Offline capability with optimistic updates
-- Error telemetry for monitoring
+- Global error boundaries with fallback UI.
+- User-friendly error messages (potentially localized).
+- Handling of GraphQL errors from Saleor.
+- Offline capability with optimistic updates.
+- Error telemetry for monitoring.
 
 ## Security Patterns
 
 ### 1. Authentication Flows
 
-**Customer Authentication**:
-- JWT-based authentication
-- Secure HTTP-only cookies
-- CSRF protection
-- Region-aware login endpoints
+**Customer Authentication**: 
+- Saleor JWT-based authentication.
+- Secure HTTP-only cookies for tokens.
+- CSRF protection handled by Saleor.
+- Cross-domain authentication setup may require custom domain configuration.
 
 **API Authentication**:
-- API Key authentication for service-to-service
-- Rate limiting per API key
-- Scoped access based on service needs
+- Saleor Apps or Service Accounts for service-to-service communication.
+- Fine-grained permissions defined in Saleor.
 
 ### 2. Data Protection
 
 **Personal Data**:
-- Encryption at rest for sensitive data
-- Region-specific data storage when required by regulations
-- Anonymization for analytics and reporting
-- Structured logging with PII redaction
+- Handled according to Saleor's data model and GDPR features.
+- Encryption at rest for sensitive data (database level).
+- Anonymization features in Saleor.
+- Structured logging with PII considerations.
 
 ## Caching Strategy
 
 ### 1. CDN Caching
 
-- Region-specific edge locations
-- Cache control headers based on content type
-- Separate cache keys for different languages
-- Cache invalidation on content update
+- Region-specific edge locations.
+- Cache control headers from Next.js/Saleor.
+- Vary caching based on `Accept-Language` and potentially channel/domain.
+- Cache invalidation triggered by Saleor webhooks or manual actions.
 
-### 2. API Response Caching
+### 2. API Response Caching (GraphQL)
 
-- Cache hierarchies with different TTLs
-- Cache varying by language and region
-- Public vs. private cache designation
-- Conditional requests with ETag/If-None-Match
+- Utilize caching within Apollo Client or similar libraries.
+- Leverage Saleor's built-in caching where applicable.
+- Consider edge caching for public GraphQL queries.
+- Cache varying by language and channel.
 
 ## Conclusion
 
-This document outlines the communication patterns between all system components for the Statamic to Medusa.js migration, with specific attention to supporting multiple regions and languages. These patterns provide a foundation for implementation teams to build a cohesive, maintainable system that meets the multi-region and multi-language requirements of the project. 
+This document outlines the updated communication patterns for the Statamic to Saleor migration, focusing on Saleor's GraphQL API and event system. These patterns provide a foundation for building a cohesive system that meets the multi-region and multi-language requirements using the Saleor platform. 

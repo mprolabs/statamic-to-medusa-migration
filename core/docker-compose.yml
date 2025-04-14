@@ -1,0 +1,64 @@
+version: '3.3'
+
+services:
+  api:
+    image: ghcr.io/saleor/saleor:3.20.0
+    restart: unless-stopped
+    container_name: saleor_api
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - redis
+    environment:
+      - SECRET_KEY=changeme
+      - DATABASE_URL=postgres://saleor:saleor@db/saleor
+      - DEFAULT_FROM_EMAIL=noreply@example.com
+      - REDIS_URL=redis://redis:6379/0
+      - ALLOWED_HOSTS=localhost,api
+      - DEBUG=True
+    volumes:
+      - ./saleor:/app/saleor:Z
+      - ./templates:/app/templates:Z
+      - ./static:/app/static:Z
+      - ./media:/app/media:Z
+
+  dashboard:
+    image: ghcr.io/saleor/saleor-dashboard:3.20.0
+    restart: unless-stopped
+    container_name: saleor_dashboard
+    ports:
+      - 9000:80
+    environment:
+      - API_URL=http://localhost:8000/graphql/
+      - APP_MOUNT_URI=/dashboard/
+      - STATIC_URL=http://localhost:9000/dashboard/
+
+  db:
+    image: postgres:13
+    restart: unless-stopped
+    container_name: saleor_postgres
+    volumes:
+      - saleor-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=saleor
+      - POSTGRES_PASSWORD=saleor
+      - POSTGRES_DB=saleor
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U saleor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.0
+    restart: unless-stopped
+    container_name: saleor_redis
+    volumes:
+      - saleor-redis:/data
+
+volumes:
+  saleor-db:
+    driver: local
+  saleor-redis:
+    driver: local
