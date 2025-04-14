@@ -9,11 +9,13 @@ dev-debug.log
 # Dependency directories
 node_modules/
 public_html/
+docs/vendor/
 # Environment variables
 .env
 
 # Editor directories and files
 .idea
+.jekyll-cache
 .vscode
 *.suo
 *.ntvs*

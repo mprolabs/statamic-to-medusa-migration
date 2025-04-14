@@ -1,0 +1,121 @@
+@startuml Saleor Multi-Region Architecture
+
+' Define styles
+skinparam component {
+  BackgroundColor #F8F9FA
+  BorderColor #6C757D
+}
+
+skinparam package {
+  BackgroundColor #E6F3FF
+  BorderColor #0D6EFD
+}
+
+skinparam database {
+  BackgroundColor #F8F0FF
+  BorderColor #6F42C1
+}
+
+title Saleor Multi-Region Architecture with Channel System
+
+' Domains
+package "Domain Routing" {
+  [domain-nl.com] as DomainNL
+  [domain-be.com] as DomainBE
+  [domain-de.com] as DomainDE
+}
+
+' CDN
+package "CDN / Edge Caching" {
+  [CDN Distribution] as CDN
+}
+
+' Next.js Storefronts
+package "Next.js Storefront" {
+  [Region/Language Detection] as RegionDetection
+  
+  package "Storefronts" {
+    [NL Storefront] as StoreNL
+    [BE Storefront] as StoreBE
+    [DE Storefront] as StoreDE
+  }
+  
+  [Apollo GraphQL Client] as ApolloClient
+  [i18n Support] as i18n
+}
+
+' Saleor
+package "Saleor Core" {
+  [GraphQL API] as API
+  
+  package "Channels" {
+    [Netherlands Channel] as ChannelNL
+    [Belgium Channel] as ChannelBE
+    [Germany Channel] as ChannelDE
+  }
+  
+  [Channel Management] as ChannelMgmt
+  [Translation System] as Translations
+}
+
+' Database
+database "PostgreSQL" as DB {
+  [Products & Prices] as Products
+  [Region-Specific Data] as RegionData
+  [Multi-Language Content] as LanguageContent
+}
+
+' Connections
+DomainNL --> CDN
+DomainBE --> CDN
+DomainDE --> CDN
+
+CDN --> RegionDetection
+
+RegionDetection --> StoreNL
+RegionDetection --> StoreBE
+RegionDetection --> StoreDE
+
+StoreNL --> ApolloClient
+StoreBE --> ApolloClient
+StoreDE --> ApolloClient
+
+StoreNL --> i18n
+StoreBE --> i18n
+StoreDE --> i18n
+
+ApolloClient --> API
+
+API --> ChannelMgmt
+API --> Translations
+
+ChannelMgmt --> ChannelNL
+ChannelMgmt --> ChannelBE
+ChannelMgmt --> ChannelDE
+
+ChannelNL --> Products
+ChannelBE --> Products
+ChannelDE --> Products
+
+ChannelNL --> RegionData
+ChannelBE --> RegionData
+ChannelDE --> RegionData
+
+Translations --> LanguageContent
+
+note right of RegionDetection
+  Domain/URL-based region detection 
+  with language preference cookie
+end note
+
+note right of ChannelMgmt
+  Each channel represents a separate region
+  with specific pricing, tax, and shipping
+end note
+
+note right of Translations
+  Multi-language content managed through
+  Saleor's Translation system
+end note
+
+@enduml 

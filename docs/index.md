@@ -1,67 +1,70 @@
 ---
-layout: default
 title: Home
-description: Documentation for the Statamic to Saleor migration project with multi-site, multi-region, and multi-language capabilities
+layout: default
+nav_order: 1
+last_updated: June 26, 2024
 ---
 
-# Statamic to Saleor Migration
+# Statamic to Saleor Migration Documentation
 
-## Overview
-This documentation covers the migration process from Statamic CMS with Simple Commerce to Saleor, focusing on implementing multi-site, multi-region, and multi-language capabilities. The project aims to create a more scalable and maintainable e-commerce solution while preserving all existing functionality.
+This documentation outlines the migration process from Statamic CMS with Simple Commerce to Saleor headless commerce platform.
 
 ## Key Features
 
-### Multi-Region Support
-- Support for 3 distinct domains/regions (Netherlands, Belgium, Germany)
-- Region-specific pricing, tax rules, and shipping options
-- Currency handling (EUR with regional variations)
-- Region-specific payment providers
+- **Multi-region support**: Three separate domains (Netherlands, Belgium, Germany)
+- **Multi-language content**: Support for Dutch and German
+- **Headless architecture**: Clear separation between front-end and back-end
+- **Improved performance**: Leveraging modern technologies for better performance
+- **Enhanced SEO**: Better support for region and language-specific SEO
+- **Streamlined content management**: Integration with Strapi CMS for enhanced content capabilities
 
-### Multi-Language Support
-- Support for multiple languages across all storefronts
-- Language-specific content management
-- SEO optimization for all language variants
-- Language detection and switching capabilities
+## Documentation Sections
 
-### E-commerce Functionality
-- Complete product catalog migration
-- Order management and fulfillment
-- Customer accounts and profiles
-- Cart and checkout processes
-- Payment provider integration
+### Architecture Documentation
 
-## Documentation Contents
+- [System Architecture Overview](architecture/)
+- [Architecture Diagram](architecture/architecture-diagram)
+- [API Documentation](architecture/api)
+- [Data Flow Documentation](architecture/data-flow)
 
-- [Architecture](architecture/index.md)
-  - [System Architecture](architecture/index.md)
-  - [Architecture Diagrams](architecture/diagrams/index.md)
-  - [API Documentation](architecture/api.md)
-  - [Data Flow](architecture/data-flow.md)
-- [Migration Process](migration/index.md)
-  - [Migration Strategy](migration/strategy.md)
-  - [Data Mapping](migration/data-mapping.md)
-  - [Content Migration](migration/content-migration.md)
-  - [Testing and Validation](migration/testing.md)
-- [Multi-Region & Multi-Language](multi-region-language/index.md)
-  - [Region Configuration](multi-region-language/region-configuration.md)
-  - [Language Implementation](multi-region-language/language-implementation.md)
-  - [Domain-Specific Setup](multi-region-language/domain-setup.md)
-  - [SEO Considerations](multi-region-language/seo.md)
-- [Development Guide](development/index.md)
-  - [Setup Instructions](development/setup.md)
-  - [Local Development](development/local-development.md)
-  - [Extending Functionality](development/extending.md)
-  - [Deployment Process](development/deployment.md)
+### Migration Documentation
+
+- [Migration Strategy](migration/)
+- [Data Migration Guide](migration/data-migration)
+- [Content Migration Guide](migration/content-migration)
+- [User Migration Guide](migration/user-migration)
+
+### Multi-Region and Multi-Language Support
+
+- [Multi-Region Setup](multi-region-language/)
+- [Multi-Language Implementation](multi-region-language/multi-language)
+- [Currency and Tax Configuration](multi-region-language/currency-tax)
+- [Domain-Specific Settings](multi-region-language/domain-settings)
+
+### Development Documentation
+
+- [Development Environment Setup](development/)
+- [Local Development Guide](development/local-development)
+- [Testing Strategy](development/testing)
+- [Deployment Guide](development/deployment)
 
 ## Project Status
-The project is currently in the planning and initial implementation phase, with a focus on validating the technical approach for multi-region and multi-language support using Saleor's Channels feature.
 
-## Getting Started
-For new team members, start by reviewing the [Architecture](architecture/index.md) section to understand the system structure, then proceed to the relevant documentation based on your assigned tasks.
+The project is currently in the **Proof of Concept** phase. We are validating Saleor's capabilities for our specific requirements, with a focus on multi-region and multi-language support.
 
-## Workflow Test
-This line was added to test the GitHub workflow triggering.
+## Contributing to the Documentation
+
+To contribute to this documentation:
+
+1. Clone the repository
+2. Create a new branch for your changes
+3. Make your changes to the relevant markdown files
+4. Submit a pull request
+
+## Contact
+
+For questions or issues with the documentation, please contact the project team.
 
 ---
 
-*Last updated: June 25, 2024* 
+*Last updated: {{ page.last_updated }}* 

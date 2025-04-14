@@ -9,8 +9,9 @@ We are in the **Proof of Concept phase** of our migration project from Statamic 
 4. Explore data migration approaches from Statamic/Simple Commerce to Saleor
 
 ## Recent Changes
-- Shifted technology focus from Medusa.js/Strapi combination to Saleor
-- Created project structure with `api`, `cms`, and `storefront` directories
+- Updated architecture diagram documentation to properly use Jekyll's site.baseurl format
+- Updated TaskMaster tasks to align with Saleor-based migration project
+- Created project structure with `saleor-project/core` and `saleor-project/storefront` directories
 - Updated architecture diagrams to reflect Saleor-based approach
 - Initiated proof of concept implementation of Saleor's Channel system for multi-region support
 - Started exploring Saleor's translation features for multi-language support
@@ -37,14 +38,16 @@ We are in the **Proof of Concept phase** of our migration project from Statamic 
 - Maintaining consistent pricing across regions with different VAT rates
 
 ## Current Environment
-- Empty project structure established but not yet populated
+- Project structure established in `saleor-project` with `core` and `storefront` directories
 - Architecture diagrams updated for Saleor implementation
 - Development environment under preparation
+- Documentation site implemented with Jekyll/Just the Docs for project documentation
 
 ## Timeline Status
 - **March 15, 2023**: Project initiated
 - **April 1, 2023**: Initial technical assessment completed
 - **April 15, 2023**: Technology stack finalized with shift to Saleor
+- **April 25, 2023**: Updated architecture documentation and task definitions
 - **Current**: Proof of concept implementation
 
 ## Key Stakeholders

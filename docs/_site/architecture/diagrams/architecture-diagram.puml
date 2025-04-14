@@ -1,0 +1,117 @@
+@startuml Saleor Architecture Diagram
+
+' Define styles for each layer
+skinparam component {
+  BackgroundColor<<Client>> #F8F9FA
+  BorderColor<<Client>> #6C757D
+  BackgroundColor<<API>> #E6F3FF
+  BorderColor<<API>> #0D6EFD
+  BackgroundColor<<Workflow>> #FFF0E6
+  BorderColor<<Workflow>> #FF7F41
+  BackgroundColor<<Module>> #E6F9F7
+  BorderColor<<Module>> #20C997
+  BackgroundColor<<DataStore>> #F8F0FF
+  BorderColor<<DataStore>> #6F42C1
+  BackgroundColor<<Content>> #F0F7DF
+  BorderColor<<Content>> #7CB518
+  BackgroundColor<<Migration>> #FFE6ED
+  BorderColor<<Migration>> #E83E8C
+}
+
+' Title
+title Saleor Architecture Diagram for Multi-Region/Multi-Language Migration
+
+' Actors
+actor "Storefront User" as StoreUser
+actor "Admin User" as AdminUser
+
+' Client Layer
+package "Client Layer" {
+  component [Storefront\n(Next.js)] as Storefront <<Client>>
+  component [Admin Dashboard\n(Saleor Dashboard)] as AdminDashboard <<Client>>
+}
+
+' HTTP Layer
+package "API Layer (GraphQL)" {
+  component [GraphQL API] as API <<API>>
+  component [Session Management\nJWT-based Auth] as Session <<API>>
+}
+
+' Workflow Layer
+package "Workflow Layer" {
+  component [Product Workflows] as ProductWorkflow <<Workflow>>
+  component [Order Workflows] as OrderWorkflow <<Workflow>>
+  component [Customer Workflows] as CustomerWorkflow <<Workflow>>
+  component [Payment Workflows] as PaymentWorkflow <<Workflow>>
+}
+
+' Module Layer
+package "Module Layer" {
+  component [Product Module] as ProductModule <<Module>>
+  component [Order Module] as OrderModule <<Module>>
+  component [Customer Module] as CustomerModule <<Module>>
+  component [Payment Module] as PaymentModule <<Module>>
+  component [Inventory Module] as InventoryModule <<Module>>
+  
+  component [Channel Management\n(Multi-Region)] as ChannelModule <<Module>>
+  component [Translation Support\n(Multi-Language)] as TranslationModule <<Module>>
+}
+
+' Data Store Layer
+package "Data Store Layer" {
+  database "PostgreSQL" as PostgreSQL <<DataStore>>
+  database "Redis\n(Cache)" as Redis <<DataStore>>
+}
+
+' Content Management
+package "Content Management" {
+  component [Saleor Content] as Content <<Content>>
+}
+
+' Data Migration
+package "Data Migration" {
+  component [Migration Tools] as MigrationTools <<Migration>>
+  component [Statamic Extractor] as StatamicExtractor <<Migration>>
+  component [Data Transformation] as DataTransform <<Migration>>
+  component [Saleor Importer] as SaleorImporter <<Migration>>
+}
+
+' Connections
+StoreUser --> Storefront
+AdminUser --> AdminDashboard
+
+Storefront --> API
+AdminDashboard --> API
+
+API --> Session
+API --> ProductWorkflow
+API --> OrderWorkflow
+API --> CustomerWorkflow
+API --> PaymentWorkflow
+
+ProductWorkflow --> ProductModule
+OrderWorkflow --> OrderModule
+CustomerWorkflow --> CustomerModule
+PaymentWorkflow --> PaymentModule
+OrderWorkflow --> InventoryModule
+
+ProductModule --> PostgreSQL
+OrderModule --> PostgreSQL
+CustomerModule --> PostgreSQL
+PaymentModule --> PostgreSQL
+InventoryModule --> PostgreSQL
+
+ProductModule --> Redis
+OrderModule --> Redis
+
+ProductModule --> ChannelModule
+ProductModule --> TranslationModule
+Content --> TranslationModule
+
+MigrationTools --> StatamicExtractor
+MigrationTools --> DataTransform
+MigrationTools --> SaleorImporter
+DataTransform --> SaleorImporter
+SaleorImporter --> PostgreSQL
+
+@enduml 

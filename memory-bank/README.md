@@ -19,7 +19,35 @@ graph TD
     style Visual fill:#d9b3ff,stroke:#b366ff
 ```
 
-> **Development Status**: This system is actively under development. Features will be added and optimized over time. If you prefer stability over new features, you may continue using the previous version (v0.1-legacy), but please read about the architectural changes described in the [Memory Bank Upgrade Guide](memory_bank_upgrade_guide.md) to understand the benefits of this new approach.
+> **Development Status**: This system is being used for the Statamic to Saleor Migration project. Current task focus is on architecture documentation and multi-region/multi-language implementation design.
+
+## Current Project: Statamic to Saleor Migration
+
+This Memory Bank is being used to track the migration from Statamic CMS with Simple Commerce to Saleor. The project has the following key requirements:
+
+- **Multi-Region Support**: Implementation of 3 separate domains/stores (Netherlands, Belgium, Germany)
+- **Multi-Language Support**: Content in multiple languages (Dutch, German, French, English) 
+- **Headless Architecture**: Clear separation between frontend and backend
+- **Next.js Storefront**: Modern frontend implementation with App Router
+
+The project is currently in the **Proof of Concept phase**, focusing on validating Saleor's capabilities for multi-region and multi-language support.
+
+### Project Structure
+
+The project is organized into the following directories:
+
+- `saleor-project/core` - Saleor backend implementation
+- `saleor-project/storefront` - Next.js frontend implementation
+- `docs/` - Project documentation including architecture diagrams
+- `memory-bank/` - Development context and progress tracking
+
+### Documentation
+
+Comprehensive documentation is maintained in the `docs/` directory, built with Jekyll and the Just the Docs theme. Key documents include:
+
+- Architecture diagrams (PlantUML source in `docs/architecture/diagrams/`)
+- Multi-region implementation guides
+- Data migration strategy
 
 ## About Memory Bank
 

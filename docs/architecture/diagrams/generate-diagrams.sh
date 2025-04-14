@@ -25,9 +25,22 @@ for puml_file in "$SCRIPT_DIR"/*.puml; do
     # Generate SVG using PlantUML
     java -jar "$SCRIPT_DIR/plantuml.jar" -tsvg "$puml_file"
     
+    # Check for both standard name and any SVG with the title as filename (PlantUML can use @startuml title as filename)
+    generated_svg="$SCRIPT_DIR/$filename_no_ext.svg"
+    title_svg=""
+    
+    # Get title from first line of PUML file
+    title=$(head -n 1 "$puml_file" | grep -o '@startuml.*' | sed 's/@startuml //')
+    if [ -n "$title" ]; then
+      title_svg="$SCRIPT_DIR/$title.svg"
+    fi
+    
     # Move the SVG to assets directory
-    if [ -f "$SCRIPT_DIR/$filename_no_ext.svg" ]; then
-      mv "$SCRIPT_DIR/$filename_no_ext.svg" "../../assets/images/$filename_no_ext.svg"
+    if [ -f "$generated_svg" ]; then
+      mv "$generated_svg" "../../assets/images/$filename_no_ext.svg"
+      echo "  Created ../../assets/images/$filename_no_ext.svg"
+    elif [ -n "$title" ] && [ -f "$title_svg" ]; then
+      mv "$title_svg" "../../assets/images/$filename_no_ext.svg"
       echo "  Created ../../assets/images/$filename_no_ext.svg"
     else
       echo "  Error: SVG not generated for $filename_no_ext"

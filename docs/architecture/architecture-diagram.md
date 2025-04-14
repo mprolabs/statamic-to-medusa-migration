@@ -2,13 +2,15 @@
 layout: default
 title: Architecture Diagram
 description: Visual representation of the Saleor migration project architecture
+parent: Architecture
+nav_order: 2
 ---
 
 # Architecture Diagram
 
 The following diagram illustrates the architecture of our Saleor-based e-commerce platform. This layered architecture follows Saleor best practices while incorporating our specific customizations for multi-region and multi-language support.
 
-![Saleor Architecture Diagram](/assets/images/architecture-diagram.svg)
+![Saleor Architecture Diagram]({{ site.baseurl }}/assets/images/architecture-diagram.svg)
 *Full architecture diagram showing the layered approach of our Saleor implementation*
 
 ## Architecture Layers
@@ -51,12 +53,8 @@ The Module Layer provides domain-specific resource management:
 - **Customer Module**: Manages customer profiles and preferences
 - **Payment Module**: Interfaces with payment providers
 - **Inventory Module**: Tracks product availability and stock levels
-
-Modules abstract the underlying data storage and provide:
-- Data access operations
-- Domain-specific validation
-- Event triggers
-- Internal business logic
+- **Channel Management**: Implements multi-region support through Saleor's Channel system
+- **Translation Support**: Handles multi-language content through Saleor's translation API
 
 ### Data Store Layer
 

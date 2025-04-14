@@ -153,7 +153,7 @@ To minimize risks during the migration:
 
 For more in-depth information on specific aspects of the migration process, refer to:
 
-- [Migration Strategy](strategy.md)
-- [Data Mapping](data-mapping.md)
-- [Content Migration](content-migration.md)
-- [Testing and Validation](testing.md) 
+- [Migration Strategy](strategy)
+- [Data Mapping](data-mapping)
+- [Content Migration](content-migration)
+- [Testing and Validation](testing) 

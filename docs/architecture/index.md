@@ -3,6 +3,9 @@ layout: default
 title: Architecture
 description: System architecture for the Statamic to Saleor migration with multi-region and multi-language support
 include_in_nav: true
+nav_order: 2
+parent: Architecture
+has_children: true
 ---
 
 # System Architecture
@@ -147,4 +150,4 @@ The data flow between components follows these patterns:
 - Backup and disaster recovery procedures
 - Expansion to additional regions and languages
 
-See [Architecture Diagrams](diagrams/index.md) for visual representations of this architecture. 
+See [Architecture Diagram](architecture-diagram) for visual representations of this architecture. 

@@ -1,4 +1,4 @@
-# Updated: 2024-06-25
+# Updated: 2024-06-26
 # Site settings
 title: "Statamic to Saleor Migration"
 description: "Documentation for the migration from Statamic CMS to Saleor headless commerce platform"
@@ -7,32 +7,83 @@ baseurl: "/statamic-to-saleor-migration"
 
 # Build settings
 markdown: kramdown
-remote_theme: pages-themes/cayman@v0.2.0
+remote_theme: just-the-docs/just-the-docs
 plugins:
   - jekyll-remote-theme
   - jekyll-github-metadata
+  - jekyll-seo-tag
 
 # Theme customization
-show_downloads: false
-
-# Theme configuration
-theme: just-the-docs
-color_scheme: light
-
-# Enable or disable the site search
 search_enabled: true
-
-# Set the search token separator for hyphenated-word search
 search_tokenizer_separator: /[\s/]+/
-
-# Heading anchor links appear on hover
 heading_anchors: true
-
-# Enable copy code button for code blocks
 enable_copy_code_button: true
 
+# Color scheme
+color_scheme: light
+
+# Aux links for the upper right navigation
+aux_links:
+  "View on GitHub":
+    - "//github.com/mprolabs/statamic-to-saleor-migration"
+
 # Footer content
-footer_content: "Copyright &copy; 2023 MPROLabs. All rights reserved."
+footer_content: "Copyright &copy; 2024 MPROLabs. All rights reserved."
+
+# Collections (documentation sections)
+collections:
+  architecture:
+    permalink: "/:collection/:path/"
+    output: true
+  migration:
+    permalink: "/:collection/:path/"
+    output: true
+  multi-region-language:
+    permalink: "/:collection/:path/"
+    output: true
+  development:
+    permalink: "/:collection/:path/"
+    output: true
+
+# Default front matter
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+  - scope:
+      path: "architecture"
+    values:
+      layout: "default"
+      permalink: /:collection/:path/
+  - scope:
+      path: "migration"
+    values:
+      layout: "default"
+      permalink: /:collection/:path/
+  - scope:
+      path: "multi-region-language"
+    values:
+      layout: "default"
+      permalink: /:collection/:path/
+  - scope:
+      path: "development"
+    values:
+      layout: "default"
+      permalink: /:collection/:path/
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - .git
+  - .github
+  - README.md
+
+# Include additional directories
+include:
+  - assets
 
 # Navigation structure
 nav:
@@ -61,56 +112,9 @@ callouts:
 # ga_tracking: UA-5555555-5
 # ga_tracking_anonymize_ip: true
 
-# Exclude from processing
-exclude:
-  - Gemfile
-  - Gemfile.lock
-  - node_modules
-  - vendor
-  - .git
-  - .github
-
 # Navigation
 header_pages:
   - architecture/index.md
   - migration/index.md
   - multi-region-language/index.md
-  - development/index.md
-
-# Include additional directories
-include:
-  - assets
-  - _data
-
-# Define collections if needed
-collections:
-  architecture:
-    permalink: "/:collection/:path/"
-    output: true
-  migration:
-    permalink: "/:collection/:path/"
-    output: true
-  development:
-    permalink: "/:collection/:path/"
-    output: true
-
-# Default front matter for pages
-defaults:
-  -
-    scope:
-      path: ""
-      type: "architecture"
-    values:
-      layout: "default"
-  -
-    scope:
-      path: ""
-      type: "migration"
-    values:
-      layout: "default"
-  -
-    scope:
-      path: ""
-      type: "development"
-    values:
-      layout: "default" 
+  - development/index.md 
