@@ -1,9 +1,9 @@
 # Updated: 2024-06-25
 # Site settings
-title: Statamic to Saleor Migration
-description: Technical documentation for the Statamic to Saleor migration project with multi-region and multi-language support
-baseurl: "/bolen-ana-pro"
+title: "Statamic to Saleor Migration"
+description: "Documentation for the migration from Statamic CMS to Saleor headless commerce platform"
 repository: mprolabs/statamic-to-saleor-migration
+baseurl: "/statamic-to-saleor-migration"
 
 # Build settings
 markdown: kramdown
@@ -15,36 +15,35 @@ plugins:
 # Theme customization
 show_downloads: false
 
-# Default layout
-defaults:
-  -
-    scope:
-      path: ""
-    values:
-      layout: "default"
-
-# Color scheme - not used by Cayman but kept for reference
+# Theme configuration
+theme: just-the-docs
 color_scheme: light
 
 # Enable or disable the site search
 search_enabled: true
 
-# Aux links for the upper right navigation
-aux_links:
-  "Project Repository":
-    - "https://github.com/mprolabs/statamic-to-saleor-migration"
+# Set the search token separator for hyphenated-word search
+search_tokenizer_separator: /[\s/]+/
 
-# Makes Aux links open in a new tab
-aux_links_new_tab: true
-
-# Heading anchor links
+# Heading anchor links appear on hover
 heading_anchors: true
 
+# Enable copy code button for code blocks
+enable_copy_code_button: true
+
 # Footer content
-footer_content: "Copyright &copy; 2024. All rights reserved."
+footer_content: "Copyright &copy; 2023 MPROLabs. All rights reserved."
 
 # Navigation structure
-# Navigation structure configuration can be added here if needed
+nav:
+  - title: Home
+    url: /
+  - title: Architecture
+    url: /architecture/
+  - title: Migration
+    url: /migration/
+  - title: Development
+    url: /development/
 
 # Callouts
 callouts:
@@ -81,4 +80,37 @@ header_pages:
 # Include additional directories
 include:
   - assets
-  - _data 
+  - _data
+
+# Define collections if needed
+collections:
+  architecture:
+    permalink: "/:collection/:path/"
+    output: true
+  migration:
+    permalink: "/:collection/:path/"
+    output: true
+  development:
+    permalink: "/:collection/:path/"
+    output: true
+
+# Default front matter for pages
+defaults:
+  -
+    scope:
+      path: ""
+      type: "architecture"
+    values:
+      layout: "default"
+  -
+    scope:
+      path: ""
+      type: "migration"
+    values:
+      layout: "default"
+  -
+    scope:
+      path: ""
+      type: "development"
+    values:
+      layout: "default" 

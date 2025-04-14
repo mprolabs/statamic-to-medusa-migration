@@ -1,0 +1,93 @@
+@startuml Statamic to Saleor Data Migration
+
+' Define styles
+skinparam component {
+  BackgroundColor #F8F9FA
+  BorderColor #6C757D
+}
+
+skinparam database {
+  BackgroundColor #F8F0FF
+  BorderColor #6F42C1
+}
+
+skinparam arrow {
+  Color #0D6EFD
+}
+
+title Statamic to Saleor Data Migration Process
+
+' Source Systems
+package "Source: Statamic" {
+  component "Statamic CMS" as StatamicCMS
+  component "Simple Commerce" as SimpleCommerce
+  database "Statamic Files" as StatamicFiles
+  
+  StatamicCMS --> StatamicFiles
+  SimpleCommerce --> StatamicFiles
+}
+
+' Migration Components
+package "Migration Tools" {
+  component "Data Extractor" as Extractor
+  component "Schema Mapper" as SchemaMapper
+  component "Language Processor" as LanguageProcessor
+  component "Data Transformer" as Transformer
+  component "Region Configurator" as RegionConfig
+  component "Saleor Importer" as Importer
+  
+  Extractor -[#0D6EFD]-> SchemaMapper : Raw Data
+  SchemaMapper -[#0D6EFD]-> LanguageProcessor : Mapped Schema
+  LanguageProcessor -[#0D6EFD]-> Transformer : Language Variants
+  Transformer -[#0D6EFD]-> RegionConfig : Transformed Data
+  RegionConfig -[#0D6EFD]-> Importer : Region-Specific Data
+}
+
+' Target System
+package "Target: Saleor" {
+  component "Saleor GraphQL API" as SaleorAPI
+  component "Channel Management" as ChannelMgmt
+  component "Translation System" as TranslationSystem
+  database "PostgreSQL" as PostgreSQL
+  
+  SaleorAPI --> ChannelMgmt
+  SaleorAPI --> TranslationSystem
+  ChannelMgmt --> PostgreSQL
+  TranslationSystem --> PostgreSQL
+}
+
+' Data Flow
+StatamicFiles -[#0D6EFD]-> Extractor : Extract Data
+Importer -[#0D6EFD]-> SaleorAPI : Import Data
+
+' Notes
+note left of Extractor
+  Extracts products, categories,
+  customers, and orders from
+  Statamic content files
+end note
+
+note right of SchemaMapper
+  Maps Statamic data structures
+  to Saleor data models
+end note
+
+note right of LanguageProcessor
+  Processes multi-language content
+  and prepares for Saleor's 
+  translation system
+end note
+
+note right of RegionConfig
+  Configures data for multiple
+  regions using Saleor's
+  Channel system
+end note
+
+note left of Importer
+  Uses Saleor's GraphQL API
+  to import data with proper
+  region and language context
+end note
+
+@enduml 

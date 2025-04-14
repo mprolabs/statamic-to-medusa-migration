@@ -442,4 +442,4 @@ The technical implementation is in the **Proof of Concept** phase, focusing on:
 - [Next.js Documentation](https://nextjs.org/docs)
 - [GraphQL Documentation](https://graphql.org/learn/)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- [Statamic Documentation](https://statamic.dev/) 
+- [Statamic Documentation](https://statamic.dev/)
