@@ -57,26 +57,18 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0'
+          ruby-version: '3.2'
           bundler-cache: false
           working-directory: './docs'
-      # Install specific bundler version
-      - name: Install Bundler 1.17.2
-        run: |
-          cd docs
-          gem install bundler:1.17.2
       # Force install Google Protobuf with Ruby platform
       - name: Force Google Protobuf Ruby Platform
         run: |
           cd docs
-          gem install google-protobuf -v 3.21.12 --platform=ruby
+          gem install google-protobuf -v 3.24.0 --platform=ruby
       - name: Build with Jekyll
         run: |
           cd docs
           bundle config set --local path 'vendor/bundle'
-          # Install a compatible version of ffi
-          gem install ffi -v 1.15.5 --platform=ruby
-          bundle update ffi
           bundle install --no-deployment
           # Extract repository name without owner
           REPO_NAME=$(echo "${{ github.repository }}" | awk -F/ '{print $2}')
