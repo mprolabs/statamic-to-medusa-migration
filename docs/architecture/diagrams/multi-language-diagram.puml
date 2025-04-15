@@ -1,128 +1,141 @@
-@startuml Saleor Multi-Language Architecture
+@startuml Multi-Language Implementation
 
-' Define styles
+' Define styles for different components
+!define Client #E1F5FE-#B3E5FC
+!define Frontend #E8F5E9-#C8E6C9
+!define API #F3E5F5-#E1BEE7
+!define Store #FFF3E0-#FFE0B2
+!define Database #FAFAFA-#F5F5F5
+!define Translation #FFEBEE-#FFCDD2
+!define Migration #FFF8E1-#FFE082
+
 skinparam component {
-  BackgroundColor<<Client>> #F8F9FA
-  BorderColor<<Client>> #6C757D
-  BackgroundColor<<Language>> #E6CCFF
-  BorderColor<<Language>> #7952B3
-  BackgroundColor<<API>> #E6F3FF
-  BorderColor<<API>> #0D6EFD
-  BackgroundColor<<Store>> #E6F9F7
-  BorderColor<<Store>> #20C997
-  BackgroundColor<<Database>> #F8F0FF
-  BorderColor<<Database>> #6F42C1
-  BackgroundColor<<Content>> #F0F7DF
-  BorderColor<<Content>> #7CB518
+    BackgroundColor white
+    BorderColor black
+    ArrowColor black
 }
 
-title Saleor Multi-Language Implementation Architecture
+skinparam note {
+    BackgroundColor #FFFDE7
+    BorderColor #FBC02D
+}
+
+title Saleor Multi-Language Architecture
 
 ' Client Layer
-package "Client Layer" {
-  component [User Browser] as Browser <<Client>>
-  component [Language Preference Cookie] as LangCookie <<Client>>
+package "Client Layer" as ClientLayer <<Client>> {
+    component "User Browser" as Browser
+    component "Language Preference Cookie" as LangCookie
+    component "Accept-Language Header" as AcceptHeader
 }
 
 ' Frontend Layer
-package "Next.js Frontend Layer" {
-  component [Language Detection] as LangDetection <<Language>>
-  component [Language Middleware] as LangMiddleware <<Language>>
-  component [Next.js i18n] as i18n <<Language>>
-  component [Language Switcher UI] as LangSwitcher <<Language>>
-  component [Translated UI Components] as TranslatedUI <<Language>>
-  component [Language URL Structure\n(/nl/, /de/, etc.)] as LangURL <<Language>>
-  
-  note right of LangDetection
-    Detects user's preferred language from:
-    1. URL path segment
-    2. Cookie
-    3. Browser settings
-  end note
-  
-  note right of LangURL
-    SEO-friendly URL structure with
-    language as a path segment
-  end note
+package "Frontend Layer" as FrontendLayer <<Frontend>> {
+    component "Language Detection\n(Middleware)" as LangDetect
+    component "Next.js i18n" as NextI18n
+    component "Language Switcher UI" as LangSwitcher
+    component "Translated UI Components" as TranslatedUI
+    component "Language URL Structure\n(/nl/, /de/, /en/)" as LangURL
+    
+    note bottom of LangDetect
+        Detects user language preference from:
+        1. URL path (/nl/, /de/, etc.)
+        2. Cookie (if previously set)
+        3. Accept-Language header
+    end note
+    
+    note bottom of LangURL
+        SEO-friendly URL structure with 
+        language code in path for all pages
+    end note
 }
 
 ' API Layer
-package "API Layer" {
-  component [GraphQL API] as API <<API>>
-  component [Language Context] as LangContext <<Language>>
-  component [GraphQL with Language Variables] as GraphQLLang <<API>>
+package "API Layer" as APILayer <<API>> {
+    component "GraphQL API" as GraphQL
+    component "Language Context" as LangContext
+    component "GraphQL with Language Variables" as GraphQLLang
 }
 
 ' Store Layer
-package "Saleor Core Layer" {
-  component [Translation Management] as TranslationMgmt <<Language>>
-  component [Product Module] as ProductModule <<Store>>
-  component [Content Module] as ContentModule <<Store>>
-  component [SEO Management] as SEOModule <<Store>>
+package "Store Layer" as StoreLayer <<Store>> {
+    component "Translation Management" as TransMgmt
+    component "Product Module" as ProductModule
+    component "Content Module" as ContentModule
+    component "SEO Management" as SEOMgmt
 }
 
 ' Database Layer
-package "Database Layer" {
-  database "PostgreSQL" as DB <<Database>> {
-    [Base Language Content] as BaseContent
-    [Translation Entries] as Translations
-    [Language Metadata] as LangMeta
-  }
+package "Database Layer" as DatabaseLayer <<Database>> {
+    database "PostgreSQL" as PostgreSQL {
+        component "Base Language Content" as BaseContent
+        component "Translation Entries" as TransEntries {
+            note right
+                Contains:
+                - Related object ID
+                - Field name
+                - Language code
+                - Translated content
+            end note
+        }
+        component "Language Metadata" as LangMeta
+    }
+}
+
+' Migration Layer
+package "Migration Layer" as MigrationLayer <<Migration>> {
+    component "Statamic Translation Parser" as StatamicParser
+    component "Translation Mapper" as TransMapper
+    component "Saleor Translation Importer" as TransImporter
+    
+    note bottom of StatamicParser
+        Extracts translations from:
+        - Language-specific content directories
+        - YAML front matter
+        - Simple Commerce product data
+    end note
 }
 
 ' Connections
-Browser --> LangDetection
-Browser --> LangCookie
-LangCookie --> LangDetection
+Browser --> LangDetect
+Browser --> LangSwitcher
+Browser --> AcceptHeader
+LangDetect --> LangCookie: Sets/Reads
+LangDetect --> LangContext: Provides language code
+LangDetect --> LangURL: Reads language from URL
+LangSwitcher --> LangURL: Updates URL with language
+NextI18n --> TranslatedUI: Provides translations
+LangContext --> GraphQLLang: Injects language parameter
+GraphQLLang --> TransMgmt: Fetches translations
+TransMgmt --> ProductModule: Applies translations to products
+TransMgmt --> ContentModule: Applies translations to content
+TransMgmt --> SEOMgmt: Applies translations to SEO fields
+TransMgmt --> TransEntries: Stores/retrieves translations
+TransMgmt --> BaseContent: References original content
+StatamicParser --> TransMapper: Provides extracted translations
+TransMapper --> TransImporter: Maps to Saleor format
+TransImporter --> TransEntries: Imports translations
 
-LangDetection --> LangMiddleware
-LangMiddleware --> i18n
-LangMiddleware --> LangURL
-LangURL --> GraphQLLang
-
-TranslatedUI --> i18n
-LangSwitcher --> LangDetection
-LangSwitcher --> LangURL
-
-i18n --> GraphQLLang
-GraphQLLang --> API
-LangMiddleware --> LangContext
-LangContext --> API
-
-API --> TranslationMgmt
-API --> ProductModule
-API --> ContentModule
-API --> SEOModule
-
-TranslationMgmt --> BaseContent
-TranslationMgmt --> Translations
-TranslationMgmt --> LangMeta
-
-ProductModule --> BaseContent
-ProductModule --> Translations
-ContentModule --> BaseContent
-ContentModule --> Translations
-SEOModule --> BaseContent
-SEOModule --> Translations
-
-note bottom of Translations
-  Translation entries store:
-  - Related object ID
-  - Field name
-  - Language code
-  - Translated content
+' Additional notes
+note right of TransMgmt
+    Saleor translation system:
+    - Separate translation objects
+    - Language-specific versions of:
+      * Product names, descriptions
+      * Category names, descriptions
+      * Collection data
+      * Page content
+      * Attribute values
+      * Shipping method names
 end note
 
-note bottom of i18n
-  Provides:
-  - Translation functions
-  - Format handling (dates, numbers)
-  - Right-to-left support
-end note
-
-note bottom of LangContext
-  GraphQL requests always include
-  the current language context
+note right of MigrationLayer
+    Migration considerations:
+    - Map Statamic language directories (nl, de, en)
+      to Saleor translation entries
+    - Preserve SEO content in all languages
+    - Convert rich text formats appropriately
+    - Maintain translation relationships with original content
 end note
 
 @enduml 
