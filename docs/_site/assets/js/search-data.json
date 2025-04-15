@@ -2,541 +2,541 @@
     "doc": "API Details",
     "title": "Saleor API Documentation",
     "content": "The Saleor commerce platform provides a comprehensive GraphQL API for all commerce operations. This document outlines the key API patterns with a focus on multi-region and multi-language support. ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#saleor-api-documentation",
+    "url": "/statamic-to-saleor-migration/architecture/api/#saleor-api-documentation",
     
-    "relUrl": "/:collection/architecture/#saleor-api-documentation"
+    "relUrl": "/architecture/api/#saleor-api-documentation"
   },"1": {
     "doc": "API Details",
     "title": "API Structure",
     "content": "Saleor uses GraphQL as its primary API interface, providing a single endpoint for all operations: . https://[your-saleor-instance]/graphql/ . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#api-structure",
+    "url": "/statamic-to-saleor-migration/architecture/api/#api-structure",
     
-    "relUrl": "/:collection/architecture/#api-structure"
+    "relUrl": "/architecture/api/#api-structure"
   },"2": {
     "doc": "API Details",
     "title": "Authentication",
     "content": "Saleor supports multiple authentication methods: . JWT Authentication . mutation { tokenCreate(email: \"user@example.com\", password: \"password\") { token refreshToken errors { field message } } } . Requesting with Authentication . fetch('https://[your-saleor-instance]/graphql/', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer YOUR_JWT_TOKEN' }, body: JSON.stringify({ query: ` query { me { id email } } ` }) }) . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#authentication",
+    "url": "/statamic-to-saleor-migration/architecture/api/#authentication",
     
-    "relUrl": "/:collection/architecture/#authentication"
+    "relUrl": "/architecture/api/#authentication"
   },"3": {
     "doc": "API Details",
     "title": "Multi-Region Support",
     "content": "Channel-Based API Queries . Saleor implements multi-region support through Channels. Each channel represents a separate region: . query { channels { edges { node { id name slug currencyCode defaultCountry { code country } } } } } . Channel-Specific Queries . Most queries in Saleor support a channel parameter to retrieve data specific to a region: . query { products(channel: \"netherlands\", first: 10) { edges { node { id name pricing { priceRange { start { gross { amount currency } } } } } } } } . Channel-Specific Mutations . When creating or updating data, you can specify the channel context: . mutation { productChannelListingUpdate( id: \"UHJvZHVjdDo0Nw==\", input: { updateChannels: [ { channelId: \"Q2hhbm5lbDox\", # Netherlands channel isPublished: true, visibleInListings: true, isAvailableForPurchase: true, addVariants: [\"UHJvZHVjdFZhcmlhbnQ6MjE3\"] }, { channelId: \"Q2hhbm5lbDoy\", # Belgium channel isPublished: true, visibleInListings: false, isAvailableForPurchase: true, addVariants: [\"UHJvZHVjdFZhcmlhbnQ6MjE3\"] } ] } ) { product { id name } } } . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#multi-region-support",
+    "url": "/statamic-to-saleor-migration/architecture/api/#multi-region-support",
     
-    "relUrl": "/:collection/architecture/#multi-region-support"
+    "relUrl": "/architecture/api/#multi-region-support"
   },"4": {
     "doc": "API Details",
     "title": "Multi-Language Support",
     "content": "Translation Queries . Saleor provides translation capabilities for most content entities: . query { products(first: 5) { edges { node { id name translation(languageCode: NL) { name description } } } } } . Adding Translations . You can add translations for products and other content through mutations: . mutation { productTranslate( id: \"UHJvZHVjdDo0Nw==\", input: { languageCode: DE, name: \"Produktname auf Deutsch\", description: \"Produktbeschreibung auf Deutsch\" } ) { product { id name translations { languageCode name } } } } . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#multi-language-support",
+    "url": "/statamic-to-saleor-migration/architecture/api/#multi-language-support",
     
-    "relUrl": "/:collection/architecture/#multi-language-support"
+    "relUrl": "/architecture/api/#multi-language-support"
   },"5": {
     "doc": "API Details",
     "title": "Core API Endpoints for Multi-Region Support",
     "content": "Products with Channel Context . query { products(first: 10, channel: \"netherlands\") { edges { node { id name description slug pricing { priceRange { start { gross { amount currency } } } } category { name } thumbnail { url } } } } } . Categories with Translations . query { categories(first: 10) { edges { node { id name slug description translation(languageCode: NL) { name description } backgroundImage { url } ancestors(first: 5) { edges { node { id name } } } } } } } . Checkout with Channel Context . # Create checkout with channel context mutation { checkoutCreate( input: { channel: \"netherlands\", lines: [{ variantId: \"UHJvZHVjdFZhcmlhbnQ6Mg==\", quantity: 1 }], email: \"customer@example.com\" } ) { checkout { id token totalPrice { gross { amount currency } } } errors { field message } } } . Orders with Channel Context . query { orders(channel: \"netherlands\", first: 10) { edges { node { id number created status total { gross { amount currency } } lines { productName quantity } } } } } . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#core-api-endpoints-for-multi-region-support",
+    "url": "/statamic-to-saleor-migration/architecture/api/#core-api-endpoints-for-multi-region-support",
     
-    "relUrl": "/:collection/architecture/#core-api-endpoints-for-multi-region-support"
+    "relUrl": "/architecture/api/#core-api-endpoints-for-multi-region-support"
   },"6": {
     "doc": "API Details",
     "title": "Channel-Specific API Patterns",
     "content": "Getting Available Shipping Methods . query { shippingMethods(channel: \"netherlands\") { id name price { amount currency } minimumOrderPrice { amount currency } maximumOrderPrice { amount currency } } } . Getting Available Payment Gateways . query { paymentGateways(channel: \"netherlands\") { id name currencies config { field value } } } . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#channel-specific-api-patterns",
+    "url": "/statamic-to-saleor-migration/architecture/api/#channel-specific-api-patterns",
     
-    "relUrl": "/:collection/architecture/#channel-specific-api-patterns"
+    "relUrl": "/architecture/api/#channel-specific-api-patterns"
   },"7": {
     "doc": "API Details",
     "title": "Recommended API Implementation Patterns",
     "content": "When implementing the frontend to work with Saleor’s API, consider these patterns for multi-region and multi-language support: . 1. Channel Context Awareness . Always include the channel parameter in queries to ensure region-specific data: . const GET_PRODUCTS = gql` query GetProducts($channel: String!) { products(first: 10, channel: $channel) { edges { node { id name # Other fields... } } } } `; // Usage client.query({ query: GET_PRODUCTS, variables: { channel: currentChannel // e.g., \"netherlands\" } }); . 2. Language Context in Queries . Include language code in queries when fetching translations: . const GET_PRODUCT_DETAILS = gql` query GetProductDetails($id: ID!, $channel: String!, $languageCode: LanguageCodeEnum!) { product(id: $id, channel: $channel) { id name description translation(languageCode: $languageCode) { name description } # Other fields... } } `; // Usage client.query({ query: GET_PRODUCT_DETAILS, variables: { id: productId, channel: currentChannel, languageCode: currentLanguage // e.g., \"NL\" } }); . 3. Fallback Strategies . Implement fallback strategies when translations are not available: . // Example React component using translations with fallback function ProductName({ product, languageCode }) { return ( &lt;h1&gt; {product.translation &amp;&amp; product.translation.name ? product.translation.name : product.name} &lt;/h1&gt; ); } . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#recommended-api-implementation-patterns",
+    "url": "/statamic-to-saleor-migration/architecture/api/#recommended-api-implementation-patterns",
     
-    "relUrl": "/:collection/architecture/#recommended-api-implementation-patterns"
+    "relUrl": "/architecture/api/#recommended-api-implementation-patterns"
   },"8": {
     "doc": "API Details",
     "title": "API Documentation References",
     "content": "For complete API documentation, refer to: . | Saleor GraphQL API Documentation | Saleor API Playground | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#api-documentation-references",
+    "url": "/statamic-to-saleor-migration/architecture/api/#api-documentation-references",
     
-    "relUrl": "/:collection/architecture/#api-documentation-references"
+    "relUrl": "/architecture/api/#api-documentation-references"
   },"9": {
     "doc": "API Details",
     "title": "API Details",
     "content": " ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/",
+    "url": "/statamic-to-saleor-migration/architecture/api/",
     
-    "relUrl": "/:collection/architecture/"
+    "relUrl": "/architecture/api/"
   },"10": {
     "doc": "Architecture Diagram",
     "title": "Architecture Diagram",
     "content": "The following diagram illustrates the architecture of our Saleor-based e-commerce platform. This layered architecture follows Saleor best practices while incorporating our specific customizations for multi-region and multi-language support. Full architecture diagram showing the layered approach of our Saleor implementation . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/",
+    "url": "/statamic-to-saleor-migration/architecture/architecture-diagram/",
     
-    "relUrl": "/:collection/architecture/"
+    "relUrl": "/architecture/architecture-diagram/"
   },"11": {
     "doc": "Architecture Diagram",
     "title": "Architecture Layers",
     "content": "Client Layer . The Client Layer consists of applications that interact with our commerce platform: . | Storefront: The customer-facing web application, built with Next.js for optimal performance and SEO | Admin Dashboard: The admin interface for managing products, orders, and content, using Saleor’s built-in Dashboard UI with custom extensions | . API Layer (GraphQL) . The API Layer serves as the entry point for all client requests: . | GraphQL API: Saleor’s comprehensive GraphQL API organized by domain (products, orders, customers, etc.) | Session Management: JWT-based authentication for maintaining state | . Workflow Layer . The Workflow Layer contains the business logic of the application: . | Product Workflows: Encapsulates product management operations | Order Workflows: Handles order creation, processing, and fulfillment | Customer Workflows: Manages customer operations and profiles | Payment Workflows: Orchestrates payment processing and verification | . Workflows are responsible for: . | Implementing business rules and constraints | Orchestrating operations across multiple modules | Ensuring transactional integrity | Handling compensating actions for failed operations | . Module Layer . The Module Layer provides domain-specific resource management: . | Product Module: Manages product catalog, variations, and metadata | Order Module: Handles order creation and lifecycle | Customer Module: Manages customer profiles and preferences | Payment Module: Interfaces with payment providers | Inventory Module: Tracks product availability and stock levels | Channel Management: Implements multi-region support through Saleor’s Channel system | Translation Support: Handles multi-language content through Saleor’s translation API | . Data Store Layer . The Data Store Layer persists the application data: . | PostgreSQL: Primary data store for commerce data (products, orders, customers) | Redis: Used for caching and task queuing | . Content Management . Content management is handled directly within Saleor: . | Saleor Content: Built-in content management capabilities for product descriptions, marketing content, and media assets | Provides multi-language content management through translations API | . Data Migration . The Data Migration component facilitates the transition from Statamic: . | Migration Tools: Custom utilities for extracting data from Statamic and importing into Saleor | Handles mappings between different data models and structures | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#architecture-layers",
+    "url": "/statamic-to-saleor-migration/architecture/architecture-diagram/#architecture-layers",
     
-    "relUrl": "/:collection/architecture/#architecture-layers"
+    "relUrl": "/architecture/architecture-diagram/#architecture-layers"
   },"12": {
     "doc": "Architecture Diagram",
     "title": "Multi-Region and Multi-Language Support",
     "content": "Our architecture has been designed with multi-region and multi-language support as core principles: . | Routing Layer: Routes requests to the appropriate region based on domain/subdomain | Channel Configuration: Region-specific settings using Saleor’s Channel system for currencies, shipping, etc. | Language Context: Language information flows through all layers, from client to data store | Content Translation: Saleor manages translated content for all supported languages | Regional Data: PostgreSQL stores region-specific product information, pricing, and availability through Saleor’s Channel system | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#multi-region-and-multi-language-support",
+    "url": "/statamic-to-saleor-migration/architecture/architecture-diagram/#multi-region-and-multi-language-support",
     
-    "relUrl": "/:collection/architecture/#multi-region-and-multi-language-support"
+    "relUrl": "/architecture/architecture-diagram/#multi-region-and-multi-language-support"
   },"13": {
     "doc": "Architecture Diagram",
     "title": "Communication Flow",
     "content": ". | Client applications make GraphQL requests to the Saleor API | API resolvers route requests to the appropriate Workflow | Workflows orchestrate operations using one or more Modules | Modules query/manipulate data in the Data Store | Data Migration tools interact with PostgreSQL during the migration process | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#communication-flow",
+    "url": "/statamic-to-saleor-migration/architecture/architecture-diagram/#communication-flow",
     
-    "relUrl": "/:collection/architecture/#communication-flow"
+    "relUrl": "/architecture/architecture-diagram/#communication-flow"
   },"14": {
     "doc": "Data Flow",
     "title": "Data Flow Diagrams",
     "content": "This document outlines the data flow between different components of our Saleor-based ecommerce system. ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#data-flow-diagrams",
+    "url": "/statamic-to-saleor-migration/architecture/data-flow/#data-flow-diagrams",
     
-    "relUrl": "/:collection/architecture/#data-flow-diagrams"
+    "relUrl": "/architecture/data-flow/#data-flow-diagrams"
   },"15": {
     "doc": "Data Flow",
     "title": "Overview",
     "content": "Our architecture uses Saleor as the central ecommerce platform with a Next.js storefront for the customer-facing interface. The system handles multi-region and multi-language requirements through Saleor’s Channels feature. ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#overview",
+    "url": "/statamic-to-saleor-migration/architecture/data-flow/#overview",
     
-    "relUrl": "/:collection/architecture/#overview"
+    "relUrl": "/architecture/data-flow/#overview"
   },"16": {
     "doc": "Data Flow",
     "title": "Customer Purchase Flow",
     "content": "sequenceDiagram Customer-&gt;&gt;NextJS Storefront: Browse Products NextJS Storefront-&gt;&gt;Saleor API: Query Products (channel specific) Saleor API-&gt;&gt;NextJS Storefront: Return Products with translations Customer-&gt;&gt;NextJS Storefront: Add to Cart NextJS Storefront-&gt;&gt;Saleor API: Create/Update Checkout Customer-&gt;&gt;NextJS Storefront: Proceed to Checkout NextJS Storefront-&gt;&gt;Saleor API: Create Order Saleor API-&gt;&gt;Payment Provider: Process Payment Payment Provider-&gt;&gt;Saleor API: Payment Confirmation Saleor API-&gt;&gt;NextJS Storefront: Order Confirmation NextJS Storefront-&gt;&gt;Customer: Display Order Confirmation Saleor API-&gt;&gt;Email Service: Send Order Confirmation Email Service-&gt;&gt;Customer: Order Confirmation Email . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#customer-purchase-flow",
+    "url": "/statamic-to-saleor-migration/architecture/data-flow/#customer-purchase-flow",
     
-    "relUrl": "/:collection/architecture/#customer-purchase-flow"
+    "relUrl": "/architecture/data-flow/#customer-purchase-flow"
   },"17": {
     "doc": "Data Flow",
     "title": "Multi-Region Data Flow",
     "content": "flowchart TD Customer([Customer]) subgraph Domains NL[domain-nl.com] BE[domain-be.com] DE[domain-de.com] end subgraph NextJS Router[Domain Router] NL_Store[NL Storefront] BE_Store[BE Storefront] DE_Store[DE Storefront] end subgraph Saleor API[GraphQL API] Channels[Channels] NL_Channel[Netherlands Channel] BE_Channel[Belgium Channel] DE_Channel[Germany Channel] Products[Products] Prices[Prices] Translations[Translations] end Customer --&gt; Domains NL --&gt; Router BE --&gt; Router DE --&gt; Router Router --&gt; NL_Store Router --&gt; BE_Store Router --&gt; DE_Store NL_Store --&gt; API BE_Store --&gt; API DE_Store --&gt; API API --&gt; Channels Channels --&gt; NL_Channel Channels --&gt; BE_Channel Channels --&gt; DE_Channel NL_Channel --&gt; Products BE_Channel --&gt; Products DE_Channel --&gt; Products NL_Channel --&gt; Prices BE_Channel --&gt; Prices DE_Channel --&gt; Prices Products --&gt; Translations . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#multi-region-data-flow",
+    "url": "/statamic-to-saleor-migration/architecture/data-flow/#multi-region-data-flow",
     
-    "relUrl": "/:collection/architecture/#multi-region-data-flow"
+    "relUrl": "/architecture/data-flow/#multi-region-data-flow"
   },"18": {
     "doc": "Data Flow",
     "title": "Product Creation and Update Flow",
     "content": "sequenceDiagram Admin-&gt;&gt;Saleor Dashboard: Create/Update Product Saleor Dashboard-&gt;&gt;Saleor API: Save Product Data Saleor API-&gt;&gt;Database: Store Base Product Data Admin-&gt;&gt;Saleor Dashboard: Add Translations Saleor Dashboard-&gt;&gt;Saleor API: Save Translations Saleor API-&gt;&gt;Database: Store Translations Admin-&gt;&gt;Saleor Dashboard: Configure Channel Availability Saleor Dashboard-&gt;&gt;Saleor API: Set Channel Settings Saleor API-&gt;&gt;Database: Store Channel Configuration Admin-&gt;&gt;Saleor Dashboard: Set Channel-specific Prices Saleor Dashboard-&gt;&gt;Saleor API: Save Channel Prices Saleor API-&gt;&gt;Database: Store Channel-specific Pricing Saleor API-&gt;&gt;NextJS Storefront: Product data available via API . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#product-creation-and-update-flow",
+    "url": "/statamic-to-saleor-migration/architecture/data-flow/#product-creation-and-update-flow",
     
-    "relUrl": "/:collection/architecture/#product-creation-and-update-flow"
+    "relUrl": "/architecture/data-flow/#product-creation-and-update-flow"
   },"19": {
     "doc": "Data Flow",
     "title": "Migration Data Flow",
     "content": "The migration from Statamic and Simple Commerce to Saleor will follow this flow: . flowchart TD subgraph \"Source: Statamic\" SC[Simple Commerce] SC_Products[Products] SC_Orders[Orders] SC_Customers[Customers] SC_Collections[Collections] SC --&gt; SC_Products SC --&gt; SC_Orders SC --&gt; SC_Customers SC --&gt; SC_Collections end subgraph \"Migration Process\" Extract[Data Extraction Scripts] Transform[Data Transformation] Load[Data Loading Scripts] Extract --&gt; Transform Transform --&gt; Load end subgraph \"Target: Saleor\" Saleor[Saleor Core] S_Products[Products] S_Orders[Orders] S_Customers[Customers] S_Categories[Categories] S_Channels[Channels] Saleor --&gt; S_Products Saleor --&gt; S_Orders Saleor --&gt; S_Customers Saleor --&gt; S_Categories Saleor --&gt; S_Channels end SC_Products --&gt; Extract SC_Orders --&gt; Extract SC_Customers --&gt; Extract SC_Collections --&gt; Extract Load --&gt; S_Products Load --&gt; S_Orders Load --&gt; S_Customers Load --&gt; S_Categories Load --&gt; S_Channels . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#migration-data-flow",
+    "url": "/statamic-to-saleor-migration/architecture/data-flow/#migration-data-flow",
     
-    "relUrl": "/:collection/architecture/#migration-data-flow"
+    "relUrl": "/architecture/data-flow/#migration-data-flow"
   },"20": {
     "doc": "Data Flow",
     "title": "Authentication Flow",
     "content": "sequenceDiagram Customer-&gt;&gt;NextJS Storefront: Login Request NextJS Storefront-&gt;&gt;Saleor API: tokenCreate Mutation Saleor API-&gt;&gt;NextJS Storefront: Return JWT Token NextJS Storefront-&gt;&gt;Customer: Login Success Customer-&gt;&gt;NextJS Storefront: Access Protected Page NextJS Storefront-&gt;&gt;Saleor API: Request with JWT Saleor API-&gt;&gt;NextJS Storefront: Return Protected Data NextJS Storefront-&gt;&gt;Customer: Display Protected Content . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#authentication-flow",
+    "url": "/statamic-to-saleor-migration/architecture/data-flow/#authentication-flow",
     
-    "relUrl": "/:collection/architecture/#authentication-flow"
+    "relUrl": "/architecture/data-flow/#authentication-flow"
   },"21": {
     "doc": "Data Flow",
     "title": "Search Flow",
     "content": "sequenceDiagram Customer-&gt;&gt;NextJS Storefront: Search Query NextJS Storefront-&gt;&gt;Saleor API: products Query with Filter Saleor API-&gt;&gt;NextJS Storefront: Return Filtered Products NextJS Storefront-&gt;&gt;Customer: Display Search Results . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#search-flow",
+    "url": "/statamic-to-saleor-migration/architecture/data-flow/#search-flow",
     
-    "relUrl": "/:collection/architecture/#search-flow"
+    "relUrl": "/architecture/data-flow/#search-flow"
   },"22": {
     "doc": "Data Flow",
     "title": "Checkout Flow",
     "content": "flowchart TD Start([Customer Starts Checkout]) CreateCheckout[Create Checkout in Saleor] AddInfo[Add Customer Information] SelectShipping[Select Shipping Method] SelectPayment[Select Payment Method] Process[Process Payment] Complete[Complete Order] Confirmation[Order Confirmation] Start --&gt; CreateCheckout CreateCheckout --&gt; AddInfo AddInfo --&gt; SelectShipping SelectShipping --&gt; SelectPayment SelectPayment --&gt; Process Process --&gt;|Success| Complete Process --&gt;|Failure| SelectPayment Complete --&gt; Confirmation subgraph \"Saleor GraphQL API\" CreateCheckout AddInfo SelectShipping SelectPayment Process Complete end subgraph \"NextJS Storefront\" Start Confirmation end . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#checkout-flow",
+    "url": "/statamic-to-saleor-migration/architecture/data-flow/#checkout-flow",
     
-    "relUrl": "/:collection/architecture/#checkout-flow"
+    "relUrl": "/architecture/data-flow/#checkout-flow"
   },"23": {
     "doc": "Data Flow",
     "title": "Data Flow",
     "content": " ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/",
+    "url": "/statamic-to-saleor-migration/architecture/data-flow/",
     
-    "relUrl": "/:collection/architecture/"
+    "relUrl": "/architecture/data-flow/"
   },"24": {
-    "doc": "Architecture Diagrams",
-    "title": "Architecture Diagrams",
-    "content": "This page provides visual representations of the architecture for the Statamic to Saleor migration project, with a focus on multi-region and multi-language capabilities. ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/",
-    
-    "relUrl": "/:collection/architecture/diagrams/"
-  },"25": {
-    "doc": "Architecture Diagrams",
-    "title": "System Overview Diagram",
-    "content": "The following diagram shows the high-level system architecture: . flowchart TD Customer([Customer]) Admin([Admin User]) subgraph \"Saleor Core\" Dashboard[Saleor Dashboard] API[GraphQL API] Channels[Channel Management] Products[Product Management] Orders[Order Management] Checkout[Checkout System] Payments[Payment Integrations] Translations[Translation System] Dashboard --- API API --- Channels API --- Products API --- Orders API --- Checkout API --- Payments Products --- Translations end subgraph \"Next.js Storefront\" Pages[Next.js Pages] Components[React Components] Hooks[Custom Hooks] API_Routes[API Routes] i18n[Internationalization] Pages --- Components Components --- Hooks Pages --- API_Routes Components --- i18n end Customer --&gt; Pages Admin --&gt; Dashboard API_Routes --&gt; API Hooks --&gt; API . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#system-overview-diagram",
-    
-    "relUrl": "/:collection/architecture/diagrams/#system-overview-diagram"
-  },"26": {
-    "doc": "Architecture Diagrams",
-    "title": "Multi-Region Architecture",
-    "content": "The following diagram illustrates the multi-region architecture using Saleor Channels: . flowchart TD Customer([Customer]) subgraph \"Domain Routing\" NL[domain-nl.com] BE[domain-be.com] DE[domain-de.com] end subgraph \"Next.js Storefront\" Router[Domain/Region Router] NL_Store[NL Specific UI] BE_Store[BE Specific UI] DE_Store[DE Specific UI] Router --- NL_Store Router --- BE_Store Router --- DE_Store end subgraph \"Saleor Core\" API[GraphQL API] Channels[Channels] NL_Channel[Netherlands Channel] BE_Channel[Belgium Channel] DE_Channel[Germany Channel] API --- Channels Channels --- NL_Channel Channels --- BE_Channel Channels --- DE_Channel end Customer --&gt; NL Customer --&gt; BE Customer --&gt; DE NL --&gt; Router BE --&gt; Router DE --&gt; Router NL_Store --&gt; API BE_Store --&gt; API DE_Store --&gt; API . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#multi-region-architecture",
-    
-    "relUrl": "/:collection/architecture/diagrams/#multi-region-architecture"
-  },"27": {
-    "doc": "Architecture Diagrams",
-    "title": "Technology Stack Diagram",
-    "content": "This diagram shows the technology stack and relationships between components: . flowchart TD subgraph \"Backend\" Saleor[Saleor Core] GraphQL[GraphQL API] Channels[Multi-Channel Support] DB[PostgreSQL] Saleor --- GraphQL Saleor --- Channels Saleor --- DB end subgraph \"Frontend\" Next[Next.js] React[React] Apollo[Apollo Client] Next --- React Next --- Apollo end subgraph \"Infrastructure\" Docker[Docker] AWS[AWS] CDN[Content Delivery Network] Docker --- AWS AWS --- CDN end Apollo --&gt; GraphQL CDN --&gt; Next . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#technology-stack-diagram",
-    
-    "relUrl": "/:collection/architecture/diagrams/#technology-stack-diagram"
-  },"28": {
-    "doc": "Architecture Diagrams",
-    "title": "Data Migration Flow",
-    "content": "This diagram illustrates the data migration process from Statamic to Saleor: . flowchart LR subgraph \"Source\" Statamic[Statamic CMS] SC[Simple Commerce] Statamic --- SC end subgraph \"Migration Tools\" Scripts[Migration Scripts] Transform[Data Transformation] Scripts --- Transform end subgraph \"Target\" Saleor[Saleor Core] API[GraphQL API] Saleor --- API end SC --&gt; Scripts Statamic --&gt; Scripts Transform --&gt; API . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#data-migration-flow",
-    
-    "relUrl": "/:collection/architecture/diagrams/#data-migration-flow"
-  },"29": {
-    "doc": "Architecture Diagrams",
-    "title": "Multi-Language Support",
-    "content": "This diagram shows how multi-language support is implemented: . flowchart TD subgraph \"Saleor\" Products[Products] Translations[Translations] Products --- Translations end subgraph \"Next.js\" i18n[Next.js i18n] UI[UI Components] i18n --- UI end Translations --&gt; i18n . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#multi-language-support",
-    
-    "relUrl": "/:collection/architecture/diagrams/#multi-language-support"
-  },"30": {
-    "doc": "Architecture Diagrams",
-    "title": "Data Flow Diagram",
-    "content": "This diagram illustrates the flow of data during customer interactions: . sequenceDiagram Customer-&gt;&gt;Next.js: Visit website Next.js-&gt;&gt;Saleor: GraphQL Query (with channel context) Saleor-&gt;&gt;Next.js: Return data (with translations) Next.js-&gt;&gt;Customer: Render page Customer-&gt;&gt;Next.js: Add to cart Next.js-&gt;&gt;Saleor: Create/Update Cart (channel-specific) Saleor-&gt;&gt;Next.js: Updated Cart data Next.js-&gt;&gt;Customer: Updated Cart UI Customer-&gt;&gt;Next.js: Checkout Next.js-&gt;&gt;Saleor: Process Checkout (channel-specific) Saleor-&gt;&gt;Payment Provider: Process Payment Payment Provider-&gt;&gt;Saleor: Payment Confirmation Saleor-&gt;&gt;Next.js: Order Confirmation Next.js-&gt;&gt;Customer: Order Confirmation Page . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#data-flow-diagram",
-    
-    "relUrl": "/:collection/architecture/diagrams/#data-flow-diagram"
-  },"31": {
-    "doc": "Architecture Diagrams",
-    "title": "Deployment Architecture",
-    "content": "This diagram shows the deployment architecture for the system: . flowchart TD subgraph \"Production Environment\" LB[Load Balancer] subgraph \"Frontend\" NL_Frontend[NL Frontend] BE_Frontend[BE Frontend] DE_Frontend[DE Frontend] end subgraph \"Backend\" Saleor_API[Saleor API] Saleor_Dashboard[Saleor Dashboard] DB[PostgreSQL] Cache[Redis] end LB --&gt; NL_Frontend LB --&gt; BE_Frontend LB --&gt; DE_Frontend NL_Frontend --&gt; Saleor_API BE_Frontend --&gt; Saleor_API DE_Frontend --&gt; Saleor_API Saleor_API --- DB Saleor_API --- Cache Saleor_Dashboard --- DB end subgraph \"DNS\" NL_Domain[domain-nl.com] BE_Domain[domain-be.com] DE_Domain[domain-de.com] NL_Domain --&gt; LB BE_Domain --&gt; LB DE_Domain --&gt; LB end . This architecture is designed to leverage Saleor’s Channel feature for comprehensive multi-region support, while providing a flexible and performant framework for multi-language capabilities across all storefronts. ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#deployment-architecture",
-    
-    "relUrl": "/:collection/architecture/diagrams/#deployment-architecture"
-  },"32": {
-    "doc": "Architecture",
-    "title": "System Architecture",
-    "content": " ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#system-architecture",
-    
-    "relUrl": "/:collection/architecture/#system-architecture"
-  },"33": {
-    "doc": "Architecture",
-    "title": "Overview",
-    "content": "The architecture for the Statamic to Saleor migration consists of the following components: . | Frontend: Next.js-based storefront that serves the customer-facing website across multiple domains and languages | Commerce Platform: Saleor Core providing comprehensive ecommerce functionality with multi-region support | Data Migration Tools: Custom scripts for migrating data from Statamic to Saleor with proper region and language mapping | Infrastructure: Multi-region deployment supporting three separate domains (Netherlands, Belgium, Germany) | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#overview",
-    
-    "relUrl": "/:collection/architecture/#overview"
-  },"34": {
-    "doc": "Architecture",
-    "title": "Core Architecture Principles",
-    "content": ". | Separation of Concerns: Clear separation between commerce functionality, content management, and presentation | API-First Approach: All interactions between components happen through well-defined APIs | Multi-Region by Design: Architecture supports multiple regions as a fundamental principle, not an afterthought | Language Flexibility: Content and commerce data support multiple language variants throughout the system | Scalability: Each component can scale independently based on demand | Maintainability: Modular design allows for easier updates and modifications | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#core-architecture-principles",
-    
-    "relUrl": "/:collection/architecture/#core-architecture-principles"
-  },"35": {
-    "doc": "Architecture",
-    "title": "Commerce Platform: Saleor",
-    "content": "Saleor will handle all commerce-related functionality: . | Product catalog management with multi-language support | Cart processing with region-specific rules | Checkout flow customized for each region | Order management across all regions | Customer accounts with cross-region capabilities | Multi-region support via Channels feature | Payment provider integration specific to each region | Shipping options configured per region | Tax calculations based on regional requirements | . Saleor Channel Architecture . Saleor’s Channel feature is the foundation of our multi-region strategy: . | Channel = Region: Each region (Netherlands, Belgium, Germany) is implemented as a separate Saleor Channel | Channel-Specific Configuration: Each Channel has its own: . | Currency settings | Pricing strategies | Product availability | Shipping methods | Payment providers | Tax configurations | . | Shared Products: Product catalog is shared across channels, with channel-specific visibility control | Centralized Management: All channels can be managed from a single Saleor Dashboard | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#commerce-platform-saleor",
-    
-    "relUrl": "/:collection/architecture/#commerce-platform-saleor"
-  },"36": {
-    "doc": "Architecture",
-    "title": "Frontend Architecture",
-    "content": "The frontend is implemented using Next.js, providing: . | Server-side rendering for optimal SEO | Client-side interactions for a responsive user experience | Multi-domain support through domain-specific deployments | Language detection and switching capabilities | Region-specific content and product presentation | Optimized performance through static generation and incremental static regeneration | Mobile-first responsive design | . Domain-Specific Configuration . Each domain has specific configurations: . | Domain-specific routing for different URLs across regions | Region-specific content sourcing | Language preferences and defaults | Regional branding and design variations (if needed) | Localized SEO metadata | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#frontend-architecture",
-    
-    "relUrl": "/:collection/architecture/#frontend-architecture"
-  },"37": {
-    "doc": "Architecture",
-    "title": "Integration Points",
-    "content": "The system components interact through the following integration points: . | GraphQL API: The primary way to interact with Saleor for product information, cart operations, and checkout | Webhooks: Event-driven notifications from Saleor to external systems | REST APIs: For interactions with other services and data sources | Authentication Services: Unified authentication across regions and domains | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#integration-points",
-    
-    "relUrl": "/:collection/architecture/#integration-points"
-  },"38": {
-    "doc": "Architecture",
-    "title": "Technology Stack",
-    "content": ". | Saleor: Open-source commerce platform serving as the core backend | Next.js: React framework for building the storefront | GraphQL: Query language for APIs, used for communication with Saleor | PostgreSQL: Database used by Saleor for persistent storage | Redis: Used for caching and session management | Docker: Containerization for development and deployment | Kubernetes: Optional for production orchestration | Content Delivery Network: For optimized global content delivery | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#technology-stack",
-    
-    "relUrl": "/:collection/architecture/#technology-stack"
-  },"39": {
-    "doc": "Architecture",
-    "title": "Multi-Region Support",
-    "content": "Saleor’s Channel feature will be used to support multiple regions: . | Separate channel for each region (Netherlands, Belgium, Germany) | Region-specific products, prices, and availability | Multiple currencies (EUR, with region-specific formatting) | Multiple languages (Dutch, French, German) with support for: . | Product information in multiple languages | Content translations | Region-specific metadata | . | Region-specific shipping and payment methods | Tax configurations appropriate for each region | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#multi-region-support",
-    
-    "relUrl": "/:collection/architecture/#multi-region-support"
-  },"40": {
-    "doc": "Architecture",
-    "title": "Data Flow Architecture",
-    "content": "The data flow between components follows these patterns: . | Customer Browsing: . | Client → Next.js → Saleor GraphQL API → PostgreSQL → Client | Content is served with appropriate region and language context | . | Cart Operations: . | Client → Next.js → Saleor GraphQL API → Cart Storage → Client | Region-specific pricing, tax, and availability rules are applied | . | Checkout Process: . | Client → Next.js → Saleor GraphQL API → Payment Providers → Order Processing | Region-specific payment methods and shipping options are presented | . | Order Management: . | Admin → Saleor Dashboard → Order Services → Fulfillment Systems | Orders are managed with awareness of their originating region | . | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#data-flow-architecture",
-    
-    "relUrl": "/:collection/architecture/#data-flow-architecture"
-  },"41": {
-    "doc": "Architecture",
-    "title": "Security Architecture",
-    "content": ". | Authentication: JWT-based authentication for both customers and administrators | Authorization: Role-based access control for administrative functions | Data Protection: Encryption for sensitive data in transit and at rest | GDPR Compliance: Data handling processes designed to comply with EU regulations | Cross-Domain Security: Secure cross-domain authentication and data sharing | . ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#security-architecture",
-    
-    "relUrl": "/:collection/architecture/#security-architecture"
-  },"42": {
-    "doc": "Architecture",
-    "title": "Future Considerations",
-    "content": ". | Scaling strategy for high-traffic periods | Caching strategy for improved performance | Performance optimization for mobile users | Monitoring and alerting system | Backup and disaster recovery procedures | Expansion to additional regions and languages | . See Architecture Diagram for visual representations of this architecture. ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/#future-considerations",
-    
-    "relUrl": "/:collection/architecture/#future-considerations"
-  },"43": {
-    "doc": "Architecture",
-    "title": "Architecture",
-    "content": " ",
-    "url": "/statamic-to-saleor-migration/:collection/architecture/",
-    
-    "relUrl": "/:collection/architecture/"
-  },"44": {
-    "doc": "Home",
-    "title": "Statamic to Saleor Migration Documentation",
-    "content": "This documentation outlines the migration process from Statamic CMS with Simple Commerce to Saleor headless commerce platform. ",
-    "url": "/statamic-to-saleor-migration/#statamic-to-saleor-migration-documentation",
-    
-    "relUrl": "/#statamic-to-saleor-migration-documentation"
-  },"45": {
-    "doc": "Home",
-    "title": "Key Features",
-    "content": ". | Multi-region support: Three separate domains (Netherlands, Belgium, Germany) | Multi-language content: Support for Dutch and German | Headless architecture: Clear separation between front-end and back-end | Improved performance: Leveraging modern technologies for better performance | Enhanced SEO: Better support for region and language-specific SEO | Streamlined content management: Integration with Strapi CMS for enhanced content capabilities | . ",
-    "url": "/statamic-to-saleor-migration/#key-features",
-    
-    "relUrl": "/#key-features"
-  },"46": {
-    "doc": "Home",
-    "title": "Documentation Sections",
-    "content": "Architecture Documentation . | System Architecture Overview | Architecture Diagram | API Documentation | Data Flow Documentation | . Migration Documentation . | Migration Strategy | Data Migration Guide | Content Migration Guide | User Migration Guide | . Multi-Region and Multi-Language Support . | Multi-Region Setup | Multi-Language Implementation | Currency and Tax Configuration | Domain-Specific Settings | . Development Documentation . | Development Environment Setup | Local Development Guide | Testing Strategy | Deployment Guide | . ",
-    "url": "/statamic-to-saleor-migration/#documentation-sections",
-    
-    "relUrl": "/#documentation-sections"
-  },"47": {
-    "doc": "Home",
-    "title": "Project Status",
-    "content": "The project is currently in the Proof of Concept phase. We are validating Saleor’s capabilities for our specific requirements, with a focus on multi-region and multi-language support. ",
-    "url": "/statamic-to-saleor-migration/#project-status",
-    
-    "relUrl": "/#project-status"
-  },"48": {
-    "doc": "Home",
-    "title": "Contributing to the Documentation",
-    "content": "To contribute to this documentation: . | Clone the repository | Create a new branch for your changes | Make your changes to the relevant markdown files | Submit a pull request | . ",
-    "url": "/statamic-to-saleor-migration/#contributing-to-the-documentation",
-    
-    "relUrl": "/#contributing-to-the-documentation"
-  },"49": {
-    "doc": "Home",
-    "title": "Contact",
-    "content": "For questions or issues with the documentation, please contact the project team. Last updated: June 26, 2024 . ",
-    "url": "/statamic-to-saleor-migration/#contact",
-    
-    "relUrl": "/#contact"
-  },"50": {
-    "doc": "Home",
-    "title": "Home",
-    "content": " ",
-    "url": "/statamic-to-saleor-migration/",
-    
-    "relUrl": "/"
-  },"51": {
-    "doc": "Multi-Region & Multi-Language Support",
-    "title": "Multi-Region and Multi-Language Implementation",
-    "content": "This section provides comprehensive documentation on how multi-region and multi-language capabilities are implemented in the Saleor-based e-commerce platform. ",
-    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#multi-region-and-multi-language-implementation",
-    
-    "relUrl": "/:collection/multi-region-language/#multi-region-and-multi-language-implementation"
-  },"52": {
-    "doc": "Multi-Region & Multi-Language Support",
-    "title": "Overview",
-    "content": "Our implementation supports: . | 3 Distinct Regions/Domains: . | Netherlands (domain-nl.com) | Belgium (domain-be.com) | Germany (domain-de.com) | . | 2 Primary Languages: . | Dutch | German | (French is also supported in the Belgium region) | . | . ",
-    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#overview",
-    
-    "relUrl": "/:collection/multi-region-language/#overview"
-  },"53": {
-    "doc": "Multi-Region & Multi-Language Support",
-    "title": "Key Architecture Components",
-    "content": "1. Region Implementation via Saleor Channels . Saleor’s Channel feature serves as the foundation for our multi-region implementation: . Saleor ├── Netherlands Channel │ ├── Currency: EUR │ ├── Tax Configuration: Dutch VAT rules │ ├── Shipping Methods: NL-specific carriers │ └── Payment Providers: iDeal, Credit Cards │ ├── Belgium Channel │ ├── Currency: EUR │ ├── Tax Configuration: Belgian VAT rules │ ├── Shipping Methods: BE-specific carriers │ └── Payment Providers: Bancontact, Credit Cards │ └── Germany Channel ├── Currency: EUR ├── Tax Configuration: German VAT rules ├── Shipping Methods: DE-specific carriers └── Payment Providers: SEPA, Credit Cards . 2. Content Translation System . Product information and content are managed with full multi-language support: . | Product Translations: Stored directly in Saleor with language variants | Content Management: Static content, blog posts, and marketing materials translated for each supported language | SEO Metadata: Language-specific SEO information for optimal search engine visibility | . 3. Domain-Specific Routing . Each region is served through its own dedicated domain with appropriate routing: . domain-nl.com → Netherlands Channel (Dutch primary) domain-be.com → Belgium Channel (Dutch/French) domain-de.com → Germany Channel (German primary) . 4. User Experience Considerations . | Language Detection: Automatic detection based on browser settings | Language Persistence: User language preference is remembered | Region Detection: Geo-IP based routing with user confirmation | Cross-Region Experience: Consistent user experience across regions | . ",
-    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#key-architecture-components",
-    
-    "relUrl": "/:collection/multi-region-language/#key-architecture-components"
-  },"54": {
-    "doc": "Multi-Region & Multi-Language Support",
-    "title": "Technical Implementation",
-    "content": "Channel Configuration in Saleor . Each Channel in Saleor is configured with: . | Channel-specific pricing: Prices can be adjusted per region | Product visibility: Products can be made available or unavailable in specific regions | Fulfillment settings: Different shipping options and warehouses per region | Tax settings: Region-appropriate tax configurations | . Frontend Implementation with Next.js . The Next.js frontend handles: . | Domain routing: Proper routing to the appropriate language and region | Language switching: UI components to change language preference | Region-aware API calls: Including channel information in all Saleor API requests | Localized components: Components that adapt to the current language context | . Database Structure for Multi-Language . The underlying database structure supports: . | Translated fields: Core content fields have language variants | Region-specific data: Pricing, availability, and configurations per region | Shared core data: Product IDs and structural information shared across regions | . ",
-    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#technical-implementation",
-    
-    "relUrl": "/:collection/multi-region-language/#technical-implementation"
-  },"55": {
-    "doc": "Multi-Region & Multi-Language Support",
-    "title": "Migration Considerations",
-    "content": "Migrating from Statamic to this multi-region, multi-language Saleor implementation involves: . | Data mapping: Mapping Statamic content to the appropriate regions and languages | URL structure preservation: Maintaining SEO value across the migration | Region-specific data migration: Ensuring pricing and product data is migrated with regional context | Testing across regions: Comprehensive testing in all region/language combinations | . ",
-    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#migration-considerations",
-    
-    "relUrl": "/:collection/multi-region-language/#migration-considerations"
-  },"56": {
-    "doc": "Multi-Region & Multi-Language Support",
-    "title": "Best Practices",
-    "content": "When working with the multi-region and multi-language capabilities: . | Always include channel context in API calls to Saleor | Test in all language combinations when making changes | Consider regional differences in business rules and user expectations | Maintain translations for all content, including error messages and notifications | Preserve URL structures for SEO across languages and regions | . ",
-    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#best-practices",
-    
-    "relUrl": "/:collection/multi-region-language/#best-practices"
-  },"57": {
-    "doc": "Multi-Region & Multi-Language Support",
-    "title": "Detailed Documentation",
-    "content": "For more detailed information on specific aspects of the multi-region and multi-language implementation, see: . | Region Configuration | Language Implementation | Domain-Specific Setup | SEO Considerations | . ",
-    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#detailed-documentation",
-    
-    "relUrl": "/:collection/multi-region-language/#detailed-documentation"
-  },"58": {
-    "doc": "Multi-Region & Multi-Language Support",
-    "title": "Multi-Region & Multi-Language Support",
-    "content": " ",
-    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/",
-    
-    "relUrl": "/:collection/multi-region-language/"
-  },"59": {
     "doc": "Development Guide",
     "title": "Development Guide",
     "content": "This section provides comprehensive development guidelines and resources for the Statamic to Saleor migration project, with specific focus on implementing multi-region and multi-language capabilities. ",
     "url": "/statamic-to-saleor-migration/:collection/development/",
     
     "relUrl": "/:collection/development/"
-  },"60": {
+  },"25": {
     "doc": "Development Guide",
     "title": "Development Overview",
     "content": "The development process for this migration project involves multiple components: . | Saleor Core: Setting up and configuring Saleor with Channels for multi-region support | Next.js Storefront: Developing a storefront with multi-domain and multi-language capabilities | Migration Tools: Creating tools to migrate data from Statamic to Saleor | Infrastructure: Setting up the deployment architecture for multiple domains | . ",
     "url": "/statamic-to-saleor-migration/:collection/development/#development-overview",
     
     "relUrl": "/:collection/development/#development-overview"
-  },"61": {
+  },"26": {
     "doc": "Development Guide",
     "title": "Development Workflow",
     "content": "Our development workflow follows these principles: . | Feature Branches: All development happens in feature branches | Pull Requests: Code is reviewed through pull requests | CI/CD: Automated testing and deployment pipelines | Environment Progression: Changes move through development → staging → production | . ",
     "url": "/statamic-to-saleor-migration/:collection/development/#development-workflow",
     
     "relUrl": "/:collection/development/#development-workflow"
-  },"62": {
+  },"27": {
     "doc": "Development Guide",
     "title": "Multi-Region Development Considerations",
     "content": "When developing for multi-region support: . | Always consider channel context: All queries to Saleor must include channel context | Region-specific business rules: Implement region-specific pricing, shipping, and tax rules | Domain-based routing: Implement proper routing based on domains | Cross-region cart and checkout: Ensure cart and checkout processes respect region context | Region-specific payment methods: Implement payment methods appropriate for each region | . ",
     "url": "/statamic-to-saleor-migration/:collection/development/#multi-region-development-considerations",
     
     "relUrl": "/:collection/development/#multi-region-development-considerations"
-  },"63": {
+  },"28": {
     "doc": "Development Guide",
     "title": "Multi-Language Development Considerations",
     "content": "When developing multi-language capabilities: . | Translation management: Implement efficient workflows for content translations | Language switching: Create seamless language switching mechanisms | SEO optimization: Ensure proper language metadata for SEO | Fallback strategies: Implement fallbacks when translations are missing | URL structures: Maintain SEO-friendly URL structures for all languages | . ",
     "url": "/statamic-to-saleor-migration/:collection/development/#multi-language-development-considerations",
     
     "relUrl": "/:collection/development/#multi-language-development-considerations"
-  },"64": {
+  },"29": {
     "doc": "Development Guide",
     "title": "Development Resources",
     "content": "Documentation . | Saleor API Documentation | Next.js Documentation | GraphQL Documentation | Docker Documentation | . Code Standards . | JavaScript Style Guide | React Best Practices | GraphQL Best Practices | . Development Environment . For detailed setup instructions, see the following guides: . | Setup Instructions: Setting up the development environment | Local Development: Working with the local development environment | Extending Functionality: Guidelines for extending the core functionality | Deployment Process: Deploying the application | . ",
     "url": "/statamic-to-saleor-migration/:collection/development/#development-resources",
     
     "relUrl": "/:collection/development/#development-resources"
-  },"65": {
+  },"30": {
     "doc": "Development Guide",
     "title": "Key Development Patterns",
     "content": "Channel-Based API Queries . Always include channel context in API queries: . const GET_PRODUCTS = gql` query GetProducts($channel: String!) { products(channel: $channel, first: 10) { edges { node { id name # Other fields... } } } } `; . Multi-Language Components . Create components that handle multiple languages: . function ProductName({ product, languageCode }) { // Use translation if available, otherwise fallback to default return ( &lt;h1&gt; {product.translation &amp;&amp; product.translation.name ? product.translation.name : product.name} &lt;/h1&gt; ); } . Domain-Specific Routing . Implement domain-based routing for region-specific storefronts: . // In Next.js middleware.js export function middleware(request) { const { hostname } = request.nextUrl; // Route based on hostname if (hostname === 'domain-nl.local') { // Netherlands-specific logic request.headers.set('x-channel', 'netherlands'); request.headers.set('x-language', 'nl'); } else if (hostname === 'domain-be.local') { // Belgium-specific logic request.headers.set('x-channel', 'belgium'); request.headers.set('x-language', determineLanguage(request)); // nl or fr } else if (hostname === 'domain-de.local') { // Germany-specific logic request.headers.set('x-channel', 'germany'); request.headers.set('x-language', 'de'); } return NextResponse.next({ request: { headers: request.headers, }, }); } . ",
     "url": "/statamic-to-saleor-migration/:collection/development/#key-development-patterns",
     
     "relUrl": "/:collection/development/#key-development-patterns"
-  },"66": {
+  },"31": {
     "doc": "Development Guide",
     "title": "Issue Tracking",
     "content": "Development issues are tracked in our project management system. Each issue should include: . | Clear description of the feature or bug | Region and language context, if applicable | Acceptance criteria | Technical approach | Testing requirements | . ",
     "url": "/statamic-to-saleor-migration/:collection/development/#issue-tracking",
     
     "relUrl": "/:collection/development/#issue-tracking"
-  },"67": {
+  },"32": {
     "doc": "Development Guide",
     "title": "Testing Requirements",
     "content": "All development work must include: . | Unit Tests: Testing individual components and functions | Integration Tests: Testing interaction between components | E2E Tests: End-to-end testing of key user flows | Multi-Region Tests: Testing across all regions | Multi-Language Tests: Testing with all supported languages | . See the individual guide pages for more detailed information on each aspect of development. ",
     "url": "/statamic-to-saleor-migration/:collection/development/#testing-requirements",
     
     "relUrl": "/:collection/development/#testing-requirements"
-  },"68": {
+  },"33": {
+    "doc": "Architecture Diagrams",
+    "title": "Architecture Diagrams",
+    "content": "This page provides visual representations of the architecture for the Statamic to Saleor migration project, with a focus on multi-region and multi-language capabilities. ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/",
+    
+    "relUrl": "/:collection/architecture/diagrams/"
+  },"34": {
+    "doc": "Architecture Diagrams",
+    "title": "System Overview Diagram",
+    "content": "The following diagram shows the high-level system architecture: . flowchart TD Customer([Customer]) Admin([Admin User]) subgraph \"Saleor Core\" Dashboard[Saleor Dashboard] API[GraphQL API] Channels[Channel Management] Products[Product Management] Orders[Order Management] Checkout[Checkout System] Payments[Payment Integrations] Translations[Translation System] Dashboard --- API API --- Channels API --- Products API --- Orders API --- Checkout API --- Payments Products --- Translations end subgraph \"Next.js Storefront\" Pages[Next.js Pages] Components[React Components] Hooks[Custom Hooks] API_Routes[API Routes] i18n[Internationalization] Pages --- Components Components --- Hooks Pages --- API_Routes Components --- i18n end Customer --&gt; Pages Admin --&gt; Dashboard API_Routes --&gt; API Hooks --&gt; API . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#system-overview-diagram",
+    
+    "relUrl": "/:collection/architecture/diagrams/#system-overview-diagram"
+  },"35": {
+    "doc": "Architecture Diagrams",
+    "title": "Multi-Region Architecture",
+    "content": "The following diagram illustrates the multi-region architecture using Saleor Channels: . flowchart TD Customer([Customer]) subgraph \"Domain Routing\" NL[domain-nl.com] BE[domain-be.com] DE[domain-de.com] end subgraph \"Next.js Storefront\" Router[Domain/Region Router] NL_Store[NL Specific UI] BE_Store[BE Specific UI] DE_Store[DE Specific UI] Router --- NL_Store Router --- BE_Store Router --- DE_Store end subgraph \"Saleor Core\" API[GraphQL API] Channels[Channels] NL_Channel[Netherlands Channel] BE_Channel[Belgium Channel] DE_Channel[Germany Channel] API --- Channels Channels --- NL_Channel Channels --- BE_Channel Channels --- DE_Channel end Customer --&gt; NL Customer --&gt; BE Customer --&gt; DE NL --&gt; Router BE --&gt; Router DE --&gt; Router NL_Store --&gt; API BE_Store --&gt; API DE_Store --&gt; API . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#multi-region-architecture",
+    
+    "relUrl": "/:collection/architecture/diagrams/#multi-region-architecture"
+  },"36": {
+    "doc": "Architecture Diagrams",
+    "title": "Technology Stack Diagram",
+    "content": "This diagram shows the technology stack and relationships between components: . flowchart TD subgraph \"Backend\" Saleor[Saleor Core] GraphQL[GraphQL API] Channels[Multi-Channel Support] DB[PostgreSQL] Saleor --- GraphQL Saleor --- Channels Saleor --- DB end subgraph \"Frontend\" Next[Next.js] React[React] Apollo[Apollo Client] Next --- React Next --- Apollo end subgraph \"Infrastructure\" Docker[Docker] AWS[AWS] CDN[Content Delivery Network] Docker --- AWS AWS --- CDN end Apollo --&gt; GraphQL CDN --&gt; Next . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#technology-stack-diagram",
+    
+    "relUrl": "/:collection/architecture/diagrams/#technology-stack-diagram"
+  },"37": {
+    "doc": "Architecture Diagrams",
+    "title": "Data Migration Flow",
+    "content": "This diagram illustrates the data migration process from Statamic to Saleor: . flowchart LR subgraph \"Source\" Statamic[Statamic CMS] SC[Simple Commerce] Statamic --- SC end subgraph \"Migration Tools\" Scripts[Migration Scripts] Transform[Data Transformation] Scripts --- Transform end subgraph \"Target\" Saleor[Saleor Core] API[GraphQL API] Saleor --- API end SC --&gt; Scripts Statamic --&gt; Scripts Transform --&gt; API . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#data-migration-flow",
+    
+    "relUrl": "/:collection/architecture/diagrams/#data-migration-flow"
+  },"38": {
+    "doc": "Architecture Diagrams",
+    "title": "Multi-Language Support",
+    "content": "This diagram shows how multi-language support is implemented: . flowchart TD subgraph \"Saleor\" Products[Products] Translations[Translations] Products --- Translations end subgraph \"Next.js\" i18n[Next.js i18n] UI[UI Components] i18n --- UI end Translations --&gt; i18n . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#multi-language-support",
+    
+    "relUrl": "/:collection/architecture/diagrams/#multi-language-support"
+  },"39": {
+    "doc": "Architecture Diagrams",
+    "title": "Data Flow Diagram",
+    "content": "This diagram illustrates the flow of data during customer interactions: . sequenceDiagram Customer-&gt;&gt;Next.js: Visit website Next.js-&gt;&gt;Saleor: GraphQL Query (with channel context) Saleor-&gt;&gt;Next.js: Return data (with translations) Next.js-&gt;&gt;Customer: Render page Customer-&gt;&gt;Next.js: Add to cart Next.js-&gt;&gt;Saleor: Create/Update Cart (channel-specific) Saleor-&gt;&gt;Next.js: Updated Cart data Next.js-&gt;&gt;Customer: Updated Cart UI Customer-&gt;&gt;Next.js: Checkout Next.js-&gt;&gt;Saleor: Process Checkout (channel-specific) Saleor-&gt;&gt;Payment Provider: Process Payment Payment Provider-&gt;&gt;Saleor: Payment Confirmation Saleor-&gt;&gt;Next.js: Order Confirmation Next.js-&gt;&gt;Customer: Order Confirmation Page . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#data-flow-diagram",
+    
+    "relUrl": "/:collection/architecture/diagrams/#data-flow-diagram"
+  },"40": {
+    "doc": "Architecture Diagrams",
+    "title": "Deployment Architecture",
+    "content": "This diagram shows the deployment architecture for the system: . flowchart TD subgraph \"Production Environment\" LB[Load Balancer] subgraph \"Frontend\" NL_Frontend[NL Frontend] BE_Frontend[BE Frontend] DE_Frontend[DE Frontend] end subgraph \"Backend\" Saleor_API[Saleor API] Saleor_Dashboard[Saleor Dashboard] DB[PostgreSQL] Cache[Redis] end LB --&gt; NL_Frontend LB --&gt; BE_Frontend LB --&gt; DE_Frontend NL_Frontend --&gt; Saleor_API BE_Frontend --&gt; Saleor_API DE_Frontend --&gt; Saleor_API Saleor_API --- DB Saleor_API --- Cache Saleor_Dashboard --- DB end subgraph \"DNS\" NL_Domain[domain-nl.com] BE_Domain[domain-be.com] DE_Domain[domain-de.com] NL_Domain --&gt; LB BE_Domain --&gt; LB DE_Domain --&gt; LB end . This architecture is designed to leverage Saleor’s Channel feature for comprehensive multi-region support, while providing a flexible and performant framework for multi-language capabilities across all storefronts. ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/diagrams/#deployment-architecture",
+    
+    "relUrl": "/:collection/architecture/diagrams/#deployment-architecture"
+  },"41": {
+    "doc": "Home",
+    "title": "Statamic to Saleor Migration Documentation",
+    "content": "This documentation outlines the migration process from Statamic CMS with Simple Commerce to Saleor headless commerce platform. Note: This repository was recently renamed to better reflect the migration target platform. ",
+    "url": "/statamic-to-saleor-migration/#statamic-to-saleor-migration-documentation",
+    
+    "relUrl": "/#statamic-to-saleor-migration-documentation"
+  },"42": {
+    "doc": "Home",
+    "title": "Key Features",
+    "content": ". | Multi-region support: Three separate domains (Netherlands, Belgium, Germany) | Multi-language content: Support for Dutch and German | Headless architecture: Clear separation between front-end and back-end | Improved performance: Leveraging modern technologies for better performance | Enhanced SEO: Better support for region and language-specific SEO | Streamlined content management: Integration with Strapi CMS for enhanced content capabilities | . ",
+    "url": "/statamic-to-saleor-migration/#key-features",
+    
+    "relUrl": "/#key-features"
+  },"43": {
+    "doc": "Home",
+    "title": "Documentation Sections",
+    "content": "Architecture Documentation . | System Architecture Overview | Architecture Diagram | API Documentation | Data Flow Documentation | . Migration Documentation . | Migration Strategy | Data Migration Guide | Content Migration Guide | User Migration Guide | . Multi-Region and Multi-Language Support . | Multi-Region Setup | Multi-Language Implementation | Currency and Tax Configuration | Domain-Specific Settings | . Development Documentation . | Development Environment Setup | Local Development Guide | Testing Strategy | Deployment Guide | . ",
+    "url": "/statamic-to-saleor-migration/#documentation-sections",
+    
+    "relUrl": "/#documentation-sections"
+  },"44": {
+    "doc": "Home",
+    "title": "Project Status",
+    "content": "The project is currently in the Proof of Concept phase. We are validating Saleor’s capabilities for our specific requirements, with a focus on multi-region and multi-language support. ",
+    "url": "/statamic-to-saleor-migration/#project-status",
+    
+    "relUrl": "/#project-status"
+  },"45": {
+    "doc": "Home",
+    "title": "Contributing to the Documentation",
+    "content": "To contribute to this documentation: . | Clone the repository | Create a new branch for your changes | Make your changes to the relevant markdown files | Submit a pull request | . ",
+    "url": "/statamic-to-saleor-migration/#contributing-to-the-documentation",
+    
+    "relUrl": "/#contributing-to-the-documentation"
+  },"46": {
+    "doc": "Home",
+    "title": "Contact",
+    "content": "For questions or issues with the documentation, please contact the project team. Last updated: April 15, 2024 . ",
+    "url": "/statamic-to-saleor-migration/#contact",
+    
+    "relUrl": "/#contact"
+  },"47": {
+    "doc": "Home",
+    "title": "Home",
+    "content": " ",
+    "url": "/statamic-to-saleor-migration/",
+    
+    "relUrl": "/"
+  },"48": {
     "doc": "Migration Process",
     "title": "Migration Process",
     "content": "This section outlines the comprehensive migration strategy from Statamic CMS with Simple Commerce to Saleor, with a focus on preserving and enhancing multi-region and multi-language capabilities. ",
     "url": "/statamic-to-saleor-migration/:collection/migration/",
     
     "relUrl": "/:collection/migration/"
-  },"69": {
+  },"49": {
     "doc": "Migration Process",
     "title": "Migration Overview",
     "content": "The migration follows these key phases: . | Assessment &amp; Planning | Environment Setup | Data Modeling &amp; Mapping | Data Migration | Frontend Development | Testing &amp; Validation | Deployment &amp; Go-Live | . ",
     "url": "/statamic-to-saleor-migration/:collection/migration/#migration-overview",
     
     "relUrl": "/:collection/migration/#migration-overview"
-  },"70": {
+  },"50": {
     "doc": "Migration Process",
     "title": "Current System Analysis",
     "content": "The current Statamic-based system includes: . | CMS: Statamic as the content management system | E-commerce: Simple Commerce for product management and checkout | Frontend: Laravel Blade templates with Vue.js components | Database: MySQL database for data storage | Multi-site: Limited multi-site capabilities through Statamic’s multi-site feature | Languages: Basic multi-language support | . ",
     "url": "/statamic-to-saleor-migration/:collection/migration/#current-system-analysis",
     
     "relUrl": "/:collection/migration/#current-system-analysis"
-  },"71": {
+  },"51": {
     "doc": "Migration Process",
     "title": "Target System Architecture",
     "content": "The target Saleor-based system includes: . | E-commerce: Saleor Core with Channels feature for multi-region support | Frontend: Next.js-based storefront with advanced routing for multiple domains | APIs: GraphQL API for communication between frontend and backend | Database: PostgreSQL for data storage | Multi-region: Comprehensive multi-region support via Saleor Channels | Multi-language: Advanced language capabilities throughout the platform | . ",
     "url": "/statamic-to-saleor-migration/:collection/migration/#target-system-architecture",
     
     "relUrl": "/:collection/migration/#target-system-architecture"
-  },"72": {
+  },"52": {
     "doc": "Migration Process",
     "title": "Migration Methodology",
     "content": "1. Data Extraction . The first step is to extract all relevant data from the current Statamic system: . | Product catalog with all variants and attributes | Categories and collections | Customer data and order history | CMS content including pages, blog posts, and media | Site configuration and settings | URL structures for SEO preservation | . Data extraction tools include: . | Custom PHP scripts to access Statamic’s data structures | Database exports for structured data | API calls for programmatically accessible data | File system operations for assets and media | . 2. Data Transformation . The extracted data needs to be transformed to match Saleor’s data models: . | Mapping Statamic product structure to Saleor’s product model | Converting content to appropriate formats for the new system | Transforming customer and order data to match Saleor’s schemas | Preparing data with appropriate language variants | Adding channel-specific data for multi-region support | . 3. Data Loading . Processed data is loaded into the Saleor system through: . | GraphQL mutations for structured data | Saleor’s import/export APIs for bulk operations | Custom import scripts for complex data structures | Media asset import to appropriate storage | . 4. Multi-Region Configuration . Special attention is given to setting up the multi-region capabilities: . | Creating appropriate Channels in Saleor (Netherlands, Belgium, Germany) | Configuring region-specific settings (currencies, taxes, shipping) | Setting up channel-specific product visibility and pricing | Establishing domain-specific routing | . 5. Multi-Language Implementation . Language support is implemented through: . | Product translations in Saleor | Content translations for all static content | Language-specific SEO metadata | Frontend components for language switching | Language detection and persistence mechanisms | . ",
     "url": "/statamic-to-saleor-migration/:collection/migration/#migration-methodology",
     
     "relUrl": "/:collection/migration/#migration-methodology"
-  },"73": {
+  },"53": {
     "doc": "Migration Process",
     "title": "Migration Challenges and Solutions",
     "content": "Challenge: Data Model Differences . Solution: Comprehensive mapping between Statamic and Saleor data models, with transformation scripts to handle structural differences. Challenge: URL Structure Preservation . Solution: Custom routing implementation in Next.js to preserve existing URL structures for SEO, with appropriate redirects for changed URLs. Challenge: Multi-Region Data . Solution: Channel-specific data imports with region context preserved throughout the migration process. Challenge: User Accounts and Orders . Solution: Secure migration of user data with appropriate hashing, preserving order history with region context. Challenge: Content Relationships . Solution: Relationship mapping to preserve connections between content types, products, and other entities. ",
     "url": "/statamic-to-saleor-migration/:collection/migration/#migration-challenges-and-solutions",
     
     "relUrl": "/:collection/migration/#migration-challenges-and-solutions"
-  },"74": {
+  },"54": {
     "doc": "Migration Process",
     "title": "Migration Timeline",
     "content": "The migration is scheduled to proceed as follows: . | Assessment Phase: 2 weeks | Environment Setup: 1 week | Data Modeling &amp; Mapping: 3 weeks | Migration Script Development: 4 weeks | Test Migration: 2 weeks | Frontend Development: 6 weeks (parallel with migration development) | Integration Testing: 3 weeks | Performance Optimization: 2 weeks | User Acceptance Testing: 2 weeks | Go-Live Preparation: 1 week | Deployment and Go-Live: 1 week | . ",
     "url": "/statamic-to-saleor-migration/:collection/migration/#migration-timeline",
     
     "relUrl": "/:collection/migration/#migration-timeline"
-  },"75": {
+  },"55": {
     "doc": "Migration Process",
     "title": "Risk Mitigation",
     "content": "To minimize risks during the migration: . | Development and testing occur in isolated environments | Multiple test migrations are performed before the final migration | Comprehensive backup strategy for all source data | Detailed rollback plan in case of unexpected issues | Thorough testing across all regions and languages | Phased go-live approach if necessary | . ",
     "url": "/statamic-to-saleor-migration/:collection/migration/#risk-mitigation",
     
     "relUrl": "/:collection/migration/#risk-mitigation"
-  },"76": {
+  },"56": {
     "doc": "Migration Process",
     "title": "Detailed Migration Documentation",
     "content": "For more in-depth information on specific aspects of the migration process, refer to: . | Migration Strategy | Data Mapping | Content Migration | Testing and Validation | . ",
     "url": "/statamic-to-saleor-migration/:collection/migration/#detailed-migration-documentation",
     
     "relUrl": "/:collection/migration/#detailed-migration-documentation"
+  },"57": {
+    "doc": "Architecture",
+    "title": "System Architecture",
+    "content": " ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/#system-architecture",
+    
+    "relUrl": "/:collection/architecture/#system-architecture"
+  },"58": {
+    "doc": "Architecture",
+    "title": "Overview",
+    "content": "The architecture for the Statamic to Saleor migration consists of the following components: . | Frontend: Next.js-based storefront that serves the customer-facing website across multiple domains and languages | Commerce Platform: Saleor Core providing comprehensive ecommerce functionality with multi-region support | Data Migration Tools: Custom scripts for migrating data from Statamic to Saleor with proper region and language mapping | Infrastructure: Multi-region deployment supporting three separate domains (Netherlands, Belgium, Germany) | . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/#overview",
+    
+    "relUrl": "/:collection/architecture/#overview"
+  },"59": {
+    "doc": "Architecture",
+    "title": "Core Architecture Principles",
+    "content": ". | Separation of Concerns: Clear separation between commerce functionality, content management, and presentation | API-First Approach: All interactions between components happen through well-defined APIs | Multi-Region by Design: Architecture supports multiple regions as a fundamental principle, not an afterthought | Language Flexibility: Content and commerce data support multiple language variants throughout the system | Scalability: Each component can scale independently based on demand | Maintainability: Modular design allows for easier updates and modifications | . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/#core-architecture-principles",
+    
+    "relUrl": "/:collection/architecture/#core-architecture-principles"
+  },"60": {
+    "doc": "Architecture",
+    "title": "Commerce Platform: Saleor",
+    "content": "Saleor will handle all commerce-related functionality: . | Product catalog management with multi-language support | Cart processing with region-specific rules | Checkout flow customized for each region | Order management across all regions | Customer accounts with cross-region capabilities | Multi-region support via Channels feature | Payment provider integration specific to each region | Shipping options configured per region | Tax calculations based on regional requirements | . Saleor Channel Architecture . Saleor’s Channel feature is the foundation of our multi-region strategy: . | Channel = Region: Each region (Netherlands, Belgium, Germany) is implemented as a separate Saleor Channel | Channel-Specific Configuration: Each Channel has its own: . | Currency settings | Pricing strategies | Product availability | Shipping methods | Payment providers | Tax configurations | . | Shared Products: Product catalog is shared across channels, with channel-specific visibility control | Centralized Management: All channels can be managed from a single Saleor Dashboard | . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/#commerce-platform-saleor",
+    
+    "relUrl": "/:collection/architecture/#commerce-platform-saleor"
+  },"61": {
+    "doc": "Architecture",
+    "title": "Frontend Architecture",
+    "content": "The frontend is implemented using Next.js, providing: . | Server-side rendering for optimal SEO | Client-side interactions for a responsive user experience | Multi-domain support through domain-specific deployments | Language detection and switching capabilities | Region-specific content and product presentation | Optimized performance through static generation and incremental static regeneration | Mobile-first responsive design | . Domain-Specific Configuration . Each domain has specific configurations: . | Domain-specific routing for different URLs across regions | Region-specific content sourcing | Language preferences and defaults | Regional branding and design variations (if needed) | Localized SEO metadata | . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/#frontend-architecture",
+    
+    "relUrl": "/:collection/architecture/#frontend-architecture"
+  },"62": {
+    "doc": "Architecture",
+    "title": "Integration Points",
+    "content": "The system components interact through the following integration points: . | GraphQL API: The primary way to interact with Saleor for product information, cart operations, and checkout | Webhooks: Event-driven notifications from Saleor to external systems | REST APIs: For interactions with other services and data sources | Authentication Services: Unified authentication across regions and domains | . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/#integration-points",
+    
+    "relUrl": "/:collection/architecture/#integration-points"
+  },"63": {
+    "doc": "Architecture",
+    "title": "Technology Stack",
+    "content": ". | Saleor: Open-source commerce platform serving as the core backend | Next.js: React framework for building the storefront | GraphQL: Query language for APIs, used for communication with Saleor | PostgreSQL: Database used by Saleor for persistent storage | Redis: Used for caching and session management | Docker: Containerization for development and deployment | Kubernetes: Optional for production orchestration | Content Delivery Network: For optimized global content delivery | . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/#technology-stack",
+    
+    "relUrl": "/:collection/architecture/#technology-stack"
+  },"64": {
+    "doc": "Architecture",
+    "title": "Multi-Region Support",
+    "content": "Saleor’s Channel feature will be used to support multiple regions: . | Separate channel for each region (Netherlands, Belgium, Germany) | Region-specific products, prices, and availability | Multiple currencies (EUR, with region-specific formatting) | Multiple languages (Dutch, French, German) with support for: . | Product information in multiple languages | Content translations | Region-specific metadata | . | Region-specific shipping and payment methods | Tax configurations appropriate for each region | . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/#multi-region-support",
+    
+    "relUrl": "/:collection/architecture/#multi-region-support"
+  },"65": {
+    "doc": "Architecture",
+    "title": "Data Flow Architecture",
+    "content": "The data flow between components follows these patterns: . | Customer Browsing: . | Client → Next.js → Saleor GraphQL API → PostgreSQL → Client | Content is served with appropriate region and language context | . | Cart Operations: . | Client → Next.js → Saleor GraphQL API → Cart Storage → Client | Region-specific pricing, tax, and availability rules are applied | . | Checkout Process: . | Client → Next.js → Saleor GraphQL API → Payment Providers → Order Processing | Region-specific payment methods and shipping options are presented | . | Order Management: . | Admin → Saleor Dashboard → Order Services → Fulfillment Systems | Orders are managed with awareness of their originating region | . | . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/#data-flow-architecture",
+    
+    "relUrl": "/:collection/architecture/#data-flow-architecture"
+  },"66": {
+    "doc": "Architecture",
+    "title": "Security Architecture",
+    "content": ". | Authentication: JWT-based authentication for both customers and administrators | Authorization: Role-based access control for administrative functions | Data Protection: Encryption for sensitive data in transit and at rest | GDPR Compliance: Data handling processes designed to comply with EU regulations | Cross-Domain Security: Secure cross-domain authentication and data sharing | . ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/#security-architecture",
+    
+    "relUrl": "/:collection/architecture/#security-architecture"
+  },"67": {
+    "doc": "Architecture",
+    "title": "Future Considerations",
+    "content": ". | Scaling strategy for high-traffic periods | Caching strategy for improved performance | Performance optimization for mobile users | Monitoring and alerting system | Backup and disaster recovery procedures | Expansion to additional regions and languages | . See Architecture Diagram for visual representations of this architecture. ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/#future-considerations",
+    
+    "relUrl": "/:collection/architecture/#future-considerations"
+  },"68": {
+    "doc": "Architecture",
+    "title": "Architecture",
+    "content": " ",
+    "url": "/statamic-to-saleor-migration/:collection/architecture/",
+    
+    "relUrl": "/:collection/architecture/"
+  },"69": {
+    "doc": "Multi-Region & Multi-Language Support",
+    "title": "Multi-Region and Multi-Language Implementation",
+    "content": "This section provides comprehensive documentation on how multi-region and multi-language capabilities are implemented in the Saleor-based e-commerce platform. ",
+    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#multi-region-and-multi-language-implementation",
+    
+    "relUrl": "/:collection/multi-region-language/#multi-region-and-multi-language-implementation"
+  },"70": {
+    "doc": "Multi-Region & Multi-Language Support",
+    "title": "Overview",
+    "content": "Our implementation supports: . | 3 Distinct Regions/Domains: . | Netherlands (domain-nl.com) | Belgium (domain-be.com) | Germany (domain-de.com) | . | 2 Primary Languages: . | Dutch | German | (French is also supported in the Belgium region) | . | . ",
+    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#overview",
+    
+    "relUrl": "/:collection/multi-region-language/#overview"
+  },"71": {
+    "doc": "Multi-Region & Multi-Language Support",
+    "title": "Key Architecture Components",
+    "content": "1. Region Implementation via Saleor Channels . Saleor’s Channel feature serves as the foundation for our multi-region implementation: . Saleor ├── Netherlands Channel │ ├── Currency: EUR │ ├── Tax Configuration: Dutch VAT rules │ ├── Shipping Methods: NL-specific carriers │ └── Payment Providers: iDeal, Credit Cards │ ├── Belgium Channel │ ├── Currency: EUR │ ├── Tax Configuration: Belgian VAT rules │ ├── Shipping Methods: BE-specific carriers │ └── Payment Providers: Bancontact, Credit Cards │ └── Germany Channel ├── Currency: EUR ├── Tax Configuration: German VAT rules ├── Shipping Methods: DE-specific carriers └── Payment Providers: SEPA, Credit Cards . 2. Content Translation System . Product information and content are managed with full multi-language support: . | Product Translations: Stored directly in Saleor with language variants | Content Management: Static content, blog posts, and marketing materials translated for each supported language | SEO Metadata: Language-specific SEO information for optimal search engine visibility | . 3. Domain-Specific Routing . Each region is served through its own dedicated domain with appropriate routing: . domain-nl.com → Netherlands Channel (Dutch primary) domain-be.com → Belgium Channel (Dutch/French) domain-de.com → Germany Channel (German primary) . 4. User Experience Considerations . | Language Detection: Automatic detection based on browser settings | Language Persistence: User language preference is remembered | Region Detection: Geo-IP based routing with user confirmation | Cross-Region Experience: Consistent user experience across regions | . ",
+    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#key-architecture-components",
+    
+    "relUrl": "/:collection/multi-region-language/#key-architecture-components"
+  },"72": {
+    "doc": "Multi-Region & Multi-Language Support",
+    "title": "Technical Implementation",
+    "content": "Channel Configuration in Saleor . Each Channel in Saleor is configured with: . | Channel-specific pricing: Prices can be adjusted per region | Product visibility: Products can be made available or unavailable in specific regions | Fulfillment settings: Different shipping options and warehouses per region | Tax settings: Region-appropriate tax configurations | . Frontend Implementation with Next.js . The Next.js frontend handles: . | Domain routing: Proper routing to the appropriate language and region | Language switching: UI components to change language preference | Region-aware API calls: Including channel information in all Saleor API requests | Localized components: Components that adapt to the current language context | . Database Structure for Multi-Language . The underlying database structure supports: . | Translated fields: Core content fields have language variants | Region-specific data: Pricing, availability, and configurations per region | Shared core data: Product IDs and structural information shared across regions | . ",
+    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#technical-implementation",
+    
+    "relUrl": "/:collection/multi-region-language/#technical-implementation"
+  },"73": {
+    "doc": "Multi-Region & Multi-Language Support",
+    "title": "Migration Considerations",
+    "content": "Migrating from Statamic to this multi-region, multi-language Saleor implementation involves: . | Data mapping: Mapping Statamic content to the appropriate regions and languages | URL structure preservation: Maintaining SEO value across the migration | Region-specific data migration: Ensuring pricing and product data is migrated with regional context | Testing across regions: Comprehensive testing in all region/language combinations | . ",
+    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#migration-considerations",
+    
+    "relUrl": "/:collection/multi-region-language/#migration-considerations"
+  },"74": {
+    "doc": "Multi-Region & Multi-Language Support",
+    "title": "Best Practices",
+    "content": "When working with the multi-region and multi-language capabilities: . | Always include channel context in API calls to Saleor | Test in all language combinations when making changes | Consider regional differences in business rules and user expectations | Maintain translations for all content, including error messages and notifications | Preserve URL structures for SEO across languages and regions | . ",
+    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#best-practices",
+    
+    "relUrl": "/:collection/multi-region-language/#best-practices"
+  },"75": {
+    "doc": "Multi-Region & Multi-Language Support",
+    "title": "Detailed Documentation",
+    "content": "For more detailed information on specific aspects of the multi-region and multi-language implementation, see: . | Region Configuration | Language Implementation | Domain-Specific Setup | SEO Considerations | . ",
+    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/#detailed-documentation",
+    
+    "relUrl": "/:collection/multi-region-language/#detailed-documentation"
+  },"76": {
+    "doc": "Multi-Region & Multi-Language Support",
+    "title": "Multi-Region & Multi-Language Support",
+    "content": " ",
+    "url": "/statamic-to-saleor-migration/:collection/multi-region-language/",
+    
+    "relUrl": "/:collection/multi-region-language/"
   },"77": {
     "doc": "Language Implementation",
     "title": "Multi-Language Implementation",
@@ -712,5 +712,89 @@
     "url": "/statamic-to-saleor-migration/:collection/development/",
     
     "relUrl": "/:collection/development/"
+  },"102": {
+    "doc": "System Architecture",
+    "title": "System Architecture",
+    "content": "This document outlines the system architecture for the migration from Statamic CMS with Simple Commerce to Saleor, with special emphasis on supporting multi-region and multi-language capabilities. ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/",
+    
+    "relUrl": "/architecture/system-architecture/"
+  },"103": {
+    "doc": "System Architecture",
+    "title": "Table of Contents",
+    "content": ". | Architecture Overview | Core Components | Integration Layer | Data Flow | Multi-Region Architecture | Multi-Language Support | Deployment Architecture | Security Architecture | Scalability Considerations | . ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/#table-of-contents",
+    
+    "relUrl": "/architecture/system-architecture/#table-of-contents"
+  },"104": {
+    "doc": "System Architecture",
+    "title": "Architecture Overview",
+    "content": "The new system architecture is designed as a composable commerce platform using Saleor as a unified solution for both commerce functionality and content management in a headless approach. The architecture consists of the following primary components: . graph TD subgraph \"Frontend Applications\" StorefrontApp[\"Storefront Application\"] AdminDashboard[\"Admin Dashboard\"] MobileApp[\"Mobile App\"] end subgraph \"Saleor Commerce &amp; Content Platform\" ProductCatalog[\"Product Catalog\"] PricingEngine[\"Pricing Engine\"] InventoryMgmt[\"Inventory Management\"] OrderMgmt[\"Order Management\"] CustomerMgmt[\"Customer Management\"] PaymentProcessing[\"Payment Processing\"] ShippingMgmt[\"Shipping Management\"] ContentMgmt[\"Content Management\"] MediaLibrary[\"Media Library\"] Channels[\"Channel Management\"] Translations[\"Translation Management\"] end subgraph \"Integration Layer\" EventBus[\"Event Bus\"] DataSync[\"Data Synchronization\"] RegionConfig[\"Region Configuration\"] end subgraph \"Infrastructure\" CDN[\"Content Delivery Network\"] DBSaleor[\"PostgreSQL (Saleor)\"] Redis[\"Redis Cache\"] S3[\"S3 Storage\"] end StorefrontApp --&gt; CDN AdminDashboard --&gt; ProductCatalog AdminDashboard --&gt; ContentMgmt MobileApp --&gt; CDN ProductCatalog --&gt; EventBus ContentMgmt --&gt; EventBus EventBus --&gt; DataSync DataSync --&gt; RegionConfig ProductCatalog --&gt; DBSaleor ContentMgmt --&gt; DBSaleor CDN --&gt; ProductCatalog CDN --&gt; ContentMgmt DBSaleor --- Redis MediaLibrary --&gt; S3 ProductCatalog --&gt; S3 . ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/#architecture-overview",
+    
+    "relUrl": "/architecture/system-architecture/#architecture-overview"
+  },"105": {
+    "doc": "System Architecture",
+    "title": "Core Components",
+    "content": "Saleor Commerce &amp; Content Platform . Saleor serves as the unified commerce and content platform with the following core modules: . | Product Catalog . | Manages product information, variants, options | Handles product relationships and categorization | Provides product search and filtering capabilities | . | Pricing Engine . | Manages product pricing across regions and currencies | Handles discounts, promotions, and special pricing | Supports tax calculations based on regional requirements | . | Inventory Management . | Tracks stock levels and inventory availability | Provides inventory allocation and reservation | Manages backorder and pre-order functionality | . | Order Management . | Processes orders from creation to fulfillment | Manages order lifecycle and status updates | Handles returns, exchanges, and cancellations | . | Customer Management . | Maintains customer profiles and accounts | Handles customer authentication and authorization | Manages customer addresses and preferences | . | Payment Processing . | Integrates with payment providers (Stripe, PayPal, etc.) | Handles payment authorization and capture | Manages refunds and payment status | . | Shipping Management . | Calculates shipping options and rates | Integrates with fulfillment providers | Manages shipping rules per region | . | Content Management . | Stores rich product descriptions, features, and specifications | Manages product-related media assets | Provides localized product content across languages | . | Media Library . | Centralizes storage for all media assets | Provides image processing and optimization | Manages digital assets across the platform | . | Channel Management . | Manages region-specific configurations through Saleor Channels | Controls product availability by region | Configures pricing strategies per Channel | . | Translation Management . | Handles multi-language content | Manages translations for products, categories, and pages | Provides translation workflows and tools | . | . ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/#core-components",
+    
+    "relUrl": "/architecture/system-architecture/#core-components"
+  },"106": {
+    "doc": "System Architecture",
+    "title": "Integration Layer",
+    "content": "The Integration Layer ensures data consistency and synchronization across the platform: . | Event Bus . | Facilitates communication between components using an event-driven architecture | Implements publish-subscribe pattern for loose coupling | Uses message queues for reliable event delivery | . | Data Synchronization . | Handles data transformation for migration purposes | Manages synchronization with third-party systems | Implements retry mechanisms and error handling | . | Region Configuration . | Manages region-specific settings and configurations | Handles domain mapping for different regions | Controls language preferences per region | . | . Integration Layer Implementation . The integration layer is implemented using the following technologies: . graph TD subgraph \"Integration Layer Technologies\" EventBus[\"Event Bus (Redis Pub/Sub)\"] SyncWorkers[\"Sync Workers (Node.js)\"] WebhookHandlers[\"Webhook Handlers (Express.js)\"] APIGateway[\"API Gateway (Express.js)\"] ConfigAPI[\"Configuration API (Express.js)\"] end EventBus --&gt; SyncWorkers WebhookHandlers --&gt; EventBus APIGateway --&gt; WebhookHandlers ConfigAPI --&gt; SyncWorkers . ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/#integration-layer",
+    
+    "relUrl": "/architecture/system-architecture/#integration-layer"
+  },"107": {
+    "doc": "System Architecture",
+    "title": "Data Flow",
+    "content": "Product Creation Flow . sequenceDiagram participant Admin as Admin User participant Saleor as Saleor participant Events as Event Bus participant Sync as Sync Service Admin-&gt;&gt;Saleor: Create Product Saleor--&gt;&gt;Admin: Product Created (ID: prod_123) Saleor-&gt;&gt;Events: Publish ProductCreated Event Events-&gt;&gt;Sync: ProductCreated Event Sync-&gt;&gt;Events: Publish ProductSynced Event . Order Processing Flow . sequenceDiagram participant Customer as Customer participant Storefront as Storefront participant Saleor as Saleor participant Payment as Payment Provider participant Events as Event Bus participant Fulfillment as Fulfillment Service Customer-&gt;&gt;Storefront: Place Order Storefront-&gt;&gt;Saleor: Create Order Saleor-&gt;&gt;Payment: Process Payment Payment--&gt;&gt;Saleor: Payment Confirmed Saleor-&gt;&gt;Events: Publish OrderCreated Event Events-&gt;&gt;Fulfillment: OrderCreated Event Fulfillment-&gt;&gt;Saleor: Update Fulfillment Status Saleor--&gt;&gt;Storefront: Order Confirmed Storefront--&gt;&gt;Customer: Order Confirmation . ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/#data-flow",
+    
+    "relUrl": "/architecture/system-architecture/#data-flow"
+  },"108": {
+    "doc": "System Architecture",
+    "title": "Multi-Region Architecture",
+    "content": "The multi-region architecture enables operation across different geographical regions with region-specific configurations using Saleor’s Channel system: . graph TD subgraph \"Region Configuration\" RegionManager[\"Region Manager\"] DomainRouter[\"Domain Router\"] RegionSettings[\"Region Settings\"] end subgraph \"Channel: Netherlands (example.nl)\" NL_Storefront[\"Dutch Storefront\"] NL_Settings[\"Settings&lt;br/&gt;- Currency: EUR&lt;br/&gt;- Languages: NL, EN&lt;br/&gt;- Tax Rate: 21%\"] end subgraph \"Channel: Germany (example.de)\" DE_Storefront[\"German Storefront\"] DE_Settings[\"Settings&lt;br/&gt;- Currency: EUR&lt;br/&gt;- Languages: DE, EN&lt;br/&gt;- Tax Rate: 19%\"] end subgraph \"Channel: Belgium (example.be)\" BE_Storefront[\"Belgian Storefront\"] BE_Settings[\"Settings&lt;br/&gt;- Currency: EUR&lt;br/&gt;- Languages: NL, FR, EN&lt;br/&gt;- Tax Rate: 21%\"] end RegionManager --&gt; DomainRouter RegionManager --&gt; RegionSettings DomainRouter --&gt; NL_Storefront DomainRouter --&gt; DE_Storefront DomainRouter --&gt; BE_Storefront RegionSettings --&gt; NL_Settings RegionSettings --&gt; DE_Settings RegionSettings --&gt; BE_Settings . Domain-based Routing . The system uses domain-based routing to direct users to the appropriate regional storefront: . | When a user accesses a domain (e.g., example.nl), the Domain Router identifies the region | The appropriate Saleor Channel configuration is loaded, including: . | Currency settings | Language preferences | Tax rates and rules | Shipping options | Payment methods | . | . Region-specific Data . Each region (implemented as a Saleor Channel) can have specific data configurations: . | Product Availability: Products can be enabled or disabled per Channel | Pricing: Different pricing strategies per Channel | Shipping Methods: Channel-specific shipping options | Payment Methods: Available payment methods by Channel | Tax Rules: Channel-specific tax calculations | . ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/#multi-region-architecture",
+    
+    "relUrl": "/architecture/system-architecture/#multi-region-architecture"
+  },"109": {
+    "doc": "System Architecture",
+    "title": "Multi-Language Support",
+    "content": "The multi-language architecture leverages Saleor’s translation capabilities to support content delivery in multiple languages based on region preferences: . graph TD subgraph \"Language Management\" LangDetector[\"Language Detector\"] LangSelector[\"Language Selector\"] TranslationProvider[\"Translation Provider\"] end subgraph \"Content Localization\" ProductLocale[\"Product Localization\"] CategoryLocale[\"Category Localization\"] PageLocale[\"Page Localization\"] UILocale[\"UI Localization\"] end LangDetector --&gt; LangSelector LangSelector --&gt; TranslationProvider TranslationProvider --&gt; ProductLocale TranslationProvider --&gt; CategoryLocale TranslationProvider --&gt; PageLocale TranslationProvider --&gt; UILocale . Language Detection and Selection . | Automatic Detection: Based on domain, browser settings, and user preferences | Manual Selection: User can override the language via UI controls | Persistence: Selected language is stored in user preferences | . Content Localization Strategy . | Database-level Localization: Content stored with language identifiers in Saleor | Translation Files: UI elements and static content stored in JSON/YAML translation files | Fallback Mechanism: If content is not available in the selected language, fall back to the default language | . ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/#multi-language-support",
+    
+    "relUrl": "/architecture/system-architecture/#multi-language-support"
+  },"110": {
+    "doc": "System Architecture",
+    "title": "Deployment Architecture",
+    "content": "The deployment architecture leverages containerization and cloud services for scalability and reliability: . graph TD subgraph \"Cloud Infrastructure\" subgraph \"Frontend Deployment\" CDN[\"CDN (Cloudflare)\"] StaticHosting[\"Static Hosting (Vercel/Netlify)\"] end subgraph \"Container Orchestration\" K8s[\"Kubernetes Cluster\"] SaleorPods[\"Saleor Pods\"] IntegrationPods[\"Integration Layer Pods\"] end subgraph \"Managed Databases\" RDS[\"PostgreSQL RDS\"] ElastiCache[\"Redis ElastiCache\"] end subgraph \"Object Storage\" S3Bucket[\"S3 Buckets\"] end end CDN --&gt; StaticHosting StaticHosting --&gt; K8s K8s --&gt; SaleorPods K8s --&gt; IntegrationPods SaleorPods --&gt; RDS IntegrationPods --&gt; RDS SaleorPods --&gt; ElastiCache IntegrationPods --&gt; ElastiCache SaleorPods --&gt; S3Bucket . Deployment Components . | Frontend Deployment . | Static assets served through CDN for performance | Jamstack approach with pre-rendered pages when possible | Dynamic content fetched through APIs | . | Backend Services . | Containerized applications deployed on Kubernetes | Horizontal scaling for handling variable loads | Health monitoring and automatic recovery | . | Database Layer . | Managed PostgreSQL instances for Saleor | Read replicas for performance optimization | Automated backups and point-in-time recovery | . | Caching Layer . | Redis for application caching | CDN caching for static content | Edge caching for API responses | . | . ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/#deployment-architecture",
+    
+    "relUrl": "/architecture/system-architecture/#deployment-architecture"
+  },"111": {
+    "doc": "System Architecture",
+    "title": "Security Architecture",
+    "content": "The security architecture implements multiple layers of protection: . graph TD subgraph \"Security Layers\" subgraph \"Network Security\" WAF[\"Web Application Firewall\"] DDoS[\"DDoS Protection\"] SSL[\"SSL/TLS Encryption\"] end subgraph \"Authentication &amp; Authorization\" Auth[\"Authentication Service\"] JWT[\"JWT Tokens\"] RBAC[\"Role-Based Access Control\"] end subgraph \"Data Security\" Encryption[\"Data Encryption\"] Masking[\"Data Masking\"] Auditing[\"Audit Logging\"] end subgraph \"API Security\" RateLimit[\"Rate Limiting\"] InputValidation[\"Input Validation\"] CORS[\"CORS Policies\"] end end WAF --&gt; Auth DDoS --&gt; WAF SSL --&gt; WAF Auth --&gt; JWT JWT --&gt; RBAC RBAC --&gt; Encryption RBAC --&gt; RateLimit RateLimit --&gt; InputValidation InputValidation --&gt; CORS . Security Components . | Network Security . | WAF to protect against common web vulnerabilities | DDoS protection to ensure service availability | SSL/TLS encryption for all communications | . | Authentication &amp; Authorization . | JWT-based authentication with short expiration | Role-based access control | OAuth integration for third-party authentication | . | Data Security . | Encryption of sensitive data at rest and in transit | PII data protection and compliance with GDPR | Regular security audits and penetration testing | . | API Security . | Rate limiting to prevent abuse | Input validation for all API endpoints | Proper CORS configuration to prevent unauthorized access | . | . ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/#security-architecture",
+    
+    "relUrl": "/architecture/system-architecture/#security-architecture"
+  },"112": {
+    "doc": "System Architecture",
+    "title": "Scalability Considerations",
+    "content": "The architecture is designed with scalability in mind to handle growing demands: . Horizontal Scaling . | Stateless Services . | All backend services designed to be stateless | Session data stored in Redis for shared state | Allows for easy horizontal scaling | . | Database Scaling . | Read replicas for handling increased read traffic | Connection pooling for efficient resource utilization | Potential sharding for extremely large datasets | . | . Performance Optimization . | Caching Strategy . | Multi-level caching (application, CDN, browser) | Cache invalidation through events | Region-specific cache nodes for improved latency | . | Asynchronous Processing . | Background processing for non-critical operations | Message queues for reliable task distribution | Scheduled jobs for maintenance tasks | . | . Monitoring and Elasticity . | Performance Monitoring . | Real-time metrics collection and dashboards | Alerting based on performance thresholds | Tracing for identifying bottlenecks | . | Auto-scaling . | Automatic scaling based on CPU/memory utilization | Scheduled scaling for predictable traffic patterns | Burst capacity for handling traffic spikes | . | . ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/#scalability-considerations",
+    
+    "relUrl": "/architecture/system-architecture/#scalability-considerations"
+  },"113": {
+    "doc": "System Architecture",
+    "title": "Conclusion",
+    "content": "This system architecture provides a robust foundation for migrating from Statamic CMS with Simple Commerce to Saleor. The design emphasizes: . | Unified commerce and content management with Saleor | Comprehensive support for multi-region through Saleor’s Channel system | Multi-language capabilities through Saleor’s translation features | Scalable and secure infrastructure for future growth | . The architecture allows for phased implementation, with the ability to migrate components incrementally while maintaining system integrity and performance. ",
+    "url": "/statamic-to-saleor-migration/architecture/system-architecture/#conclusion",
+    
+    "relUrl": "/architecture/system-architecture/#conclusion"
   }
 }

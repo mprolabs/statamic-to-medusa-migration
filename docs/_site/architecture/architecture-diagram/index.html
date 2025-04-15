@@ -14,9 +14,10 @@
   <style id="jtd-nav-activation">
   
 
+    .site-nav > ul.nav-list:first-child > li > a,
     
-    .site-nav > ul.nav-list:first-child > li:not(:nth-child(1)) > a,
-    .site-nav > ul.nav-list:first-child > li > ul > li a {
+    .site-nav > ul.nav-list:first-child > li > ul > li:not(:nth-child(1)) > a,
+    .site-nav > ul.nav-list:first-child > li > ul > li > ul > li a {
       background-image: none;
     }
 
@@ -25,12 +26,14 @@
       background-image: none;
     }
 
-    .site-nav > ul.nav-list:first-child > li:nth-child(1) > a {
+    .site-nav > ul.nav-list:first-child > li:nth-child(2) > ul > li:nth-child(1) > a {
       font-weight: 600;
       text-decoration: none;
-    }.site-nav > ul.nav-list:first-child > li:nth-child(1) > button svg {
+    }.site-nav > ul.nav-list:first-child > li:nth-child(2) > button svg,
+    .site-nav > ul.nav-list:first-child > li:nth-child(2) > ul > li:nth-child(1) > button svg {
       transform: rotate(-90deg);
-    }.site-nav > ul.nav-list:first-child > li.nav-list-item:nth-child(1) > ul.nav-list {
+    }.site-nav > ul.nav-list:first-child > li.nav-list-item:nth-child(2) > ul.nav-list,
+    .site-nav > ul.nav-list:first-child > li.nav-list-item:nth-child(2) > ul.nav-list > li.nav-list-item:nth-child(1) > ul.nav-list {
       display: block;
     }
   </style>
@@ -50,18 +53,18 @@
 
 
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Home | Statamic to Saleor Migration</title>
+<title>Architecture Diagram | Statamic to Saleor Migration</title>
 <meta name="generator" content="Jekyll v4.3.4" />
-<meta property="og:title" content="Home" />
+<meta property="og:title" content="Architecture Diagram" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Documentation for the migration from Statamic CMS to Saleor headless commerce platform" />
-<meta property="og:description" content="Documentation for the migration from Statamic CMS to Saleor headless commerce platform" />
+<meta name="description" content="Visual representation of the Saleor migration project architecture" />
+<meta property="og:description" content="Visual representation of the Saleor migration project architecture" />
 <meta property="og:site_name" content="Statamic to Saleor Migration" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Home" />
+<meta property="twitter:title" content="Architecture Diagram" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","description":"Documentation for the migration from Statamic CMS to Saleor headless commerce platform","headline":"Home","name":"Statamic to Saleor Migration","url":"/statamic-to-saleor-migration/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Visual representation of the Saleor migration project architecture","headline":"Architecture Diagram","url":"/statamic-to-saleor-migration/architecture/architecture-diagram/"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -204,148 +207,192 @@
 </div>
 
     <div class="main-content-wrap">
-      
+      <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <ol class="breadcrumb-nav-list">
+    <li class="breadcrumb-nav-list-item"><a href="/statamic-to-saleor-migration/:collection/architecture/">Architecture</a></li>
+    <li class="breadcrumb-nav-list-item"><span>Architecture Diagram</span></li>
+  </ol>
+</nav>
+
+
       <div id="main-content" class="main-content">
         <main>
           
-            <h1 id="statamic-to-saleor-migration-documentation">
+            <h1 id="architecture-diagram">
   
   
-    <a href="#statamic-to-saleor-migration-documentation" class="anchor-heading" aria-labelledby="statamic-to-saleor-migration-documentation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Statamic to Saleor Migration Documentation
+    <a href="#architecture-diagram" class="anchor-heading" aria-labelledby="architecture-diagram"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Architecture Diagram
   
   
 </h1>
     
 
-<p>This documentation outlines the migration process from Statamic CMS with Simple Commerce to Saleor headless commerce platform.</p>
+<p>The following diagram illustrates the architecture of our Saleor-based e-commerce platform. This layered architecture follows Saleor best practices while incorporating our specific customizations for multi-region and multi-language support.</p>
 
-<blockquote>
-  <p><strong>Note</strong>: This repository was recently renamed to better reflect the migration target platform.</p>
-</blockquote>
-<h2 id="key-features">
+<p><img src="/statamic-to-saleor-migration/assets/images/architecture-diagram.svg" alt="Saleor Architecture Diagram" />
+<em>Full architecture diagram showing the layered approach of our Saleor implementation</em></p>
+<h2 id="architecture-layers">
   
   
-    <a href="#key-features" class="anchor-heading" aria-labelledby="key-features"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Key Features
+    <a href="#architecture-layers" class="anchor-heading" aria-labelledby="architecture-layers"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Architecture Layers
   
   
 </h2>
     
-
-<ul>
-  <li><strong>Multi-region support</strong>: Three separate domains (Netherlands, Belgium, Germany)</li>
-  <li><strong>Multi-language content</strong>: Support for Dutch and German</li>
-  <li><strong>Headless architecture</strong>: Clear separation between front-end and back-end</li>
-  <li><strong>Improved performance</strong>: Leveraging modern technologies for better performance</li>
-  <li><strong>Enhanced SEO</strong>: Better support for region and language-specific SEO</li>
-  <li><strong>Streamlined content management</strong>: Integration with Strapi CMS for enhanced content capabilities</li>
-</ul>
-<h2 id="documentation-sections">
+<h3 id="client-layer">
   
   
-    <a href="#documentation-sections" class="anchor-heading" aria-labelledby="documentation-sections"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Documentation Sections
-  
-  
-</h2>
-    
-<h3 id="architecture-documentation">
-  
-  
-    <a href="#architecture-documentation" class="anchor-heading" aria-labelledby="architecture-documentation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Architecture Documentation
+    <a href="#client-layer" class="anchor-heading" aria-labelledby="client-layer"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Client Layer
   
   
 </h3>
     
 
+<p>The Client Layer consists of applications that interact with our commerce platform:</p>
+
 <ul>
-  <li><a href="architecture/">System Architecture Overview</a></li>
-  <li><a href="architecture/architecture-diagram">Architecture Diagram</a></li>
-  <li><a href="architecture/api">API Documentation</a></li>
-  <li><a href="architecture/data-flow">Data Flow Documentation</a></li>
+  <li><strong>Storefront</strong>: The customer-facing web application, built with Next.js for optimal performance and SEO</li>
+  <li><strong>Admin Dashboard</strong>: The admin interface for managing products, orders, and content, using Saleor’s built-in Dashboard UI with custom extensions</li>
 </ul>
-<h3 id="migration-documentation">
+<h3 id="api-layer-graphql">
   
   
-    <a href="#migration-documentation" class="anchor-heading" aria-labelledby="migration-documentation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Migration Documentation
+    <a href="#api-layer-graphql" class="anchor-heading" aria-labelledby="api-layer-graphql"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> API Layer (GraphQL)
   
   
 </h3>
     
 
+<p>The API Layer serves as the entry point for all client requests:</p>
+
 <ul>
-  <li><a href="migration/">Migration Strategy</a></li>
-  <li><a href="migration/data-migration">Data Migration Guide</a></li>
-  <li><a href="migration/content-migration">Content Migration Guide</a></li>
-  <li><a href="migration/user-migration">User Migration Guide</a></li>
+  <li><strong>GraphQL API</strong>: Saleor’s comprehensive GraphQL API organized by domain (products, orders, customers, etc.)</li>
+  <li><strong>Session Management</strong>: JWT-based authentication for maintaining state</li>
 </ul>
-<h3 id="multi-region-and-multi-language-support">
+<h3 id="workflow-layer">
+  
+  
+    <a href="#workflow-layer" class="anchor-heading" aria-labelledby="workflow-layer"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Workflow Layer
+  
+  
+</h3>
+    
+
+<p>The Workflow Layer contains the business logic of the application:</p>
+
+<ul>
+  <li><strong>Product Workflows</strong>: Encapsulates product management operations</li>
+  <li><strong>Order Workflows</strong>: Handles order creation, processing, and fulfillment</li>
+  <li><strong>Customer Workflows</strong>: Manages customer operations and profiles</li>
+  <li><strong>Payment Workflows</strong>: Orchestrates payment processing and verification</li>
+</ul>
+
+<p>Workflows are responsible for:</p>
+<ul>
+  <li>Implementing business rules and constraints</li>
+  <li>Orchestrating operations across multiple modules</li>
+  <li>Ensuring transactional integrity</li>
+  <li>Handling compensating actions for failed operations</li>
+</ul>
+<h3 id="module-layer">
+  
+  
+    <a href="#module-layer" class="anchor-heading" aria-labelledby="module-layer"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Module Layer
+  
+  
+</h3>
+    
+
+<p>The Module Layer provides domain-specific resource management:</p>
+
+<ul>
+  <li><strong>Product Module</strong>: Manages product catalog, variations, and metadata</li>
+  <li><strong>Order Module</strong>: Handles order creation and lifecycle</li>
+  <li><strong>Customer Module</strong>: Manages customer profiles and preferences</li>
+  <li><strong>Payment Module</strong>: Interfaces with payment providers</li>
+  <li><strong>Inventory Module</strong>: Tracks product availability and stock levels</li>
+  <li><strong>Channel Management</strong>: Implements multi-region support through Saleor’s Channel system</li>
+  <li><strong>Translation Support</strong>: Handles multi-language content through Saleor’s translation API</li>
+</ul>
+<h3 id="data-store-layer">
+  
+  
+    <a href="#data-store-layer" class="anchor-heading" aria-labelledby="data-store-layer"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Data Store Layer
+  
+  
+</h3>
+    
+
+<p>The Data Store Layer persists the application data:</p>
+
+<ul>
+  <li><strong>PostgreSQL</strong>: Primary data store for commerce data (products, orders, customers)</li>
+  <li><strong>Redis</strong>: Used for caching and task queuing</li>
+</ul>
+<h3 id="content-management">
+  
+  
+    <a href="#content-management" class="anchor-heading" aria-labelledby="content-management"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Content Management
+  
+  
+</h3>
+    
+
+<p>Content management is handled directly within Saleor:</p>
+
+<ul>
+  <li><strong>Saleor Content</strong>: Built-in content management capabilities for product descriptions, marketing content, and media assets</li>
+  <li>Provides multi-language content management through translations API</li>
+</ul>
+<h3 id="data-migration">
+  
+  
+    <a href="#data-migration" class="anchor-heading" aria-labelledby="data-migration"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Data Migration
+  
+  
+</h3>
+    
+
+<p>The Data Migration component facilitates the transition from Statamic:</p>
+
+<ul>
+  <li><strong>Migration Tools</strong>: Custom utilities for extracting data from Statamic and importing into Saleor</li>
+  <li>Handles mappings between different data models and structures</li>
+</ul>
+<h2 id="multi-region-and-multi-language-support">
   
   
     <a href="#multi-region-and-multi-language-support" class="anchor-heading" aria-labelledby="multi-region-and-multi-language-support"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Multi-Region and Multi-Language Support
   
   
-</h3>
-    
-
-<ul>
-  <li><a href="multi-region-language/">Multi-Region Setup</a></li>
-  <li><a href="multi-region-language/multi-language">Multi-Language Implementation</a></li>
-  <li><a href="multi-region-language/currency-tax">Currency and Tax Configuration</a></li>
-  <li><a href="multi-region-language/domain-settings">Domain-Specific Settings</a></li>
-</ul>
-<h3 id="development-documentation">
-  
-  
-    <a href="#development-documentation" class="anchor-heading" aria-labelledby="development-documentation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Development Documentation
-  
-  
-</h3>
-    
-
-<ul>
-  <li><a href="development/">Development Environment Setup</a></li>
-  <li><a href="development/local-development">Local Development Guide</a></li>
-  <li><a href="development/testing">Testing Strategy</a></li>
-  <li><a href="development/deployment">Deployment Guide</a></li>
-</ul>
-<h2 id="project-status">
-  
-  
-    <a href="#project-status" class="anchor-heading" aria-labelledby="project-status"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Project Status
-  
-  
 </h2>
     
 
-<p>The project is currently in the <strong>Proof of Concept</strong> phase. We are validating Saleor’s capabilities for our specific requirements, with a focus on multi-region and multi-language support.</p>
-<h2 id="contributing-to-the-documentation">
-  
-  
-    <a href="#contributing-to-the-documentation" class="anchor-heading" aria-labelledby="contributing-to-the-documentation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Contributing to the Documentation
-  
-  
-</h2>
-    
-
-<p>To contribute to this documentation:</p>
+<p>Our architecture has been designed with multi-region and multi-language support as core principles:</p>
 
 <ol>
-  <li>Clone the repository</li>
-  <li>Create a new branch for your changes</li>
-  <li>Make your changes to the relevant markdown files</li>
-  <li>Submit a pull request</li>
+  <li><strong>Routing Layer</strong>: Routes requests to the appropriate region based on domain/subdomain</li>
+  <li><strong>Channel Configuration</strong>: Region-specific settings using Saleor’s Channel system for currencies, shipping, etc.</li>
+  <li><strong>Language Context</strong>: Language information flows through all layers, from client to data store</li>
+  <li><strong>Content Translation</strong>: Saleor manages translated content for all supported languages</li>
+  <li><strong>Regional Data</strong>: PostgreSQL stores region-specific product information, pricing, and availability through Saleor’s Channel system</li>
 </ol>
-<h2 id="contact">
+<h2 id="communication-flow">
   
   
-    <a href="#contact" class="anchor-heading" aria-labelledby="contact"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Contact
+    <a href="#communication-flow" class="anchor-heading" aria-labelledby="communication-flow"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Communication Flow
   
   
 </h2>
     
 
-<p>For questions or issues with the documentation, please contact the project team.</p><hr />
-
-<p><em>Last updated: April 15, 2024</em></p>
+<ol>
+  <li>Client applications make GraphQL requests to the Saleor API</li>
+  <li>API resolvers route requests to the appropriate Workflow</li>
+  <li>Workflows orchestrate operations using one or more Modules</li>
+  <li>Modules query/manipulate data in the Data Store</li>
+  <li>Data Migration tools interact with PostgreSQL during the migration process</li>
+</ol>
 
           
 

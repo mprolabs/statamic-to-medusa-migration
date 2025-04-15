@@ -1,0 +1,829 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+  <link rel="stylesheet" href="/statamic-to-saleor-migration/assets/css/just-the-docs-default.css">
+
+  <link rel="stylesheet" href="/statamic-to-saleor-migration/assets/css/just-the-docs-head-nav.css" id="jtd-head-nav-stylesheet">
+
+  <style id="jtd-nav-activation">
+  
+
+    .site-nav > ul.nav-list:first-child > li > a,
+    
+    .site-nav > ul.nav-list:first-child > li > ul > li:not(:nth-child(2)) > a,
+    .site-nav > ul.nav-list:first-child > li > ul > li > ul > li a {
+      background-image: none;
+    }
+
+    .site-nav > ul.nav-list:not(:first-child) a,
+    .site-nav li.external a {
+      background-image: none;
+    }
+
+    .site-nav > ul.nav-list:first-child > li:nth-child(2) > ul > li:nth-child(2) > a {
+      font-weight: 600;
+      text-decoration: none;
+    }.site-nav > ul.nav-list:first-child > li:nth-child(2) > button svg,
+    .site-nav > ul.nav-list:first-child > li:nth-child(2) > ul > li:nth-child(2) > button svg {
+      transform: rotate(-90deg);
+    }.site-nav > ul.nav-list:first-child > li.nav-list-item:nth-child(2) > ul.nav-list,
+    .site-nav > ul.nav-list:first-child > li.nav-list-item:nth-child(2) > ul.nav-list > li.nav-list-item:nth-child(2) > ul.nav-list {
+      display: block;
+    }
+  </style>
+
+  
+
+  
+    <script src="/statamic-to-saleor-migration/assets/js/vendor/lunr.min.js"></script>
+  
+
+  <script src="/statamic-to-saleor-migration/assets/js/just-the-docs.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>API Details | Statamic to Saleor Migration</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="API Details" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="API documentation for the Saleor commerce platform with multi-region and multi-language capabilities" />
+<meta property="og:description" content="API documentation for the Saleor commerce platform with multi-region and multi-language capabilities" />
+<meta property="og:site_name" content="Statamic to Saleor Migration" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="API Details" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"API documentation for the Saleor commerce platform with multi-region and multi-language capabilities","headline":"API Details","url":"/statamic-to-saleor-migration/architecture/api/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+</head>
+
+<body>
+  <a class="skip-to-main" href="#main-content">Skip to main content</a>
+  <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="svg-link" viewBox="0 0 24 24">
+  <title>Link</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+  </svg>
+</symbol>
+
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+  <title>Menu</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+    <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+</symbol>
+
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+  <title>Expand</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+    <polyline points="9 18 15 12 9 6"></polyline>
+  </svg>
+</symbol>
+
+  <!-- Feather. MIT License: https://github.com/feathericons/feather/blob/master/LICENSE -->
+<symbol id="svg-external-link" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link">
+  <title id="svg-external-link-title">(external link)</title>
+  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>
+</symbol>
+
+  
+    <symbol id="svg-doc" viewBox="0 0 24 24">
+  <title>Document</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
+    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline>
+  </svg>
+</symbol>
+
+    <symbol id="svg-search" viewBox="0 0 24 24">
+  <title>Search</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+  </svg>
+</symbol>
+
+  
+  
+    <!-- Bootstrap Icons. MIT License: https://github.com/twbs/icons/blob/main/LICENSE.md -->
+<symbol id="svg-copy" viewBox="0 0 16 16">
+  <title>Copy</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+  </svg>
+</symbol>
+<symbol id="svg-copied" viewBox="0 0 16 16">
+  <title>Copied</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
+    <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z"/>
+    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z"/>
+  </svg>
+</symbol>
+
+  
+</svg>
+
+  
+    <div class="side-bar">
+  <div class="site-header" role="banner">
+    <a href="/statamic-to-saleor-migration/" class="site-title lh-tight">
+  Statamic to Saleor Migration
+
+</a>
+    <button id="menu-button" class="site-button btn-reset" aria-label="Toggle menu" aria-pressed="false">
+      <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use xlink:href="#svg-menu"></use></svg>
+    </button>
+  </div>
+
+  <nav aria-label="Main" id="site-nav" class="site-nav">
+  
+  
+    <ul class="nav-list"><li class="nav-list-item"><a href="/statamic-to-saleor-migration/" class="nav-list-link">Home</a></li><li class="nav-list-item"><button class="nav-list-expander btn-reset" aria-label="toggle items in Architecture category" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use xlink:href="#svg-arrow-right"></use></svg>
+      </button><a href="/statamic-to-saleor-migration/:collection/architecture/" class="nav-list-link">Architecture</a><ul class="nav-list"><li class="nav-list-item"><a href="/statamic-to-saleor-migration/architecture/architecture-diagram/" class="nav-list-link">Architecture Diagram</a></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/architecture/api/" class="nav-list-link">API Details</a></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/:collection/architecture/diagrams/" class="nav-list-link">Architecture Diagrams</a></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/architecture/data-flow/" class="nav-list-link">Data Flow</a></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/architecture/system-architecture/" class="nav-list-link">System Architecture</a></li></ul></li><li class="nav-list-item"><button class="nav-list-expander btn-reset" aria-label="toggle items in Development Guide category" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use xlink:href="#svg-arrow-right"></use></svg>
+      </button><a href="/statamic-to-saleor-migration/:collection/development/" class="nav-list-link">Development Guide</a><ul class="nav-list"><li class="nav-list-item"><a href="/statamic-to-saleor-migration/:collection/development/" class="nav-list-link">Setup Instructions</a></li></ul></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/:collection/migration/" class="nav-list-link">Migration Process</a></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/:collection/multi-region-language/" class="nav-list-link">Multi-Region & Multi-Language Support</a></li></ul>
+  
+</nav>
+
+
+
+
+  
+  
+    <footer class="site-footer">
+      This site uses <a href="https://github.com/just-the-docs/just-the-docs">Just the Docs</a>, a documentation theme for Jekyll.
+    </footer>
+  
+</div>
+
+  
+  <div class="main" id="top">
+    <div id="main-header" class="main-header">
+  
+    
+
+<div class="search" role="search">
+  <div class="search-input-wrap">
+    <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search Statamic to Saleor Migration" aria-label="Search Statamic to Saleor Migration" autocomplete="off">
+    <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon"><use xlink:href="#svg-search"></use></svg></label>
+  </div>
+  <div id="search-results" class="search-results"></div>
+</div>
+
+  
+  
+  
+    <nav aria-label="Auxiliary" class="aux-nav">
+  <ul class="aux-nav-list">
+    
+      <li class="aux-nav-list-item">
+        <a href="//github.com/mprolabs/statamic-to-saleor-migration" class="site-button"
+          
+        >
+          View on GitHub
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+  
+</div>
+
+    <div class="main-content-wrap">
+      <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <ol class="breadcrumb-nav-list">
+    <li class="breadcrumb-nav-list-item"><a href="/statamic-to-saleor-migration/:collection/architecture/">Architecture</a></li>
+    <li class="breadcrumb-nav-list-item"><span>API Details</span></li>
+  </ol>
+</nav>
+
+
+      <div id="main-content" class="main-content">
+        <main>
+          
+            <h1 id="saleor-api-documentation">
+  
+  
+    <a href="#saleor-api-documentation" class="anchor-heading" aria-labelledby="saleor-api-documentation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Saleor API Documentation
+  
+  
+</h1>
+    
+
+<p>The Saleor commerce platform provides a comprehensive GraphQL API for all commerce operations. This document outlines the key API patterns with a focus on multi-region and multi-language support.</p>
+<h2 id="api-structure">
+  
+  
+    <a href="#api-structure" class="anchor-heading" aria-labelledby="api-structure"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> API Structure
+  
+  
+</h2>
+    
+
+<p>Saleor uses GraphQL as its primary API interface, providing a single endpoint for all operations:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://[your-saleor-instance]/graphql/
+</code></pre></div></div>
+<h2 id="authentication">
+  
+  
+    <a href="#authentication" class="anchor-heading" aria-labelledby="authentication"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Authentication
+  
+  
+</h2>
+    
+
+<p>Saleor supports multiple authentication methods:</p>
+<h3 id="jwt-authentication">
+  
+  
+    <a href="#jwt-authentication" class="anchor-heading" aria-labelledby="jwt-authentication"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> JWT Authentication
+  
+  
+</h3>
+    
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">mutation</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">tokenCreate</span><span class="p">(</span><span class="n">email</span><span class="p">:</span><span class="w"> </span><span class="s2">"user@example.com"</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">:</span><span class="w"> </span><span class="s2">"password"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">token</span><span class="w">
+    </span><span class="n">refreshToken</span><span class="w">
+    </span><span class="n">errors</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">field</span><span class="w">
+      </span><span class="n">message</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="requesting-with-authentication">
+  
+  
+    <a href="#requesting-with-authentication" class="anchor-heading" aria-labelledby="requesting-with-authentication"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Requesting with Authentication
+  
+  
+</h3>
+    
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://[your-saleor-instance]/graphql/</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Bearer YOUR_JWT_TOKEN</span><span class="dl">'</span>
+  <span class="p">},</span>
+  <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+    <span class="na">query</span><span class="p">:</span> <span class="s2">`
+      query {
+        me {
+          id
+          email
+        }
+      }
+    `</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div></div>
+<h2 id="multi-region-support">
+  
+  
+    <a href="#multi-region-support" class="anchor-heading" aria-labelledby="multi-region-support"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Multi-Region Support
+  
+  
+</h2>
+    
+<h3 id="channel-based-api-queries">
+  
+  
+    <a href="#channel-based-api-queries" class="anchor-heading" aria-labelledby="channel-based-api-queries"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Channel-Based API Queries
+  
+  
+</h3>
+    
+
+<p>Saleor implements multi-region support through Channels. Each channel represents a separate region:</p>
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">query</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">channels</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">edges</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">node</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">id</span><span class="w">
+        </span><span class="n">name</span><span class="w">
+        </span><span class="n">slug</span><span class="w">
+        </span><span class="n">currencyCode</span><span class="w">
+        </span><span class="n">defaultCountry</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">code</span><span class="w">
+          </span><span class="n">country</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="channel-specific-queries">
+  
+  
+    <a href="#channel-specific-queries" class="anchor-heading" aria-labelledby="channel-specific-queries"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Channel-Specific Queries
+  
+  
+</h3>
+    
+
+<p>Most queries in Saleor support a channel parameter to retrieve data specific to a region:</p>
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">query</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">products</span><span class="p">(</span><span class="n">channel</span><span class="p">:</span><span class="w"> </span><span class="s2">"netherlands"</span><span class="p">,</span><span class="w"> </span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">edges</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">node</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">id</span><span class="w">
+        </span><span class="n">name</span><span class="w">
+        </span><span class="n">pricing</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">priceRange</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">start</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">gross</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="n">amount</span><span class="w">
+                </span><span class="n">currency</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="channel-specific-mutations">
+  
+  
+    <a href="#channel-specific-mutations" class="anchor-heading" aria-labelledby="channel-specific-mutations"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Channel-Specific Mutations
+  
+  
+</h3>
+    
+
+<p>When creating or updating data, you can specify the channel context:</p>
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">mutation</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">productChannelListingUpdate</span><span class="p">(</span><span class="w">
+    </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="s2">"UHJvZHVjdDo0Nw=="</span><span class="p">,</span><span class="w">
+    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">updateChannels</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="n">channelId</span><span class="p">:</span><span class="w"> </span><span class="s2">"Q2hhbm5lbDox"</span><span class="p">,</span><span class="w"> </span><span class="c"># Netherlands channel</span><span class="w">
+          </span><span class="n">isPublished</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="n">visibleInListings</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="n">isAvailableForPurchase</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="n">addVariants</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"UHJvZHVjdFZhcmlhbnQ6MjE3"</span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="n">channelId</span><span class="p">:</span><span class="w"> </span><span class="s2">"Q2hhbm5lbDoy"</span><span class="p">,</span><span class="w"> </span><span class="c"># Belgium channel</span><span class="w">
+          </span><span class="n">isPublished</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="n">visibleInListings</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="n">isAvailableForPurchase</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="n">addVariants</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"UHJvZHVjdFZhcmlhbnQ6MjE3"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">product</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">id</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="multi-language-support">
+  
+  
+    <a href="#multi-language-support" class="anchor-heading" aria-labelledby="multi-language-support"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Multi-Language Support
+  
+  
+</h2>
+    
+<h3 id="translation-queries">
+  
+  
+    <a href="#translation-queries" class="anchor-heading" aria-labelledby="translation-queries"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Translation Queries
+  
+  
+</h3>
+    
+
+<p>Saleor provides translation capabilities for most content entities:</p>
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">query</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">products</span><span class="p">(</span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">edges</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">node</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">id</span><span class="w">
+        </span><span class="n">name</span><span class="w">
+        </span><span class="n">translation</span><span class="p">(</span><span class="n">languageCode</span><span class="p">:</span><span class="w"> </span><span class="n">NL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">name</span><span class="w">
+          </span><span class="n">description</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="adding-translations">
+  
+  
+    <a href="#adding-translations" class="anchor-heading" aria-labelledby="adding-translations"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Adding Translations
+  
+  
+</h3>
+    
+
+<p>You can add translations for products and other content through mutations:</p>
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">mutation</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">productTranslate</span><span class="p">(</span><span class="w">
+    </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="s2">"UHJvZHVjdDo0Nw=="</span><span class="p">,</span><span class="w">
+    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">languageCode</span><span class="p">:</span><span class="w"> </span><span class="n">DE</span><span class="p">,</span><span class="w">
+      </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="s2">"Produktname auf Deutsch"</span><span class="p">,</span><span class="w">
+      </span><span class="n">description</span><span class="p">:</span><span class="w"> </span><span class="s2">"Produktbeschreibung auf Deutsch"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">product</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">id</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+      </span><span class="n">translations</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">languageCode</span><span class="w">
+        </span><span class="n">name</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="core-api-endpoints-for-multi-region-support">
+  
+  
+    <a href="#core-api-endpoints-for-multi-region-support" class="anchor-heading" aria-labelledby="core-api-endpoints-for-multi-region-support"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Core API Endpoints for Multi-Region Support
+  
+  
+</h2>
+    
+<h3 id="products-with-channel-context">
+  
+  
+    <a href="#products-with-channel-context" class="anchor-heading" aria-labelledby="products-with-channel-context"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Products with Channel Context
+  
+  
+</h3>
+    
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">query</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">products</span><span class="p">(</span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">channel</span><span class="p">:</span><span class="w"> </span><span class="s2">"netherlands"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">edges</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">node</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">id</span><span class="w">
+        </span><span class="n">name</span><span class="w">
+        </span><span class="n">description</span><span class="w">
+        </span><span class="n">slug</span><span class="w">
+        </span><span class="n">pricing</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">priceRange</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">start</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">gross</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="n">amount</span><span class="w">
+                </span><span class="n">currency</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="n">category</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">name</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="n">thumbnail</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">url</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="categories-with-translations">
+  
+  
+    <a href="#categories-with-translations" class="anchor-heading" aria-labelledby="categories-with-translations"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Categories with Translations
+  
+  
+</h3>
+    
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">query</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">categories</span><span class="p">(</span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">edges</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">node</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">id</span><span class="w">
+        </span><span class="n">name</span><span class="w">
+        </span><span class="n">slug</span><span class="w">
+        </span><span class="n">description</span><span class="w">
+        </span><span class="n">translation</span><span class="p">(</span><span class="n">languageCode</span><span class="p">:</span><span class="w"> </span><span class="n">NL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">name</span><span class="w">
+          </span><span class="n">description</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="n">backgroundImage</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">url</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="n">ancestors</span><span class="p">(</span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">edges</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">node</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">id</span><span class="w">
+              </span><span class="n">name</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="checkout-with-channel-context">
+  
+  
+    <a href="#checkout-with-channel-context" class="anchor-heading" aria-labelledby="checkout-with-channel-context"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Checkout with Channel Context
+  
+  
+</h3>
+    
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create checkout with channel context</span><span class="w">
+</span><span class="k">mutation</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">checkoutCreate</span><span class="p">(</span><span class="w">
+    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">channel</span><span class="p">:</span><span class="w"> </span><span class="s2">"netherlands"</span><span class="p">,</span><span class="w">
+      </span><span class="n">lines</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="n">variantId</span><span class="p">:</span><span class="w"> </span><span class="s2">"UHJvZHVjdFZhcmlhbnQ6Mg=="</span><span class="p">,</span><span class="w"> </span><span class="n">quantity</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">}],</span><span class="w">
+      </span><span class="n">email</span><span class="p">:</span><span class="w"> </span><span class="s2">"customer@example.com"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">checkout</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">id</span><span class="w">
+      </span><span class="n">token</span><span class="w">
+      </span><span class="n">totalPrice</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">gross</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">amount</span><span class="w">
+          </span><span class="n">currency</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="n">errors</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">field</span><span class="w">
+      </span><span class="n">message</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="orders-with-channel-context">
+  
+  
+    <a href="#orders-with-channel-context" class="anchor-heading" aria-labelledby="orders-with-channel-context"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Orders with Channel Context
+  
+  
+</h3>
+    
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">query</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">orders</span><span class="p">(</span><span class="n">channel</span><span class="p">:</span><span class="w"> </span><span class="s2">"netherlands"</span><span class="p">,</span><span class="w"> </span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">edges</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">node</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">id</span><span class="w">
+        </span><span class="n">number</span><span class="w">
+        </span><span class="n">created</span><span class="w">
+        </span><span class="n">status</span><span class="w">
+        </span><span class="n">total</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">gross</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">amount</span><span class="w">
+            </span><span class="n">currency</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="n">lines</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">productName</span><span class="w">
+          </span><span class="n">quantity</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="channel-specific-api-patterns">
+  
+  
+    <a href="#channel-specific-api-patterns" class="anchor-heading" aria-labelledby="channel-specific-api-patterns"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Channel-Specific API Patterns
+  
+  
+</h2>
+    
+<h3 id="getting-available-shipping-methods">
+  
+  
+    <a href="#getting-available-shipping-methods" class="anchor-heading" aria-labelledby="getting-available-shipping-methods"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Getting Available Shipping Methods
+  
+  
+</h3>
+    
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">query</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">shippingMethods</span><span class="p">(</span><span class="n">channel</span><span class="p">:</span><span class="w"> </span><span class="s2">"netherlands"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">id</span><span class="w">
+    </span><span class="n">name</span><span class="w">
+    </span><span class="n">price</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">amount</span><span class="w">
+      </span><span class="n">currency</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="n">minimumOrderPrice</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">amount</span><span class="w">
+      </span><span class="n">currency</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="n">maximumOrderPrice</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">amount</span><span class="w">
+      </span><span class="n">currency</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="getting-available-payment-gateways">
+  
+  
+    <a href="#getting-available-payment-gateways" class="anchor-heading" aria-labelledby="getting-available-payment-gateways"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Getting Available Payment Gateways
+  
+  
+</h3>
+    
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">query</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">paymentGateways</span><span class="p">(</span><span class="n">channel</span><span class="p">:</span><span class="w"> </span><span class="s2">"netherlands"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">id</span><span class="w">
+    </span><span class="n">name</span><span class="w">
+    </span><span class="n">currencies</span><span class="w">
+    </span><span class="n">config</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">field</span><span class="w">
+      </span><span class="n">value</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="recommended-api-implementation-patterns">
+  
+  
+    <a href="#recommended-api-implementation-patterns" class="anchor-heading" aria-labelledby="recommended-api-implementation-patterns"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Recommended API Implementation Patterns
+  
+  
+</h2>
+    
+
+<p>When implementing the frontend to work with Saleor’s API, consider these patterns for multi-region and multi-language support:</p>
+<h3 id="1-channel-context-awareness">
+  
+  
+    <a href="#1-channel-context-awareness" class="anchor-heading" aria-labelledby="1-channel-context-awareness"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> 1. Channel Context Awareness
+  
+  
+</h3>
+    
+
+<p>Always include the channel parameter in queries to ensure region-specific data:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">GET_PRODUCTS</span> <span class="o">=</span> <span class="nx">gql</span><span class="s2">`
+  query GetProducts($channel: String!) {
+    products(first: 10, channel: $channel) {
+      edges {
+        node {
+          id
+          name
+          # Other fields...
+        }
+      }
+    }
+  }
+`</span><span class="p">;</span>
+
+<span class="c1">// Usage</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">query</span><span class="p">({</span>
+  <span class="na">query</span><span class="p">:</span> <span class="nx">GET_PRODUCTS</span><span class="p">,</span>
+  <span class="na">variables</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">channel</span><span class="p">:</span> <span class="nx">currentChannel</span> <span class="c1">// e.g., "netherlands"</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+<h3 id="2-language-context-in-queries">
+  
+  
+    <a href="#2-language-context-in-queries" class="anchor-heading" aria-labelledby="2-language-context-in-queries"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> 2. Language Context in Queries
+  
+  
+</h3>
+    
+
+<p>Include language code in queries when fetching translations:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">GET_PRODUCT_DETAILS</span> <span class="o">=</span> <span class="nx">gql</span><span class="s2">`
+  query GetProductDetails($id: ID!, $channel: String!, $languageCode: LanguageCodeEnum!) {
+    product(id: $id, channel: $channel) {
+      id
+      name
+      description
+      translation(languageCode: $languageCode) {
+        name
+        description
+      }
+      # Other fields...
+    }
+  }
+`</span><span class="p">;</span>
+
+<span class="c1">// Usage</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">query</span><span class="p">({</span>
+  <span class="na">query</span><span class="p">:</span> <span class="nx">GET_PRODUCT_DETAILS</span><span class="p">,</span>
+  <span class="na">variables</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">id</span><span class="p">:</span> <span class="nx">productId</span><span class="p">,</span>
+    <span class="na">channel</span><span class="p">:</span> <span class="nx">currentChannel</span><span class="p">,</span>
+    <span class="na">languageCode</span><span class="p">:</span> <span class="nx">currentLanguage</span> <span class="c1">// e.g., "NL"</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+<h3 id="3-fallback-strategies">
+  
+  
+    <a href="#3-fallback-strategies" class="anchor-heading" aria-labelledby="3-fallback-strategies"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> 3. Fallback Strategies
+  
+  
+</h3>
+    
+
+<p>Implement fallback strategies when translations are not available:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example React component using translations with fallback</span>
+<span class="kd">function</span> <span class="nx">ProductName</span><span class="p">({</span> <span class="nx">product</span><span class="p">,</span> <span class="nx">languageCode</span> <span class="p">})</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="nx">product</span><span class="p">.</span><span class="nx">translation</span> <span class="o">&amp;&amp;</span> <span class="nx">product</span><span class="p">.</span><span class="nx">translation</span><span class="p">.</span><span class="nx">name</span>
+        <span class="p">?</span> <span class="nx">product</span><span class="p">.</span><span class="nx">translation</span><span class="p">.</span><span class="nx">name</span>
+        <span class="p">:</span> <span class="nx">product</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span>
+    <span class="o">&lt;</span><span class="sr">/h1</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h2 id="api-documentation-references">
+  
+  
+    <a href="#api-documentation-references" class="anchor-heading" aria-labelledby="api-documentation-references"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> API Documentation References
+  
+  
+</h2>
+    
+
+<p>For complete API documentation, refer to:</p>
+
+<ol>
+  <li><a href="https://docs.saleor.io/docs/3.x/api-reference/">Saleor GraphQL API Documentation</a></li>
+  <li><a href="https://demo.saleor.io/graphql/">Saleor API Playground</a></li>
+</ol>
+
+          
+
+          
+            
+          
+        </main>
+        
+
+  <hr>
+  <footer>
+    
+
+    <p class="text-small text-grey-dk-100 mb-0">Copyright &copy; 2024 MPROLabs. All rights reserved.</p>
+
+    
+  </footer>
+
+
+      </div>
+    </div>
+    
+      
+
+<div class="search-overlay"></div>
+
+    
+  </div>
+
+  
+</body>
+</html>
+
