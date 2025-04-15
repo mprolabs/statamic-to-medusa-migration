@@ -74,6 +74,9 @@ jobs:
         run: |
           cd docs
           bundle config set --local path 'vendor/bundle'
+          # Install compatible version of ffi gem
+          gem install ffi -v 1.15.5 --platform=ruby
+          bundle config set ffi 1.15.5
           bundle install --no-deployment
           # Extract repository name without owner
           REPO_NAME=$(echo "${{ github.repository }}" | awk -F/ '{print $2}')
