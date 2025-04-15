@@ -70,7 +70,65 @@
 <!-- End Jekyll SEO tag -->
 
 
-  
+  <!-- Mermaid JS for diagram rendering -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@9.4.3/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      },
+      sequence: {
+        diagramMarginX: 50,
+        diagramMarginY: 10,
+        actorMargin: 50,
+        width: 150,
+        height: 65,
+        boxMargin: 10,
+        boxTextMargin: 5,
+        noteMargin: 10
+      }
+    });
+  });
+</script>
+<style>
+  .mermaid {
+    margin-bottom: 2rem;
+    overflow: auto;
+    max-width: 100%;
+  }
+  .mermaid svg {
+    max-width: 100%;
+  }
+  /* Custom styling for diagram elements */
+  .mermaid .node rect,
+  .mermaid .node circle,
+  .mermaid .node ellipse,
+  .mermaid .node polygon,
+  .mermaid .node path {
+    fill: #f4f4f5;
+    stroke: #0077cc;
+    stroke-width: 1px;
+  }
+  .mermaid .edgePath .path {
+    stroke: #333333;
+    stroke-width: 1.5px;
+  }
+  .mermaid .label {
+    color: #333333;
+  }
+  .mermaid .cluster rect {
+    fill: #f4f4f5;
+    stroke: #0077cc;
+    stroke-width: 1px;
+    border-radius: 4px;
+  }
+</style> 
 
 </head>
 
