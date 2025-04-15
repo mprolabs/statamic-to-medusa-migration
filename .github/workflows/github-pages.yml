@@ -58,6 +58,7 @@ jobs:
         with:
           ruby-version: '3.2.8'
           bundler-cache: true
+          bundler: 'latest'
           cache-version: 1
           working-directory: './docs'
       - name: Build with Jekyll
