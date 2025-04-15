@@ -4,6 +4,7 @@ title: Architecture Diagram
 description: Visual representation of the Saleor migration project architecture
 parent: Architecture
 nav_order: 2
+permalink: /architecture/architecture-diagram/
 ---
 
 # Architecture Diagram

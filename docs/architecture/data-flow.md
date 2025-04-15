@@ -1,8 +1,9 @@
 ---
 layout: default
 title: Data Flow
-description: Data flow in the Statamic to Saleor migration project
+description: Data flow diagrams and explanations for the Saleor migration project
 parent: Architecture
+permalink: /architecture/data-flow/
 ---
 
 # Data Flow Diagrams

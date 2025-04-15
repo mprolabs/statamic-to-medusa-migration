@@ -1,3 +1,11 @@
+---
+layout: default
+title: System Architecture
+description: Detailed system architecture for the Saleor migration project
+parent: Architecture
+permalink: /architecture/system-architecture/
+---
+
 # System Architecture
 
 This document outlines the system architecture for the migration from Statamic CMS with Simple Commerce to Saleor, with special emphasis on supporting multi-region and multi-language capabilities.

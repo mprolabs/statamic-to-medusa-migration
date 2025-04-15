@@ -1,9 +1,9 @@
 # Updated: 2024-06-26
 # Site settings
-title: "Statamic to Saleor Migration"
-description: "Documentation for the migration from Statamic CMS to Saleor headless commerce platform"
-repository: mprolabs/statamic-to-saleor-migration
-baseurl: "/statamic-to-saleor-migration"
+title: "Statamic to Medusa Migration"
+description: "Documentation for the migration from Statamic CMS to Medusa headless commerce platform"
+repository: mprolabs/statamic-to-medusa-migration
+baseurl: "/statamic-to-medusa-migration"
 
 # Build settings
 markdown: kramdown
@@ -25,7 +25,7 @@ color_scheme: light
 # Aux links for the upper right navigation
 aux_links:
   "View on GitHub":
-    - "//github.com/mprolabs/statamic-to-saleor-migration"
+    - "//github.com/mprolabs/statamic-to-medusa-migration"
 
 # Footer content
 footer_content: "Copyright &copy; 2024 MPROLabs. All rights reserved."

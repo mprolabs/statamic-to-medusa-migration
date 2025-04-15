@@ -4,7 +4,6 @@ title: Architecture
 description: System architecture for the Statamic to Saleor migration with multi-region and multi-language support
 include_in_nav: true
 nav_order: 2
-parent: Architecture
 has_children: true
 ---
 

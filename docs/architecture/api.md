@@ -3,6 +3,7 @@ layout: default
 title: API Details
 description: API documentation for the Saleor commerce platform with multi-region and multi-language capabilities
 parent: Architecture
+permalink: /architecture/api/
 ---
 
 # Saleor API Documentation
