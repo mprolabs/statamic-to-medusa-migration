@@ -1,0 +1,140 @@
+@startuml Saleor Data Flow Diagram
+
+' Define styles
+skinparam sequence {
+  ArrowColor #0D6EFD
+  LifeLineBorderColor #6C757D
+  LifeLineBackgroundColor #F8F9FA
+  
+  ParticipantBorderColor #6C757D
+  ParticipantBackgroundColor #F8F9FA
+  
+  ActorBorderColor #6C757D
+  ActorBackgroundColor #F8F9FA
+}
+
+title Saleor Multi-Region and Multi-Language Data Flow
+
+actor "Customer" as Customer
+participant "Next.js\nStorefront" as Storefront
+participant "Apollo\nClient" as Apollo
+participant "Saleor\nGraphQL API" as API
+participant "Channel\nSystem" as Channel
+participant "Translation\nSystem" as Translation
+database "PostgreSQL" as DB
+participant "Payment\nProvider" as Payment
+
+' Initial page load
+Customer -> Storefront: Visit website (domain-specific URL)
+activate Storefront
+
+Storefront -> Storefront: Detect region & language\nfrom domain/cookies
+Storefront -> Apollo: Request products\nwith channel & language context
+activate Apollo
+
+Apollo -> API: GraphQL Query with\nchannel & language parameters
+activate API
+
+API -> Channel: Get channel-specific data\n(pricing, availability)
+activate Channel
+Channel -> DB: Query with channel filter
+activate DB
+DB --> Channel: Return data
+deactivate DB
+Channel --> API: Channel-specific products
+deactivate Channel
+
+API -> Translation: Get translations for\nselected language
+activate Translation
+Translation -> DB: Query translations
+activate DB
+DB --> Translation: Return translations
+deactivate DB
+Translation --> API: Translated content
+deactivate Translation
+
+API --> Apollo: GraphQL Response with\nregion & language specific data
+deactivate API
+
+Apollo --> Storefront: Return data
+deactivate Apollo
+
+Storefront --> Customer: Render localized page\nwith region-specific pricing
+deactivate Storefront
+
+' Add to cart
+Customer -> Storefront: Add product to cart
+activate Storefront
+
+Storefront -> Apollo: Create/Update cart\nwith channel context
+activate Apollo
+
+Apollo -> API: GraphQL Mutation
+activate API
+
+API -> Channel: Create cart in channel context
+activate Channel
+Channel -> DB: Store cart with channel ID
+activate DB
+DB --> Channel: Confirm storage
+deactivate DB
+Channel --> API: Cart data
+deactivate Channel
+
+API -> Translation: Get translations\nfor cart content
+activate Translation
+Translation -> DB: Query translations
+activate DB
+DB --> Translation: Return translations
+deactivate DB
+Translation --> API: Translated cart content
+deactivate Translation
+
+API --> Apollo: Cart with translated content\nand region-specific prices
+deactivate API
+
+Apollo --> Storefront: Updated cart data
+deactivate Apollo
+
+Storefront --> Customer: Display updated cart
+deactivate Storefront
+
+' Checkout
+Customer -> Storefront: Proceed to checkout
+activate Storefront
+
+Storefront -> Apollo: Create checkout\nwith channel context
+activate Apollo
+
+Apollo -> API: GraphQL Mutation
+activate API
+
+API -> Channel: Process checkout in channel context\n(region-specific shipping, taxes)
+activate Channel
+Channel -> DB: Store checkout with channel data
+activate DB
+DB --> Channel: Confirm storage
+deactivate DB
+Channel --> API: Checkout data
+deactivate Channel
+
+API -> Payment: Process payment\n(region-specific payment provider)
+activate Payment
+Payment --> API: Payment confirmation
+deactivate Payment
+
+API -> DB: Create order with\nchannel context
+activate DB
+DB --> API: Order confirmation
+deactivate DB
+
+API --> Apollo: Order data
+deactivate API
+
+Apollo --> Storefront: Order confirmation
+deactivate Apollo
+
+Storefront --> Customer: Display order confirmation\nin customer's language
+deactivate Storefront
+
+@enduml 

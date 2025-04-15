@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+  <link rel="stylesheet" href="/statamic-to-saleor-migration/assets/css/just-the-docs-default.css">
+
+  <link rel="stylesheet" href="/statamic-to-saleor-migration/assets/css/just-the-docs-head-nav.css" id="jtd-head-nav-stylesheet">
+
+  <style id="jtd-nav-activation">
+  
+
+    .site-nav > ul.nav-list:first-child > li > a,
+    
+    .site-nav > ul.nav-list:first-child > li > ul > li:not(:nth-child(3)) > a,
+    .site-nav > ul.nav-list:first-child > li > ul > li > ul > li a {
+      background-image: none;
+    }
+
+    .site-nav > ul.nav-list:not(:first-child) a,
+    .site-nav li.external a {
+      background-image: none;
+    }
+
+    .site-nav > ul.nav-list:first-child > li:nth-child(2) > ul > li:nth-child(3) > a {
+      font-weight: 600;
+      text-decoration: none;
+    }.site-nav > ul.nav-list:first-child > li:nth-child(2) > button svg,
+    .site-nav > ul.nav-list:first-child > li:nth-child(2) > ul > li:nth-child(3) > button svg {
+      transform: rotate(-90deg);
+    }.site-nav > ul.nav-list:first-child > li.nav-list-item:nth-child(2) > ul.nav-list,
+    .site-nav > ul.nav-list:first-child > li.nav-list-item:nth-child(2) > ul.nav-list > li.nav-list-item:nth-child(3) > ul.nav-list {
+      display: block;
+    }
+  </style>
+
+  
+
+  
+    <script src="/statamic-to-saleor-migration/assets/js/vendor/lunr.min.js"></script>
+  
+
+  <script src="/statamic-to-saleor-migration/assets/js/just-the-docs.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Architecture Diagrams | Statamic to Saleor Migration</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Architecture Diagrams" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Visual representations of the Saleor-based architecture with multi-region and multi-language support" />
+<meta property="og:description" content="Visual representations of the Saleor-based architecture with multi-region and multi-language support" />
+<link rel="canonical" href="https://github.com/statamic-to-saleor-migration/:collection/architecture/diagrams/" />
+<meta property="og:url" content="https://github.com/statamic-to-saleor-migration/:collection/architecture/diagrams/" />
+<meta property="og:site_name" content="Statamic to Saleor Migration" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Architecture Diagrams" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Visual representations of the Saleor-based architecture with multi-region and multi-language support","headline":"Architecture Diagrams","url":"https://github.com/statamic-to-saleor-migration/:collection/architecture/diagrams/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+</head>
+
+<body>
+  <a class="skip-to-main" href="#main-content">Skip to main content</a>
+  <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="svg-link" viewBox="0 0 24 24">
+  <title>Link</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+  </svg>
+</symbol>
+
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+  <title>Menu</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+    <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+</symbol>
+
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+  <title>Expand</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+    <polyline points="9 18 15 12 9 6"></polyline>
+  </svg>
+</symbol>
+
+  <!-- Feather. MIT License: https://github.com/feathericons/feather/blob/master/LICENSE -->
+<symbol id="svg-external-link" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link">
+  <title id="svg-external-link-title">(external link)</title>
+  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>
+</symbol>
+
+  
+    <symbol id="svg-doc" viewBox="0 0 24 24">
+  <title>Document</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
+    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline>
+  </svg>
+</symbol>
+
+    <symbol id="svg-search" viewBox="0 0 24 24">
+  <title>Search</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+  </svg>
+</symbol>
+
+  
+  
+    <!-- Bootstrap Icons. MIT License: https://github.com/twbs/icons/blob/main/LICENSE.md -->
+<symbol id="svg-copy" viewBox="0 0 16 16">
+  <title>Copy</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+  </svg>
+</symbol>
+<symbol id="svg-copied" viewBox="0 0 16 16">
+  <title>Copied</title>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
+    <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z"/>
+    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z"/>
+  </svg>
+</symbol>
+
+  
+</svg>
+
+  
+    <div class="side-bar">
+  <div class="site-header" role="banner">
+    <a href="/statamic-to-saleor-migration/" class="site-title lh-tight">
+  Statamic to Saleor Migration
+
+</a>
+    <button id="menu-button" class="site-button btn-reset" aria-label="Toggle menu" aria-pressed="false">
+      <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use xlink:href="#svg-menu"></use></svg>
+    </button>
+  </div>
+
+  <nav aria-label="Main" id="site-nav" class="site-nav">
+  
+  
+    <ul class="nav-list"><li class="nav-list-item"><a href="/statamic-to-saleor-migration/" class="nav-list-link">Home</a></li><li class="nav-list-item"><button class="nav-list-expander btn-reset" aria-label="toggle items in Architecture category" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use xlink:href="#svg-arrow-right"></use></svg>
+      </button><a href="/statamic-to-saleor-migration/:collection/architecture/" class="nav-list-link">Architecture</a><ul class="nav-list"><li class="nav-list-item"><a href="/statamic-to-saleor-migration/architecture/architecture-diagram/" class="nav-list-link">Architecture Diagram</a></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/architecture/api/" class="nav-list-link">API Details</a></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/:collection/architecture/diagrams/" class="nav-list-link">Architecture Diagrams</a></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/architecture/data-flow/" class="nav-list-link">Data Flow</a></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/architecture/system-architecture/" class="nav-list-link">System Architecture</a></li></ul></li><li class="nav-list-item"><button class="nav-list-expander btn-reset" aria-label="toggle items in Development Guide category" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use xlink:href="#svg-arrow-right"></use></svg>
+      </button><a href="/statamic-to-saleor-migration/:collection/development/" class="nav-list-link">Development Guide</a><ul class="nav-list"><li class="nav-list-item"><a href="/statamic-to-saleor-migration/:collection/development/" class="nav-list-link">Setup Instructions</a></li></ul></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/:collection/migration/" class="nav-list-link">Migration Process</a></li><li class="nav-list-item"><a href="/statamic-to-saleor-migration/:collection/multi-region-language/" class="nav-list-link">Multi-Region & Multi-Language Support</a></li></ul>
+  
+</nav>
+
+
+
+
+  
+  
+    <footer class="site-footer">
+      This site uses <a href="https://github.com/just-the-docs/just-the-docs">Just the Docs</a>, a documentation theme for Jekyll.
+    </footer>
+  
+</div>
+
+  
+  <div class="main" id="top">
+    <div id="main-header" class="main-header">
+  
+    
+
+<div class="search" role="search">
+  <div class="search-input-wrap">
+    <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search Statamic to Saleor Migration" aria-label="Search Statamic to Saleor Migration" autocomplete="off">
+    <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon"><use xlink:href="#svg-search"></use></svg></label>
+  </div>
+  <div id="search-results" class="search-results"></div>
+</div>
+
+  
+  
+  
+    <nav aria-label="Auxiliary" class="aux-nav">
+  <ul class="aux-nav-list">
+    
+      <li class="aux-nav-list-item">
+        <a href="//github.com/mprolabs/statamic-to-saleor-migration" class="site-button"
+          
+        >
+          View on GitHub
+        </a>
+      </li>
+    
+  </ul>
+</nav>
+
+  
+</div>
+
+    <div class="main-content-wrap">
+      <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <ol class="breadcrumb-nav-list">
+    <li class="breadcrumb-nav-list-item"><a href="/statamic-to-saleor-migration/:collection/architecture/">Architecture</a></li>
+    <li class="breadcrumb-nav-list-item"><span>Architecture Diagrams</span></li>
+  </ol>
+</nav>
+
+
+      <div id="main-content" class="main-content">
+        <main>
+          
+            <h1 id="architecture-diagrams">
+  
+  
+    <a href="#architecture-diagrams" class="anchor-heading" aria-labelledby="architecture-diagrams"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Architecture Diagrams
+  
+  
+</h1>
+    
+
+<p>This page provides visual representations of the architecture for the Statamic to Saleor migration project, with a focus on multi-region and multi-language capabilities.</p>
+<h2 id="system-overview-diagram">
+  
+  
+    <a href="#system-overview-diagram" class="anchor-heading" aria-labelledby="system-overview-diagram"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> System Overview Diagram
+  
+  
+</h2>
+    
+
+<p>The following diagram shows the high-level system architecture:</p>
+
+<pre><code class="language-mermaid">flowchart TD
+    Customer([Customer])
+    Admin([Admin User])
+    
+    subgraph "Saleor Core"
+        Dashboard[Saleor Dashboard]
+        API[GraphQL API]
+        Channels[Channel Management]
+        Products[Product Management]
+        Orders[Order Management]
+        Checkout[Checkout System]
+        Payments[Payment Integrations]
+        Translations[Translation System]
+        
+        Dashboard --- API
+        API --- Channels
+        API --- Products
+        API --- Orders
+        API --- Checkout
+        API --- Payments
+        Products --- Translations
+    end
+    
+    subgraph "Next.js Storefront"
+        Pages[Next.js Pages]
+        Components[React Components]
+        Hooks[Custom Hooks]
+        API_Routes[API Routes]
+        i18n[Internationalization]
+        
+        Pages --- Components
+        Components --- Hooks
+        Pages --- API_Routes
+        Components --- i18n
+    end
+    
+    Customer --&gt; Pages
+    Admin --&gt; Dashboard
+    API_Routes --&gt; API
+    Hooks --&gt; API
+</code></pre>
+<h2 id="multi-region-architecture">
+  
+  
+    <a href="#multi-region-architecture" class="anchor-heading" aria-labelledby="multi-region-architecture"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Multi-Region Architecture
+  
+  
+</h2>
+    
+
+<p>The following diagram illustrates the multi-region architecture using Saleor Channels:</p>
+
+<pre><code class="language-mermaid">flowchart TD
+    Customer([Customer])
+    
+    subgraph "Domain Routing"
+        NL[domain-nl.com]
+        BE[domain-be.com]
+        DE[domain-de.com]
+    end
+    
+    subgraph "Next.js Storefront"
+        Router[Domain/Region Router]
+        NL_Store[NL Specific UI]
+        BE_Store[BE Specific UI]
+        DE_Store[DE Specific UI]
+        
+        Router --- NL_Store
+        Router --- BE_Store
+        Router --- DE_Store
+    end
+    
+    subgraph "Saleor Core"
+        API[GraphQL API]
+        Channels[Channels]
+        NL_Channel[Netherlands Channel]
+        BE_Channel[Belgium Channel]
+        DE_Channel[Germany Channel]
+        
+        API --- Channels
+        Channels --- NL_Channel
+        Channels --- BE_Channel
+        Channels --- DE_Channel
+    end
+    
+    Customer --&gt; NL
+    Customer --&gt; BE
+    Customer --&gt; DE
+    
+    NL --&gt; Router
+    BE --&gt; Router
+    DE --&gt; Router
+    
+    NL_Store --&gt; API
+    BE_Store --&gt; API
+    DE_Store --&gt; API
+</code></pre>
+<h2 id="technology-stack-diagram">
+  
+  
+    <a href="#technology-stack-diagram" class="anchor-heading" aria-labelledby="technology-stack-diagram"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Technology Stack Diagram
+  
+  
+</h2>
+    
+
+<p>This diagram shows the technology stack and relationships between components:</p>
+
+<pre><code class="language-mermaid">flowchart TD
+    subgraph "Backend"
+        Saleor[Saleor Core]
+        GraphQL[GraphQL API]
+        Channels[Multi-Channel Support]
+        DB[PostgreSQL]
+        
+        Saleor --- GraphQL
+        Saleor --- Channels
+        Saleor --- DB
+    end
+    
+    subgraph "Frontend"
+        Next[Next.js]
+        React[React]
+        Apollo[Apollo Client]
+        
+        Next --- React
+        Next --- Apollo
+    end
+    
+    subgraph "Infrastructure"
+        Docker[Docker]
+        AWS[AWS]
+        CDN[Content Delivery Network]
+        
+        Docker --- AWS
+        AWS --- CDN
+    end
+    
+    Apollo --&gt; GraphQL
+    CDN --&gt; Next
+</code></pre>
+<h2 id="data-migration-flow">
+  
+  
+    <a href="#data-migration-flow" class="anchor-heading" aria-labelledby="data-migration-flow"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Data Migration Flow
+  
+  
+</h2>
+    
+
+<p>This diagram illustrates the data migration process from Statamic to Saleor:</p>
+
+<pre><code class="language-mermaid">flowchart LR
+    subgraph "Source"
+        Statamic[Statamic CMS]
+        SC[Simple Commerce]
+        
+        Statamic --- SC
+    end
+    
+    subgraph "Migration Tools"
+        Scripts[Migration Scripts]
+        Transform[Data Transformation]
+        
+        Scripts --- Transform
+    end
+    
+    subgraph "Target"
+        Saleor[Saleor Core]
+        API[GraphQL API]
+        
+        Saleor --- API
+    end
+    
+    SC --&gt; Scripts
+    Statamic --&gt; Scripts
+    Transform --&gt; API
+</code></pre>
+<h2 id="multi-language-support">
+  
+  
+    <a href="#multi-language-support" class="anchor-heading" aria-labelledby="multi-language-support"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Multi-Language Support
+  
+  
+</h2>
+    
+
+<p>This diagram shows how multi-language support is implemented:</p>
+
+<pre><code class="language-mermaid">flowchart TD
+    subgraph "Saleor"
+        Products[Products]
+        Translations[Translations]
+        
+        Products --- Translations
+    end
+    
+    subgraph "Next.js"
+        i18n[Next.js i18n]
+        UI[UI Components]
+        
+        i18n --- UI
+    end
+    
+    Translations --&gt; i18n
+</code></pre>
+<h2 id="data-flow-diagram">
+  
+  
+    <a href="#data-flow-diagram" class="anchor-heading" aria-labelledby="data-flow-diagram"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Data Flow Diagram
+  
+  
+</h2>
+    
+
+<p>This diagram illustrates the flow of data during customer interactions:</p>
+
+<pre><code class="language-mermaid">sequenceDiagram
+    Customer-&gt;&gt;Next.js: Visit website
+    Next.js-&gt;&gt;Saleor: GraphQL Query (with channel context)
+    Saleor-&gt;&gt;Next.js: Return data (with translations)
+    Next.js-&gt;&gt;Customer: Render page
+    
+    Customer-&gt;&gt;Next.js: Add to cart
+    Next.js-&gt;&gt;Saleor: Create/Update Cart (channel-specific)
+    Saleor-&gt;&gt;Next.js: Updated Cart data
+    Next.js-&gt;&gt;Customer: Updated Cart UI
+    
+    Customer-&gt;&gt;Next.js: Checkout
+    Next.js-&gt;&gt;Saleor: Process Checkout (channel-specific)
+    Saleor-&gt;&gt;Payment Provider: Process Payment
+    Payment Provider-&gt;&gt;Saleor: Payment Confirmation
+    Saleor-&gt;&gt;Next.js: Order Confirmation
+    Next.js-&gt;&gt;Customer: Order Confirmation Page
+</code></pre>
+<h2 id="deployment-architecture">
+  
+  
+    <a href="#deployment-architecture" class="anchor-heading" aria-labelledby="deployment-architecture"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Deployment Architecture
+  
+  
+</h2>
+    
+
+<p>This diagram shows the deployment architecture for the system:</p>
+
+<pre><code class="language-mermaid">flowchart TD
+    subgraph "Production Environment"
+        LB[Load Balancer]
+        
+        subgraph "Frontend"
+            NL_Frontend[NL Frontend]
+            BE_Frontend[BE Frontend]
+            DE_Frontend[DE Frontend]
+        end
+        
+        subgraph "Backend"
+            Saleor_API[Saleor API]
+            Saleor_Dashboard[Saleor Dashboard]
+            DB[PostgreSQL]
+            Cache[Redis]
+        end
+        
+        LB --&gt; NL_Frontend
+        LB --&gt; BE_Frontend
+        LB --&gt; DE_Frontend
+        
+        NL_Frontend --&gt; Saleor_API
+        BE_Frontend --&gt; Saleor_API
+        DE_Frontend --&gt; Saleor_API
+        
+        Saleor_API --- DB
+        Saleor_API --- Cache
+        Saleor_Dashboard --- DB
+    end
+    
+    subgraph "DNS"
+        NL_Domain[domain-nl.com]
+        BE_Domain[domain-be.com]
+        DE_Domain[domain-de.com]
+        
+        NL_Domain --&gt; LB
+        BE_Domain --&gt; LB
+        DE_Domain --&gt; LB
+    end
+</code></pre>
+
+<p>This architecture is designed to leverage Saleor’s Channel feature for comprehensive multi-region support, while providing a flexible and performant framework for multi-language capabilities across all storefronts.</p>
+
+          
+
+          
+            
+          
+        </main>
+        
+
+  <hr>
+  <footer>
+    
+
+    <p class="text-small text-grey-dk-100 mb-0">Copyright &copy; 2024 MPROLabs. All rights reserved.</p>
+
+    
+  </footer>
+
+
+      </div>
+    </div>
+    
+      
+
+<div class="search-overlay"></div>
+
+    
+  </div>
+
+  
+</body>
+</html>
+
