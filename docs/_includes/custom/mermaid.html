@@ -1,29 +1,37 @@
 <!-- Mermaid.js for diagram rendering -->
-<script src="https://cdn.jsdelivr.net/npm/mermaid@{{ site.mermaid.version }}/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Initialize mermaid with default configuration
     mermaid.initialize({
       startOnLoad: true,
       theme: 'default',
+      securityLevel: 'loose',
       flowchart: {
         useMaxWidth: false,
         htmlLabels: true
-      }
+      },
+      fontSize: 16
     });
     
-    // Force initialization on all mermaid code blocks
-    document.querySelectorAll('.language-mermaid').forEach(function(element) {
-      // Create a unique ID for each mermaid div
-      var id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
-      element.id = id;
-      
-      // Get the mermaid content
-      var content = element.textContent;
-      
-      // Initialize this specific diagram
-      mermaid.render(id, content, function(svgCode) {
-        element.innerHTML = svgCode;
+    // Wait a bit to ensure DOM is fully loaded and processed
+    setTimeout(function() {
+      // Find all mermaid code blocks
+      document.querySelectorAll('pre code.language-mermaid').forEach(function(element) {
+        // Get the parent pre element
+        var pre = element.parentElement;
+        
+        // Create a div for mermaid
+        var div = document.createElement('div');
+        div.className = 'mermaid';
+        div.innerHTML = element.textContent;
+        
+        // Replace the pre element with the mermaid div
+        pre.parentElement.replaceChild(div, pre);
       });
-    });
+      
+      // Re-process all mermaid diagrams
+      mermaid.init(undefined, '.mermaid');
+    }, 500);
   });
 </script> 

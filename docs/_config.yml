@@ -13,25 +13,23 @@ plugins:
   - jekyll-github-metadata
   - jekyll-seo-tag
 
-# Theme customization
+# Just the Docs theme configuration
+# See: https://just-the-docs.com/docs/configuration/
 search_enabled: true
 search_tokenizer_separator: /[\s/]+/
 heading_anchors: true
 enable_copy_code_button: true
 color_scheme: light
-
-# Mermaid diagram support
-mermaid:
-  # Version of mermaid library
-  version: "10.9.0"
-
-# Aux links for the upper right navigation
 aux_links:
   "View on GitHub":
     - "//github.com/mprolabs/statamic-to-saleor-migration"
-
-# Footer content
+back_to_top: true
+back_to_top_text: "Back to top"
 footer_content: "Copyright &copy; 2024 MPROLabs. All rights reserved."
+
+# Mermaid diagram support
+mermaid:
+  version: "10.9.0"
 
 # Collections (documentation sections)
 collections:
@@ -99,17 +97,6 @@ exclude:
 # Include additional directories
 include:
   - assets
-
-# Navigation structure
-nav:
-  - title: Home
-    url: /
-  - title: Architecture
-    url: /architecture/
-  - title: Migration
-    url: /migration/
-  - title: Development
-    url: /development/
 
 # Callouts
 callouts:
