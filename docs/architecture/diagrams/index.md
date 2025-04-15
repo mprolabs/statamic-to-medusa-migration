@@ -9,6 +9,35 @@ parent: Architecture
 
 This page provides visual representations of the architecture for the Statamic to Saleor migration project, with a focus on multi-region and multi-language capabilities.
 
+## PlantUML Diagrams
+
+We have created detailed technical diagrams using PlantUML to visualize key aspects of our architecture:
+
+### Main Architecture Diagram
+
+![Saleor Architecture Diagram]({{ site.baseurl }}/assets/images/architecture-diagram.svg)
+*Full architecture diagram showing the layered approach of our Saleor implementation*
+
+### Multi-Region Architecture
+
+![Saleor Multi-Region Architecture]({{ site.baseurl }}/assets/images/multi-region-diagram.svg)
+*Detailed view of the multi-region implementation using Saleor Channels*
+
+### Multi-Language Architecture
+
+![Saleor Multi-Language Architecture]({{ site.baseurl }}/assets/images/multi-language-diagram.svg)
+*Detailed view of the multi-language implementation with Next.js i18n integration*
+
+### Data Flow Diagram
+
+![Saleor Data Flow]({{ site.baseurl }}/assets/images/data-flow-diagram.svg)
+*Visualization of data flow between system components*
+
+### Data Migration Diagram
+
+![Data Migration Approach]({{ site.baseurl }}/assets/images/data-migration-diagram.svg)
+*Diagram showing the migration path from Statamic to Saleor*
+
 ## System Overview Diagram
 
 The following diagram shows the high-level system architecture:
@@ -56,7 +85,7 @@ flowchart TD
     Hooks --> API
 ```
 
-## Multi-Region Architecture
+## Multi-Region Architecture (Mermaid)
 
 The following diagram illustrates the multi-region architecture using Saleor Channels:
 
@@ -178,7 +207,7 @@ flowchart LR
     Transform --> API
 ```
 
-## Multi-Language Support
+## Multi-Language Support (Mermaid)
 
 This diagram shows how multi-language support is implemented:
 
@@ -201,7 +230,7 @@ flowchart TD
     Translations --> i18n
 ```
 
-## Data Flow Diagram
+## Data Flow Diagram (Mermaid)
 
 This diagram illustrates the flow of data during customer interactions:
 

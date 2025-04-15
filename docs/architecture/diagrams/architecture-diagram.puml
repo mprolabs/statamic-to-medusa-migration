@@ -16,6 +16,10 @@ skinparam component {
   BorderColor<<Content>> #7CB518
   BackgroundColor<<Migration>> #FFE6ED
   BorderColor<<Migration>> #E83E8C
+  BackgroundColor<<MultiRegion>> #FFE6CC
+  BorderColor<<MultiRegion>> #FD7E14
+  BackgroundColor<<MultiLanguage>> #E6CCFF
+  BorderColor<<MultiLanguage>> #7952B3
 }
 
 ' Title
@@ -28,13 +32,35 @@ actor "Admin User" as AdminUser
 ' Client Layer
 package "Client Layer" {
   component [Storefront\n(Next.js)] as Storefront <<Client>>
+  note right of Storefront
+    Domain-specific storefronts:
+    - nl.domain.com
+    - be.domain.com
+    - de.domain.com
+  end note
   component [Admin Dashboard\n(Saleor Dashboard)] as AdminDashboard <<Client>>
 }
 
-' HTTP Layer
+' Domain and Multi-Region Routing
+package "Domain Routing & Multi-Region Support" {
+  component [Domain-specific Routing] as DomainRouting <<MultiRegion>>
+  component [Region Detection Middleware] as RegionMiddleware <<MultiRegion>>
+  component [CDN Edge Caching] as CDN <<MultiRegion>>
+}
+
+' Multi-Language Support
+package "Multi-Language Support" {
+  component [Language Detection] as LangDetection <<MultiLanguage>>
+  component [Next.js i18n] as i18n <<MultiLanguage>>
+  component [Language Switcher] as LangSwitcher <<MultiLanguage>>
+}
+
+' API Layer
 package "API Layer (GraphQL)" {
   component [GraphQL API] as API <<API>>
   component [Session Management\nJWT-based Auth] as Session <<API>>
+  component [Channel Context] as ChannelContext <<MultiRegion>>
+  component [Language Context] as LangContext <<MultiLanguage>>
 }
 
 ' Workflow Layer
@@ -43,6 +69,7 @@ package "Workflow Layer" {
   component [Order Workflows] as OrderWorkflow <<Workflow>>
   component [Customer Workflows] as CustomerWorkflow <<Workflow>>
   component [Payment Workflows] as PaymentWorkflow <<Workflow>>
+  component [Checkout Workflows] as CheckoutWorkflow <<Workflow>>
 }
 
 ' Module Layer
@@ -53,8 +80,32 @@ package "Module Layer" {
   component [Payment Module] as PaymentModule <<Module>>
   component [Inventory Module] as InventoryModule <<Module>>
   
-  component [Channel Management\n(Multi-Region)] as ChannelModule <<Module>>
-  component [Translation Support\n(Multi-Language)] as TranslationModule <<Module>>
+  package "Multi-Region Implementation" {
+    component [Channel Management] as ChannelModule <<MultiRegion>>
+    note right of ChannelModule
+      Each region implemented
+      as a separate Channel:
+      - Netherlands Channel
+      - Belgium Channel
+      - Germany Channel
+    end note
+    component [Region-specific Pricing] as RegionPricing <<MultiRegion>>
+    component [Region-specific Taxes] as RegionTaxes <<MultiRegion>>
+    component [Region-specific Shipping] as RegionShipping <<MultiRegion>>
+    component [Region-specific Payment Methods] as RegionPayment <<MultiRegion>>
+  }
+  
+  package "Multi-Language Implementation" {
+    component [Translation System] as TranslationModule <<MultiLanguage>>
+    note right of TranslationModule
+      Saleor's Translation API
+      for multi-language support:
+      - Dutch (NL, BE)
+      - German (DE)
+      - French (BE optional)
+    end note
+    component [Content Localization] as ContentLocalization <<MultiLanguage>>
+  }
 }
 
 ' Data Store Layer
@@ -66,6 +117,8 @@ package "Data Store Layer" {
 ' Content Management
 package "Content Management" {
   component [Saleor Content] as Content <<Content>>
+  component [Multi-Language Content] as MultiLangContent <<MultiLanguage>>
+  component [Channel-specific Content] as ChannelContent <<MultiRegion>>
 }
 
 ' Data Migration
@@ -74,44 +127,81 @@ package "Data Migration" {
   component [Statamic Extractor] as StatamicExtractor <<Migration>>
   component [Data Transformation] as DataTransform <<Migration>>
   component [Saleor Importer] as SaleorImporter <<Migration>>
+  component [Language Mapping] as LangMapping <<MultiLanguage>>
+  component [Region Mapping] as RegionMapping <<MultiRegion>>
 }
 
 ' Connections
 StoreUser --> Storefront
 AdminUser --> AdminDashboard
 
+Storefront --> DomainRouting
+DomainRouting --> RegionMiddleware
+RegionMiddleware --> CDN
+CDN --> API
+
+Storefront --> LangDetection
+LangDetection --> i18n
+i18n --> LangSwitcher
+LangSwitcher --> LangContext
+
 Storefront --> API
 AdminDashboard --> API
+
+RegionMiddleware --> ChannelContext
+ChannelContext --> API
+LangContext --> API
 
 API --> Session
 API --> ProductWorkflow
 API --> OrderWorkflow
 API --> CustomerWorkflow
 API --> PaymentWorkflow
+API --> CheckoutWorkflow
 
 ProductWorkflow --> ProductModule
 OrderWorkflow --> OrderModule
 CustomerWorkflow --> CustomerModule
 PaymentWorkflow --> PaymentModule
-OrderWorkflow --> InventoryModule
+CheckoutWorkflow --> InventoryModule
+CheckoutWorkflow --> PaymentModule
 
+ProductModule --> ChannelModule
+OrderModule --> ChannelModule
+CustomerModule --> ChannelModule
+PaymentModule --> RegionPayment
+OrderModule --> RegionShipping
+OrderModule --> RegionTaxes
+ProductModule --> RegionPricing
+
+ProductModule --> TranslationModule
+ContentLocalization --> TranslationModule
+MultiLangContent --> TranslationModule
+
+ChannelModule --> PostgreSQL
 ProductModule --> PostgreSQL
 OrderModule --> PostgreSQL
 CustomerModule --> PostgreSQL
 PaymentModule --> PostgreSQL
 InventoryModule --> PostgreSQL
+TranslationModule --> PostgreSQL
+RegionPricing --> PostgreSQL
+RegionTaxes --> PostgreSQL
+RegionShipping --> PostgreSQL
+RegionPayment --> PostgreSQL
 
 ProductModule --> Redis
 OrderModule --> Redis
 
-ProductModule --> ChannelModule
-ProductModule --> TranslationModule
-Content --> TranslationModule
+Content --> MultiLangContent
+Content --> ChannelContent
 
 MigrationTools --> StatamicExtractor
 MigrationTools --> DataTransform
 MigrationTools --> SaleorImporter
 DataTransform --> SaleorImporter
+DataTransform --> LangMapping
+DataTransform --> RegionMapping
 SaleorImporter --> PostgreSQL
 
 @enduml 

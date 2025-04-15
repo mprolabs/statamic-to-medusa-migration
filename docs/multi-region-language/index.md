@@ -8,6 +8,15 @@ description: Implementation details for multi-region and multi-language capabili
 
 This section provides comprehensive documentation on how multi-region and multi-language capabilities are implemented in the Saleor-based e-commerce platform.
 
+## Architecture Diagrams
+
+For a visual representation of the multi-region and multi-language architecture, please refer to the following diagrams:
+
+- [Multi-Region Architecture Diagram]({{ site.baseurl }}/architecture/diagrams/#multi-region-architecture)
+- [Multi-Language Architecture Diagram]({{ site.baseurl }}/architecture/diagrams/#multi-language-architecture)
+
+These diagrams illustrate the relationships between different components and how data flows through the system.
+
 ## Overview
 
 Our implementation supports:
@@ -92,6 +101,15 @@ The Next.js frontend handles:
 2. **Language switching**: UI components to change language preference
 3. **Region-aware API calls**: Including channel information in all Saleor API requests
 4. **Localized components**: Components that adapt to the current language context
+
+### Language Implementation Details
+
+Our language implementation uses:
+
+1. **Next.js i18n**: For frontend translation and URL structure
+2. **Saleor Translation API**: For storing product and content translations
+3. **Language Context**: A wrapper that ensures language preferences are applied consistently
+4. **Translation Management**: A system for managing and updating translations across all regions
 
 ### Database Structure for Multi-Language
 

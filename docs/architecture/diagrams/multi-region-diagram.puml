@@ -2,120 +2,190 @@
 
 ' Define styles
 skinparam component {
-  BackgroundColor #F8F9FA
-  BorderColor #6C757D
-}
-
-skinparam package {
-  BackgroundColor #E6F3FF
-  BorderColor #0D6EFD
-}
-
-skinparam database {
-  BackgroundColor #F8F0FF
-  BorderColor #6F42C1
+  BackgroundColor<<Client>> #F8F9FA
+  BorderColor<<Client>> #6C757D
+  BackgroundColor<<Routing>> #FFE6CC
+  BorderColor<<Routing>> #FD7E14
+  BackgroundColor<<API>> #E6F3FF
+  BorderColor<<API>> #0D6EFD
+  BackgroundColor<<Channel>> #FFF0E6
+  BorderColor<<Channel>> #FF7F41
+  BackgroundColor<<Module>> #E6F9F7
+  BorderColor<<Module>> #20C997
+  BackgroundColor<<Database>> #F8F0FF
+  BorderColor<<Database>> #6F42C1
+  BackgroundColor<<Content>> #F0F7DF
+  BorderColor<<Content>> #7CB518
 }
 
 title Saleor Multi-Region Architecture with Channel System
 
-' Domains
-package "Domain Routing" {
-  [domain-nl.com] as DomainNL
-  [domain-be.com] as DomainBE
-  [domain-de.com] as DomainDE
+' Domain Layer
+package "Domain Layer" {
+  component [nl.domain.com] as DomainNL <<Client>>
+  component [be.domain.com] as DomainBE <<Client>>
+  component [de.domain.com] as DomainDE <<Client>>
 }
 
-' CDN
-package "CDN / Edge Caching" {
-  [CDN Distribution] as CDN
+' Routing Layer
+package "Routing & Caching Layer" {
+  component [Domain-based Routing] as DomainRouting <<Routing>>
+  component [Region Detection Middleware] as RegionDetection <<Routing>>
+  component [CDN / Edge Caching] as CDN <<Routing>>
 }
 
-' Next.js Storefronts
-package "Next.js Storefront" {
-  [Region/Language Detection] as RegionDetection
+' Next.js Layer
+package "Next.js Storefront Layer" {
+  component [NL Storefront] as StoreNL <<Client>>
+  component [BE Storefront] as StoreBE <<Client>>
+  component [DE Storefront] as StoreDE <<Client>>
   
-  package "Storefronts" {
-    [NL Storefront] as StoreNL
-    [BE Storefront] as StoreBE
-    [DE Storefront] as StoreDE
+  component [Apollo GraphQL Client\nwith Channel Context] as ApolloClient <<API>>
+  component [Region-specific Configuration] as RegionConfig <<Routing>>
+}
+
+' Saleor API Layer
+package "Saleor API Layer" {
+  component [GraphQL API] as API <<API>>
+  component [Channel Context Provider] as ChannelProvider <<API>>
+  component [Authentication with JWT] as Auth <<API>>
+}
+
+' Channel Management Layer
+package "Channel Management Layer" {
+  component [Channel Registry] as ChannelRegistry <<Channel>>
+  
+  package "Channel Configuration" {
+    component [Netherlands Channel] as ChannelNL <<Channel>>
+    note right of ChannelNL
+      - Currency: EUR
+      - Tax rates: Dutch VAT
+      - Shipping zones: NL
+      - Payment methods: iDeal, etc.
+    end note
+    
+    component [Belgium Channel] as ChannelBE <<Channel>>
+    note right of ChannelBE
+      - Currency: EUR
+      - Tax rates: Belgian VAT
+      - Shipping zones: BE
+      - Payment methods: Bancontact, etc.
+    end note
+    
+    component [Germany Channel] as ChannelDE <<Channel>>
+    note right of ChannelDE
+      - Currency: EUR
+      - Tax rates: German VAT
+      - Shipping zones: DE
+      - Payment methods: SEPA, etc.
+    end note
+  }
+}
+
+' Module Layer
+package "Module Layer" {
+  component [Product Module] as ProductModule <<Module>>
+  component [Order Module] as OrderModule <<Module>>
+  component [Checkout Module] as CheckoutModule <<Module>>
+  component [Customer Module] as CustomerModule <<Module>>
+  component [Shipping Module] as ShippingModule <<Module>>
+  component [Payment Module] as PaymentModule <<Module>>
+  component [Tax Module] as TaxModule <<Module>>
+}
+
+' Content Layer
+package "Content Layer" {
+  component [Content Management] as Content <<Content>>
+  component [Channel-specific Content] as ChannelContent <<Content>>
+}
+
+' Database Layer
+package "Database Layer" {
+  database "PostgreSQL" as DB <<Database>> {
+    [Channel Data] as ChannelData
+    [Products] as Products
+    [Prices by Channel] as Prices
+    [Region-specific Settings] as RegionSettings
   }
   
-  [Apollo GraphQL Client] as ApolloClient
-  [i18n Support] as i18n
-}
-
-' Saleor
-package "Saleor Core" {
-  [GraphQL API] as API
-  
-  package "Channels" {
-    [Netherlands Channel] as ChannelNL
-    [Belgium Channel] as ChannelBE
-    [Germany Channel] as ChannelDE
-  }
-  
-  [Channel Management] as ChannelMgmt
-  [Translation System] as Translations
-}
-
-' Database
-database "PostgreSQL" as DB {
-  [Products & Prices] as Products
-  [Region-Specific Data] as RegionData
-  [Multi-Language Content] as LanguageContent
+  database "Redis\n(Cache)" as Redis <<Database>>
 }
 
 ' Connections
-DomainNL --> CDN
-DomainBE --> CDN
-DomainDE --> CDN
+DomainNL --> DomainRouting
+DomainBE --> DomainRouting
+DomainDE --> DomainRouting
 
-CDN --> RegionDetection
+DomainRouting --> RegionDetection
+RegionDetection --> CDN
 
-RegionDetection --> StoreNL
-RegionDetection --> StoreBE
-RegionDetection --> StoreDE
+CDN --> StoreNL
+CDN --> StoreBE
+CDN --> StoreDE
 
-StoreNL --> ApolloClient
-StoreBE --> ApolloClient
-StoreDE --> ApolloClient
+StoreNL --> RegionConfig
+StoreBE --> RegionConfig
+StoreDE --> RegionConfig
 
-StoreNL --> i18n
-StoreBE --> i18n
-StoreDE --> i18n
+RegionConfig --> ApolloClient
 
 ApolloClient --> API
+API --> Auth
+API --> ChannelProvider
 
-API --> ChannelMgmt
-API --> Translations
+ChannelProvider --> ChannelRegistry
+ChannelRegistry --> ChannelNL
+ChannelRegistry --> ChannelBE
+ChannelRegistry --> ChannelDE
 
-ChannelMgmt --> ChannelNL
-ChannelMgmt --> ChannelBE
-ChannelMgmt --> ChannelDE
+ChannelNL --> ProductModule
+ChannelBE --> ProductModule
+ChannelDE --> ProductModule
 
-ChannelNL --> Products
-ChannelBE --> Products
-ChannelDE --> Products
+ChannelNL --> OrderModule
+ChannelBE --> OrderModule
+ChannelDE --> OrderModule
 
-ChannelNL --> RegionData
-ChannelBE --> RegionData
-ChannelDE --> RegionData
+ChannelNL --> CheckoutModule
+ChannelBE --> CheckoutModule
+ChannelDE --> CheckoutModule
 
-Translations --> LanguageContent
+CheckoutModule --> ShippingModule
+CheckoutModule --> PaymentModule
+CheckoutModule --> TaxModule
 
-note right of RegionDetection
-  Domain/URL-based region detection 
-  with language preference cookie
+ProductModule --> ChannelData
+OrderModule --> ChannelData
+CheckoutModule --> ChannelData
+CustomerModule --> ChannelData
+ShippingModule --> RegionSettings
+PaymentModule --> RegionSettings
+TaxModule --> RegionSettings
+ProductModule --> Products
+ProductModule --> Prices
+
+ChannelNL --> ChannelContent
+ChannelBE --> ChannelContent
+ChannelDE --> ChannelContent
+ChannelContent --> Content
+
+ProductModule --> Redis
+OrderModule --> Redis
+CheckoutModule --> Redis
+
+note bottom of RegionConfig
+  Environment-based configuration
+  for each region/domain
 end note
 
-note right of ChannelMgmt
-  Each channel represents a separate region
-  with specific pricing, tax, and shipping
+note bottom of ChannelProvider
+  Injects channel context into
+  all GraphQL operations
 end note
 
-note right of Translations
-  Multi-language content managed through
-  Saleor's Translation system
+note bottom of Prices
+  Products can have different
+  prices for each channel
 end note
 
 @enduml 
