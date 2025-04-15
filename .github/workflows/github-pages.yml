@@ -60,6 +60,11 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: false
           working-directory: './docs'
+      # Install newer Bundler compatible with Ruby 3.2
+      - name: Install Bundler
+        run: |
+          cd docs
+          gem install bundler -v 2.4.22
       # Force install Google Protobuf with Ruby platform
       - name: Force Google Protobuf Ruby Platform
         run: |
