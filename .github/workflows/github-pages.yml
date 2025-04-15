@@ -56,8 +56,9 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.6'
+          ruby-version: '3.2.8'
           bundler-cache: true
+          bundler: 'latest'
           cache-version: 1
           working-directory: './docs'
       - name: Build with Jekyll
