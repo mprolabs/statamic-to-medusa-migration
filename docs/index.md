@@ -24,31 +24,31 @@ This documentation outlines the migration process from Statamic CMS with Simple 
 
 ### Architecture Documentation
 
-- [System Architecture Overview]({{ site.baseurl }}/architecture/)
-- [Architecture Diagram]({{ site.baseurl }}/architecture/architecture-diagram)
-- [API Documentation]({{ site.baseurl }}/architecture/api)
-- [Data Flow Documentation]({{ site.baseurl }}/architecture/data-flow)
+- [System Architecture Overview](architecture/)
+- [Architecture Diagram](architecture/architecture-diagram)
+- [API Documentation](architecture/api)
+- [Data Flow Documentation](architecture/data-flow)
 
 ### Migration Documentation
 
-- [Migration Strategy]({{ site.baseurl }}/migration/)
-- [Data Migration Guide]({{ site.baseurl }}/migration/data-migration)
-- [Content Migration Guide]({{ site.baseurl }}/migration/content-migration)
-- [User Migration Guide]({{ site.baseurl }}/migration/user-migration)
+- [Migration Strategy](migration/)
+- [Data Migration Guide](migration/data-migration)
+- [Content Migration Guide](migration/content-migration)
+- [User Migration Guide](migration/user-migration)
 
 ### Multi-Region and Multi-Language Support
 
-- [Multi-Region Setup]({{ site.baseurl }}/multi-region-language/)
-- [Multi-Language Implementation]({{ site.baseurl }}/multi-region-language/multi-language)
-- [Currency and Tax Configuration]({{ site.baseurl }}/multi-region-language/currency-tax)
-- [Domain-Specific Settings]({{ site.baseurl }}/multi-region-language/domain-settings)
+- [Multi-Region Setup](multi-region-language/)
+- [Multi-Language Implementation](multi-region-language/multi-language)
+- [Currency and Tax Configuration](multi-region-language/currency-tax)
+- [Domain-Specific Settings](multi-region-language/domain-settings)
 
 ### Development Documentation
 
-- [Development Environment Setup]({{ site.baseurl }}/development/)
-- [Local Development Guide]({{ site.baseurl }}/development/local-development)
-- [Testing Strategy]({{ site.baseurl }}/development/testing)
-- [Deployment Guide]({{ site.baseurl }}/development/deployment)
+- [Development Environment Setup](development/)
+- [Local Development Guide](development/local-development)
+- [Testing Strategy](development/testing)
+- [Deployment Guide](development/deployment)
 
 ## Project Status
 
