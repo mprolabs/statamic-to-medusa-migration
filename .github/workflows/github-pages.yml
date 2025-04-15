@@ -76,9 +76,9 @@ jobs:
           bundle config set --local path 'vendor/bundle'
           # Directly modify the Gemfile to pin ffi version
           if grep -q "ffi" Gemfile; then
-            sed -i "s/gem ['\\"]ffi['\\"](, *['\\"]*[^'\\"]*['\\"]*)*$/gem 'ffi', '1.15.5'/" Gemfile
+            sed -i 's/gem ["]\\{0,1\\}ffi["]\\{0,1\\}.*$/gem "ffi", "1.15.5"/' Gemfile
           else
-            echo "gem 'ffi', '1.15.5'" >> Gemfile
+            echo 'gem "ffi", "1.15.5"' >> Gemfile
           fi
           # Install the specific ffi version
           gem install ffi -v 1.15.5 --platform=ruby
