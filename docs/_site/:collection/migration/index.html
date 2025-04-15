@@ -50,20 +50,20 @@
 
 
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Migration Process | Statamic to Saleor Migration</title>
+<title>User Migration | Statamic to Saleor Migration</title>
 <meta name="generator" content="Jekyll v4.3.4" />
-<meta property="og:title" content="Migration Process" />
+<meta property="og:title" content="User Migration" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Comprehensive guide to migrating from Statamic with Simple Commerce to Saleor with multi-region and multi-language support" />
-<meta property="og:description" content="Comprehensive guide to migrating from Statamic with Simple Commerce to Saleor with multi-region and multi-language support" />
+<meta name="description" content="Documentation for the migration from Statamic CMS to Saleor headless commerce platform" />
+<meta property="og:description" content="Documentation for the migration from Statamic CMS to Saleor headless commerce platform" />
 <link rel="canonical" href="http://localhost:4001/statamic-to-saleor-migration/:collection/migration/" />
 <meta property="og:url" content="http://localhost:4001/statamic-to-saleor-migration/:collection/migration/" />
 <meta property="og:site_name" content="Statamic to Saleor Migration" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Migration Process" />
+<meta property="twitter:title" content="User Migration" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Comprehensive guide to migrating from Statamic with Simple Commerce to Saleor with multi-region and multi-language support","headline":"Migration Process","url":"http://localhost:4001/statamic-to-saleor-migration/:collection/migration/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Documentation for the migration from Statamic CMS to Saleor headless commerce platform","headline":"User Migration","url":"http://localhost:4001/statamic-to-saleor-migration/:collection/migration/"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -206,302 +206,69 @@
 </div>
 
     <div class="main-content-wrap">
-      
+      <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <ol class="breadcrumb-nav-list">
+    <li class="breadcrumb-nav-list-item"><span>User Migration</span></li>
+  </ol>
+</nav>
+
+
       <div id="main-content" class="main-content">
         <main>
           
-            <h1 id="migration-process">
+            <h1 id="user-migration">
   
   
-    <a href="#migration-process" class="anchor-heading" aria-labelledby="migration-process"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Migration Process
+    <a href="#user-migration" class="anchor-heading" aria-labelledby="user-migration"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> User Migration
   
   
 </h1>
     
 
-<p>This section outlines the comprehensive migration strategy from Statamic CMS with Simple Commerce to Saleor, with a focus on preserving and enhancing multi-region and multi-language capabilities.</p>
-<h2 id="migration-overview">
+<p>This section outlines the approach for migrating user accounts from the Statamic/Simple Commerce system to Saleor.</p>
+<h2 id="key-considerations">
   
   
-    <a href="#migration-overview" class="anchor-heading" aria-labelledby="migration-overview"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Migration Overview
+    <a href="#key-considerations" class="anchor-heading" aria-labelledby="key-considerations"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Key Considerations
   
   
 </h2>
     
 
-<p>The migration follows these key phases:</p>
+<ul>
+  <li><strong>Password Security:</strong> Passwords cannot be migrated directly due to hashing. Users will likely need to reset their passwords upon first login to the new system.</li>
+  <li><strong>Data Mapping:</strong> Mapping user fields (name, email, address, custom fields) to Saleor Customer accounts and associated addresses.</li>
+  <li><strong>Communication:</strong> Planning user communication regarding the migration and the need for password resets.</li>
+  <li><strong>GDPR/Privacy:</strong> Ensuring compliance with data privacy regulations during the transfer.</li>
+</ul>
+<h2 id="process">
+  
+  
+    <a href="#process" class="anchor-heading" aria-labelledby="process"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Process
+  
+  
+</h2>
+    
 
 <ol>
-  <li><strong>Assessment &amp; Planning</strong></li>
-  <li><strong>Environment Setup</strong></li>
-  <li><strong>Data Modeling &amp; Mapping</strong></li>
-  <li><strong>Data Migration</strong></li>
-  <li><strong>Frontend Development</strong></li>
-  <li><strong>Testing &amp; Validation</strong></li>
-  <li><strong>Deployment &amp; Go-Live</strong></li>
+  <li><strong>Analyze User Data:</strong> Identify all user fields stored in Statamic.</li>
+  <li><strong>Map User Fields:</strong> Define the mapping to Saleor Customer fields and address book entries.</li>
+  <li><strong>Develop Extraction Script:</strong> Export user data (excluding passwords).</li>
+  <li><strong>Develop Transformation Script:</strong> Clean and format user data for Saleor.</li>
+  <li><strong>Develop Loading Script:</strong> Use Saleor’s GraphQL API to create Customer accounts and addresses.</li>
+  <li><strong>Password Reset Strategy:</strong>
+    <ul>
+      <li>Implement a “password reset required” flag or mechanism in Saleor upon import.</li>
+      <li>Trigger password reset emails upon first login attempt or via a bulk campaign post-migration.</li>
+    </ul>
+  </li>
+  <li><strong>Testing:</strong> Migrate test user accounts and verify data and the password reset flow.</li>
+  <li><strong>User Communication Plan:</strong> Draft emails/notifications informing users about the platform change and login procedure.</li>
+  <li><strong>Execute Migration:</strong> Run scripts during the migration window.</li>
+  <li><strong>Monitor Post-Migration:</strong> Track user login success rates and support requests.</li>
 </ol>
-<h2 id="current-system-analysis">
-  
-  
-    <a href="#current-system-analysis" class="anchor-heading" aria-labelledby="current-system-analysis"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Current System Analysis
-  
-  
-</h2>
-    
 
-<p>The current Statamic-based system includes:</p>
-
-<ul>
-  <li><strong>CMS</strong>: Statamic as the content management system</li>
-  <li><strong>E-commerce</strong>: Simple Commerce for product management and checkout</li>
-  <li><strong>Frontend</strong>: Laravel Blade templates with Vue.js components</li>
-  <li><strong>Database</strong>: MySQL database for data storage</li>
-  <li><strong>Multi-site</strong>: Limited multi-site capabilities through Statamic’s multi-site feature</li>
-  <li><strong>Languages</strong>: Basic multi-language support</li>
-</ul>
-<h2 id="target-system-architecture">
-  
-  
-    <a href="#target-system-architecture" class="anchor-heading" aria-labelledby="target-system-architecture"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Target System Architecture
-  
-  
-</h2>
-    
-
-<p>The target Saleor-based system includes:</p>
-
-<ul>
-  <li><strong>E-commerce</strong>: Saleor Core with Channels feature for multi-region support</li>
-  <li><strong>Frontend</strong>: Next.js-based storefront with advanced routing for multiple domains</li>
-  <li><strong>APIs</strong>: GraphQL API for communication between frontend and backend</li>
-  <li><strong>Database</strong>: PostgreSQL for data storage</li>
-  <li><strong>Multi-region</strong>: Comprehensive multi-region support via Saleor Channels</li>
-  <li><strong>Multi-language</strong>: Advanced language capabilities throughout the platform</li>
-</ul>
-<h2 id="migration-methodology">
-  
-  
-    <a href="#migration-methodology" class="anchor-heading" aria-labelledby="migration-methodology"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Migration Methodology
-  
-  
-</h2>
-    
-<h3 id="1-data-extraction">
-  
-  
-    <a href="#1-data-extraction" class="anchor-heading" aria-labelledby="1-data-extraction"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> 1. Data Extraction
-  
-  
-</h3>
-    
-
-<p>The first step is to extract all relevant data from the current Statamic system:</p>
-
-<ul>
-  <li>Product catalog with all variants and attributes</li>
-  <li>Categories and collections</li>
-  <li>Customer data and order history</li>
-  <li>CMS content including pages, blog posts, and media</li>
-  <li>Site configuration and settings</li>
-  <li>URL structures for SEO preservation</li>
-</ul>
-
-<p>Data extraction tools include:</p>
-
-<ul>
-  <li>Custom PHP scripts to access Statamic’s data structures</li>
-  <li>Database exports for structured data</li>
-  <li>API calls for programmatically accessible data</li>
-  <li>File system operations for assets and media</li>
-</ul>
-<h3 id="2-data-transformation">
-  
-  
-    <a href="#2-data-transformation" class="anchor-heading" aria-labelledby="2-data-transformation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> 2. Data Transformation
-  
-  
-</h3>
-    
-
-<p>The extracted data needs to be transformed to match Saleor’s data models:</p>
-
-<ul>
-  <li>Mapping Statamic product structure to Saleor’s product model</li>
-  <li>Converting content to appropriate formats for the new system</li>
-  <li>Transforming customer and order data to match Saleor’s schemas</li>
-  <li>Preparing data with appropriate language variants</li>
-  <li>Adding channel-specific data for multi-region support</li>
-</ul>
-<h3 id="3-data-loading">
-  
-  
-    <a href="#3-data-loading" class="anchor-heading" aria-labelledby="3-data-loading"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> 3. Data Loading
-  
-  
-</h3>
-    
-
-<p>Processed data is loaded into the Saleor system through:</p>
-
-<ul>
-  <li>GraphQL mutations for structured data</li>
-  <li>Saleor’s import/export APIs for bulk operations</li>
-  <li>Custom import scripts for complex data structures</li>
-  <li>Media asset import to appropriate storage</li>
-</ul>
-<h3 id="4-multi-region-configuration">
-  
-  
-    <a href="#4-multi-region-configuration" class="anchor-heading" aria-labelledby="4-multi-region-configuration"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> 4. Multi-Region Configuration
-  
-  
-</h3>
-    
-
-<p>Special attention is given to setting up the multi-region capabilities:</p>
-
-<ul>
-  <li>Creating appropriate Channels in Saleor (Netherlands, Belgium, Germany)</li>
-  <li>Configuring region-specific settings (currencies, taxes, shipping)</li>
-  <li>Setting up channel-specific product visibility and pricing</li>
-  <li>Establishing domain-specific routing</li>
-</ul>
-<h3 id="5-multi-language-implementation">
-  
-  
-    <a href="#5-multi-language-implementation" class="anchor-heading" aria-labelledby="5-multi-language-implementation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> 5. Multi-Language Implementation
-  
-  
-</h3>
-    
-
-<p>Language support is implemented through:</p>
-
-<ul>
-  <li>Product translations in Saleor</li>
-  <li>Content translations for all static content</li>
-  <li>Language-specific SEO metadata</li>
-  <li>Frontend components for language switching</li>
-  <li>Language detection and persistence mechanisms</li>
-</ul>
-<h2 id="migration-challenges-and-solutions">
-  
-  
-    <a href="#migration-challenges-and-solutions" class="anchor-heading" aria-labelledby="migration-challenges-and-solutions"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Migration Challenges and Solutions
-  
-  
-</h2>
-    
-<h3 id="challenge-data-model-differences">
-  
-  
-    <a href="#challenge-data-model-differences" class="anchor-heading" aria-labelledby="challenge-data-model-differences"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Challenge: Data Model Differences
-  
-  
-</h3>
-    
-
-<p><strong>Solution</strong>: Comprehensive mapping between Statamic and Saleor data models, with transformation scripts to handle structural differences.</p>
-<h3 id="challenge-url-structure-preservation">
-  
-  
-    <a href="#challenge-url-structure-preservation" class="anchor-heading" aria-labelledby="challenge-url-structure-preservation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Challenge: URL Structure Preservation
-  
-  
-</h3>
-    
-
-<p><strong>Solution</strong>: Custom routing implementation in Next.js to preserve existing URL structures for SEO, with appropriate redirects for changed URLs.</p>
-<h3 id="challenge-multi-region-data">
-  
-  
-    <a href="#challenge-multi-region-data" class="anchor-heading" aria-labelledby="challenge-multi-region-data"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Challenge: Multi-Region Data
-  
-  
-</h3>
-    
-
-<p><strong>Solution</strong>: Channel-specific data imports with region context preserved throughout the migration process.</p>
-<h3 id="challenge-user-accounts-and-orders">
-  
-  
-    <a href="#challenge-user-accounts-and-orders" class="anchor-heading" aria-labelledby="challenge-user-accounts-and-orders"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Challenge: User Accounts and Orders
-  
-  
-</h3>
-    
-
-<p><strong>Solution</strong>: Secure migration of user data with appropriate hashing, preserving order history with region context.</p>
-<h3 id="challenge-content-relationships">
-  
-  
-    <a href="#challenge-content-relationships" class="anchor-heading" aria-labelledby="challenge-content-relationships"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Challenge: Content Relationships
-  
-  
-</h3>
-    
-
-<p><strong>Solution</strong>: Relationship mapping to preserve connections between content types, products, and other entities.</p>
-<h2 id="migration-timeline">
-  
-  
-    <a href="#migration-timeline" class="anchor-heading" aria-labelledby="migration-timeline"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Migration Timeline
-  
-  
-</h2>
-    
-
-<p>The migration is scheduled to proceed as follows:</p>
-
-<ol>
-  <li><strong>Assessment Phase</strong>: 2 weeks</li>
-  <li><strong>Environment Setup</strong>: 1 week</li>
-  <li><strong>Data Modeling &amp; Mapping</strong>: 3 weeks</li>
-  <li><strong>Migration Script Development</strong>: 4 weeks</li>
-  <li><strong>Test Migration</strong>: 2 weeks</li>
-  <li><strong>Frontend Development</strong>: 6 weeks (parallel with migration development)</li>
-  <li><strong>Integration Testing</strong>: 3 weeks</li>
-  <li><strong>Performance Optimization</strong>: 2 weeks</li>
-  <li><strong>User Acceptance Testing</strong>: 2 weeks</li>
-  <li><strong>Go-Live Preparation</strong>: 1 week</li>
-  <li><strong>Deployment and Go-Live</strong>: 1 week</li>
-</ol>
-<h2 id="risk-mitigation">
-  
-  
-    <a href="#risk-mitigation" class="anchor-heading" aria-labelledby="risk-mitigation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Risk Mitigation
-  
-  
-</h2>
-    
-
-<p>To minimize risks during the migration:</p>
-
-<ul>
-  <li>Development and testing occur in isolated environments</li>
-  <li>Multiple test migrations are performed before the final migration</li>
-  <li>Comprehensive backup strategy for all source data</li>
-  <li>Detailed rollback plan in case of unexpected issues</li>
-  <li>Thorough testing across all regions and languages</li>
-  <li>Phased go-live approach if necessary</li>
-</ul>
-<h2 id="detailed-migration-documentation">
-  
-  
-    <a href="#detailed-migration-documentation" class="anchor-heading" aria-labelledby="detailed-migration-documentation"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Detailed Migration Documentation
-  
-  
-</h2>
-    
-
-<p>For more in-depth information on specific aspects of the migration process, refer to:</p>
-
-<ul>
-  <li><a href="strategy">Migration Strategy</a></li>
-  <li><a href="data-mapping">Data Mapping</a></li>
-  <li><a href="content-migration">Content Migration</a></li>
-  <li><a href="testing">Testing and Validation</a></li>
-</ul>
+<p><em>(Add specific password reset flow details and communication templates)</em></p>
 
           
 
