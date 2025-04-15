@@ -14,7 +14,7 @@ on:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -56,7 +56,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2.8'
+          ruby-version: '2.6.10'
           bundler-cache: true
           bundler: 'latest'
           cache-version: 1
@@ -71,12 +71,16 @@ jobs:
           bundle exec jekyll build --baseurl "/$REPO_NAME"
         env:
           JEKYLL_ENV: production
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to GitHub Pages branch
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: docs/_site
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_site
+          destination_dir: .
+          enable_jekyll: false
+          force_orphan: true
 
-  # Deployment job
+  # Original deployment job - keep as a backup
   deploy:
     environment:
       name: github-pages
