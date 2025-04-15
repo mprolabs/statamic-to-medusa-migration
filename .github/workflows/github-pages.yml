@@ -60,6 +60,7 @@ jobs:
           ruby-version: '3.0'
           bundler-cache: false
           working-directory: './docs'
+          bundler: '2.4.22'
       # Force install Google Protobuf with Ruby platform
       - name: Force Google Protobuf Ruby Platform
         run: |
@@ -69,6 +70,7 @@ jobs:
         run: |
           cd docs
           bundle config set --local path 'vendor/bundle'
+          bundle update ffi
           bundle install --no-deployment
           # Extract repository name without owner
           REPO_NAME=$(echo "${{ github.repository }}" | awk -F/ '{print $2}')

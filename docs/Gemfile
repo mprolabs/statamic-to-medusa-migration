@@ -8,4 +8,4 @@ gem "jekyll-github-metadata"
 gem "webrick", "~> 1.9"
 gem "google-protobuf", "3.21.12", platforms: :ruby
 gem "sass-embedded", "~> 1.58.3"
-gem "ffi", "~> 1.15.5" 
+gem "ffi", "< 1.18" 
