@@ -49,20 +49,21 @@ jobs:
                 mv "${file%.puml}.svg" ../../../docs/assets/images/
               fi
             done
-            cd ../../.i.
+            cd ../../..
           fi
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2'
+          ruby-version: '2.6'
           bundler-cache: true
-          cache-version: 0
+          cache-version: 1
           working-directory: './docs'
       - name: Build with Jekyll
         run: |
           cd docs
+          bundle config set --local path 'vendor/bundle'
           bundle install
           # Extract repository name without owner
           REPO_NAME=$(echo "${{ github.repository }}" | awk -F/ '{print $2}')
