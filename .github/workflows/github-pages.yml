@@ -74,6 +74,8 @@ jobs:
         run: |
           cd docs
           bundle config set --local path 'vendor/bundle'
+          # Install a compatible version of ffi
+          gem install ffi -v 1.15.5 --platform=ruby
           bundle update ffi
           bundle install --no-deployment
           # Extract repository name without owner
