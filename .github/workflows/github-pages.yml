@@ -36,15 +36,15 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2' # Using a newer Ruby version with a newer RubyGems
-      
-      - name: Install Bundler 1.17.2
-        run: gem install bundler:1.17.2
+          bundler: '2.4.22'  # Use a newer Bundler version compatible with Ruby 3.2
       
       - name: Force downgrade ffi in Gemfile.lock
         run: |
           cd docs
           sed -i 's/ffi (1.17.1)/ffi (1.15.5)/' Gemfile.lock
           grep -A 2 "ffi (" Gemfile.lock
+          # Also update bundler version in Gemfile.lock
+          sed -i 's/BUNDLED WITH\n   1.17.2/BUNDLED WITH\n   2.4.22/' Gemfile.lock || true
       
       - name: Setup Bundler
         run: |
