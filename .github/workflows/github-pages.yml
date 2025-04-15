@@ -43,8 +43,6 @@ jobs:
           cd docs
           sed -i 's/ffi (1.17.1)/ffi (1.15.5)/' Gemfile.lock
           grep -A 2 "ffi (" Gemfile.lock
-          # Also update bundler version in Gemfile.lock
-          sed -i 's/BUNDLED WITH\n   1.17.2/BUNDLED WITH\n   2.4.22/' Gemfile.lock || true
       
       - name: Setup Bundler
         run: |
@@ -55,6 +53,10 @@ jobs:
           bundle config set --local path vendor/bundle
           bundle config set --local clean true
           bundle env
+
+      - name: Update Bundler version in lockfile
+        working-directory: ./docs
+        run: bundle update --bundler
       
       - name: Setup Pages
         id: pages
