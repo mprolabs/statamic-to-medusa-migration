@@ -33,16 +33,16 @@ footer_content: "Copyright &copy; 2024 MPROLabs. All rights reserved."
 # Collections (documentation sections)
 collections:
   architecture:
-    permalink: "/:collection/:path/"
+    permalink: "/architecture/:name/"
     output: true
   migration:
-    permalink: "/:collection/:path/"
+    permalink: "/migration/:name/"
     output: true
   multi-region-language:
-    permalink: "/:collection/:path/"
+    permalink: "/multi-region-language/:name/"
     output: true
   development:
-    permalink: "/:collection/:path/"
+    permalink: "/development/:name/"
     output: true
 
 # Default front matter
@@ -55,38 +55,34 @@ defaults:
       path: "architecture"
     values:
       layout: "default"
-      permalink: /:collection/:path/
   - scope:
       path: "migration"
     values:
       layout: "default"
-      permalink: /:collection/:path/
   - scope:
       path: "multi-region-language"
     values:
       layout: "default"
-      permalink: /:collection/:path/
   - scope:
       path: "development"
     values:
       layout: "default"
-      permalink: /:collection/:path/
   - scope:
       path: "development/index.md"
     values:
-      permalink: /:collection/
+      permalink: "/development/"
   - scope:
       path: "multi-region-language/index.md"
     values:
-      permalink: /:collection/
+      permalink: "/multi-region-language/"
   - scope:
       path: "architecture/index.md"
     values:
-      permalink: /:collection/
+      permalink: "/architecture/"
   - scope:
       path: "migration/index.md"
     values:
-      permalink: /:collection/
+      permalink: "/migration/"
 
 # Exclude from processing
 exclude:
