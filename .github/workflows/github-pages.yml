@@ -29,7 +29,7 @@ jobs:
   build-and-deploy:
     environment:
       name: github-pages
-      url: https://mprolabs.github.io/statamic-to-saleor-migration
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -57,11 +57,14 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.6.10'
+          ruby-version: '2.7'
           bundler-cache: true
-          bundler: 'latest'
-          cache-version: 1
           working-directory: './docs'
+      # Force install Google Protobuf with Ruby platform
+      - name: Force Google Protobuf Ruby Platform
+        run: |
+          cd docs
+          gem install google-protobuf -v 3.21.12 --platform=ruby
       - name: Build with Jekyll
         run: |
           cd docs
@@ -72,11 +75,13 @@ jobs:
           bundle exec jekyll build --baseurl "/$REPO_NAME"
         env:
           JEKYLL_ENV: production
-      - name: Deploy to GitHub Pages branch
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/_site
-          destination_dir: .
-          enable_jekyll: false
-          force_orphan: true
+          path: ./docs/_site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
