@@ -1,4 +1,4 @@
-# Updated: 2024-06-27
+# Updated: 2024-06-26
 # Site settings
 title: "Statamic to Saleor Migration"
 description: "Documentation for the migration from Statamic CMS to Saleor headless commerce platform"
@@ -7,29 +7,28 @@ baseurl: "/statamic-to-saleor-migration"
 
 # Build settings
 markdown: kramdown
-remote_theme: just-the-docs/just-the-docs@v0.6.1
+remote_theme: just-the-docs/just-the-docs
 plugins:
   - jekyll-remote-theme
   - jekyll-github-metadata
   - jekyll-seo-tag
 
-# Just the Docs theme configuration
-# See: https://just-the-docs.com/docs/configuration/
+# Theme customization
 search_enabled: true
 search_tokenizer_separator: /[\s/]+/
 heading_anchors: true
 enable_copy_code_button: true
+
+# Color scheme
 color_scheme: light
+
+# Aux links for the upper right navigation
 aux_links:
   "View on GitHub":
     - "//github.com/mprolabs/statamic-to-saleor-migration"
-back_to_top: true
-back_to_top_text: "Back to top"
-footer_content: "Copyright &copy; 2024 MPROLabs. All rights reserved."
 
-# Mermaid diagram support
-mermaid:
-  version: "10.9.0"
+# Footer content
+footer_content: "Copyright &copy; 2024 MPROLabs. All rights reserved."
 
 # Collections (documentation sections)
 collections:
@@ -97,6 +96,17 @@ exclude:
 # Include additional directories
 include:
   - assets
+
+# Navigation structure
+nav:
+  - title: Home
+    url: /
+  - title: Architecture
+    url: /architecture/
+  - title: Migration
+    url: /migration/
+  - title: Development
+    url: /development/
 
 # Callouts
 callouts:
