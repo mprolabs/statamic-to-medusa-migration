@@ -1,0 +1,55 @@
+---
+layout: table_wrappers
+---
+
+<!DOCTYPE html>
+
+<html lang="{{ site.lang | default: 'en-US' }}">
+{% include head.html %}
+<body>
+  <a class="skip-to-main" href="#main-content">Skip to main content</a>
+  {% include icons/icons.html %}
+  {% include components/header.html %}
+  <div class="main" id="top">
+    {% include components/sidebar.html %}
+    <div class="main-content-wrap js-main-content" tabindex="0">
+      <div class="main-content">
+        <div id="main-content" class="page-content" role="main">
+          {% if site.heading_anchors != false %}
+            {% include vendor/anchor_headings.html html=content beforeHeading="true" anchorBody="<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><use xlink:href=\"#svg-link\"></use></svg>" anchorClass="anchor-heading" anchorAttrs="aria-labelledby=\"%html_id%\"" %}
+          {% else %}
+            {{ content }}
+          {% endif %}
+
+          {% if page.has_children == true and page.has_toc != false %}
+            {% include components/children_nav.html %}
+          {% endif %}
+        </div>
+      </div>
+      {% include components/footer.html %}
+    </div>
+  </div>
+
+  {% if site.search_enabled != false %}
+    {% include components/search_footer.html %}
+  {% endif %}
+
+  {% if site.mermaid %}
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@{{ site.mermaid.version }}/dist/mermaid.min.js"></script>
+  <script>
+    var config = {
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true
+      }
+    };
+    mermaid.initialize(config);
+    window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+  </script>
+  {% endif %}
+
+  {% include components/scroll_to_top.html %}
+</body>
+</html> 
