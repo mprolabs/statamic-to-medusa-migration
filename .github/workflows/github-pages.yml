@@ -86,7 +86,7 @@ jobs:
         working-directory: ./docs
         run: |
           gem list ffi
-          bundle install --jobs 4 --retry 3 --conservative
+          bundle install --jobs 4 --retry 3
           bundle exec ruby -e "require 'ffi'; puts 'FFI version: ' + FFI::VERSION"
           
       - name: Build with Jekyll
