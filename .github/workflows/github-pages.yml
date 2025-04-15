@@ -74,17 +74,16 @@ jobs:
         run: |
           cd docs
           bundle config set --local path 'vendor/bundle'
-          # Pin ffi to an older version compatible with Ruby 2.7
+          # Directly modify the Gemfile to pin ffi version
+          if grep -q "ffi" Gemfile; then
+            sed -i "s/gem ['\\"]ffi['\\"](, *['\\"]*[^'\\"]*['\\"]*)*$/gem 'ffi', '1.15.5'/" Gemfile
+          else
+            echo "gem 'ffi', '1.15.5'" >> Gemfile
+          fi
+          # Install the specific ffi version
           gem install ffi -v 1.15.5 --platform=ruby
-          bundle config set ffi 1.15.5
-          # Create a temporary .bundler/config to force the version
-          mkdir -p .bundle
-          echo --- > .bundle/config
-          echo BUNDLE_FROZEN: \"true\" >> .bundle/config
-          echo "BUNDLE_BUILD__FFI: \"--platform=ruby\"" >> .bundle/config
-          # Use conservative update to avoid dependency resolution issues
-          bundle update ffi --conservative
-          bundle install --local --no-deployment
+          # Normal bundle install
+          bundle install --no-deployment
           # Extract repository name without owner
           REPO_NAME=$(echo "${{ github.repository }}" | awk -F/ '{print $2}')
           bundle exec jekyll build --baseurl "/$REPO_NAME"
