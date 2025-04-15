@@ -1,0 +1,36 @@
+/* Custom styles for Mermaid diagrams */
+.language-mermaid {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 1.5em;
+  border-radius: 4px;
+  overflow: auto;
+}
+
+/* Ensure SVG diagrams are fully visible */
+.language-mermaid svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Better styling for diagram nodes */
+.language-mermaid .node rect,
+.language-mermaid .node circle,
+.language-mermaid .node ellipse,
+.language-mermaid .node polygon,
+.language-mermaid .node path {
+  stroke-width: 2px;
+}
+
+/* Better styling for diagram lines */
+.language-mermaid .edgePath .path {
+  stroke-width: 2px;
+}
+
+/* Better text readability in diagrams */
+.language-mermaid .label {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+} 
