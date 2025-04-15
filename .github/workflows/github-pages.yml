@@ -27,6 +27,9 @@ concurrency:
 jobs:
   # Build job
   build-and-deploy:
+    environment:
+      name: github-pages
+      url: https://mprolabs.github.io/statamic-to-saleor-migration
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
