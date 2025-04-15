@@ -2,12 +2,14 @@
 title: Home
 layout: default
 nav_order: 1
-last_updated: June 26, 2024
+last_updated: April 15, 2024
 ---
 
 # Statamic to Saleor Migration Documentation
 
 This documentation outlines the migration process from Statamic CMS with Simple Commerce to Saleor headless commerce platform.
+
+> **Note**: This repository was recently renamed to better reflect the migration target platform.
 
 ## Key Features
 
