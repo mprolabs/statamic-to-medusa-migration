@@ -6,5 +6,5 @@ gem "jekyll-seo-tag"
 gem "just-the-docs", "0.6.1"
 gem "jekyll-github-metadata"
 gem "webrick", "~> 1.9"
-gem "google-protobuf", "~> 3.21.12"
+gem "google-protobuf", "3.21.12", platforms: :ruby
 gem "sass-embedded", "~> 1.58.3" 

@@ -71,6 +71,22 @@ defaults:
     values:
       layout: "default"
       permalink: /:collection/:path/
+  - scope:
+      path: "development/index.md"
+    values:
+      permalink: /:collection/
+  - scope:
+      path: "multi-region-language/index.md"
+    values:
+      permalink: /:collection/
+  - scope:
+      path: "architecture/index.md"
+    values:
+      permalink: /:collection/
+  - scope:
+      path: "migration/index.md"
+    values:
+      permalink: /:collection/
 
 # Exclude from processing
 exclude:
