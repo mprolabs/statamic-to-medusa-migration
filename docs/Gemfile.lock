@@ -97,7 +97,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  google-protobuf (~> 3.21.12)
+  google-protobuf (= 3.21.12)
   jekyll (~> 4.3.4)
   jekyll-github-metadata
   jekyll-remote-theme
