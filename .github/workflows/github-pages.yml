@@ -60,7 +60,11 @@ jobs:
           ruby-version: '3.0'
           bundler-cache: false
           working-directory: './docs'
-          bundler: '2.4.22'
+      # Install specific bundler version
+      - name: Install Bundler 1.17.2
+        run: |
+          cd docs
+          gem install bundler:1.17.2
       # Force install Google Protobuf with Ruby platform
       - name: Force Google Protobuf Ruby Platform
         run: |
