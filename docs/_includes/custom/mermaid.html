@@ -1,0 +1,29 @@
+<!-- Mermaid.js for diagram rendering -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@{{ site.mermaid.version }}/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true
+      }
+    });
+    
+    // Force initialization on all mermaid code blocks
+    document.querySelectorAll('.language-mermaid').forEach(function(element) {
+      // Create a unique ID for each mermaid div
+      var id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+      element.id = id;
+      
+      // Get the mermaid content
+      var content = element.textContent;
+      
+      // Initialize this specific diagram
+      mermaid.render(id, content, function(svgCode) {
+        element.innerHTML = svgCode;
+      });
+    });
+  });
+</script> 

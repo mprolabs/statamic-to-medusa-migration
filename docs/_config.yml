@@ -7,7 +7,7 @@ baseurl: "/statamic-to-saleor-migration"
 
 # Build settings
 markdown: kramdown
-remote_theme: just-the-docs/just-the-docs
+remote_theme: just-the-docs/just-the-docs@v0.6.1
 plugins:
   - jekyll-remote-theme
   - jekyll-github-metadata
@@ -18,15 +18,12 @@ search_enabled: true
 search_tokenizer_separator: /[\s/]+/
 heading_anchors: true
 enable_copy_code_button: true
+color_scheme: light
+
+# Mermaid diagram support
 mermaid:
   # Version of mermaid library
-  # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
   version: "10.9.0"
-  # Explicitly enable mermaid rendering
-  enabled: true
-
-# Color scheme
-color_scheme: light
 
 # Aux links for the upper right navigation
 aux_links:
