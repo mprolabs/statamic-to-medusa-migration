@@ -36,23 +36,22 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2' # Using a newer Ruby version with a newer RubyGems
-          bundler: '1.17.2'   # Match the bundler version in Gemfile.lock
       
-      - name: Update RubyGems
-        run: |
-          gem update --system 3.4.22
-          gem --version
+      - name: Install Bundler 1.17.2
+        run: gem install bundler:1.17.2
       
-      - name: Force install specific gem versions
+      - name: Force downgrade ffi in Gemfile.lock
         run: |
-          gem install google-protobuf -v 3.21.12 --platform=ruby
-          gem install ffi -v 1.15.5 --platform=ruby
-          gem list | grep -E 'ffi|google-protobuf'
+          cd docs
+          sed -i 's/ffi (1.17.1)/ffi (1.15.5)/' Gemfile.lock
+          grep -A 2 "ffi (" Gemfile.lock
       
       - name: Setup Bundler
         run: |
+          mkdir -p ~/.bundle
           echo "---" > ~/.bundle/config
           echo "BUNDLE_FORCE_RUBY_PLATFORM: \"true\"" >> ~/.bundle/config
+          cd docs
           bundle config set --local path vendor/bundle
           bundle config set --local clean true
           bundle env
@@ -86,7 +85,9 @@ jobs:
       - name: Install dependencies
         working-directory: ./docs
         run: |
+          gem list ffi
           bundle install --jobs 4 --retry 3 --conservative
+          bundle exec ruby -e "require 'ffi'; puts 'FFI version: ' + FFI::VERSION"
           
       - name: Build with Jekyll
         working-directory: ./docs
