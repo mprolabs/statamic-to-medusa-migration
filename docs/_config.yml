@@ -19,6 +19,13 @@ search_tokenizer_separator: /[\s/]+/
 heading_anchors: true
 enable_copy_code_button: true
 
+# Mermaid diagram support
+mermaid:
+  # Version of mermaid library
+  version: "9.4.3"
+  # Setting this to true will load the Mermaid JS library
+  enable: true
+
 # Color scheme
 color_scheme: light
 
