@@ -11,7 +11,17 @@ mkdir -p docs/assets/images
 # Generate SVG diagrams from PlantUML
 echo "Generating diagrams..."
 cd docs/architecture/diagrams
-bash generate-diagrams.sh
+# Try the Node.js approach first (better encoding support)
+if [ -f "generate-diagrams-node.sh" ]; then
+  echo "Using Node.js for diagram generation..."
+  bash generate-diagrams-node.sh
+# Fall back to shell script if Node.js approach fails
+elif [ -f "generate-diagrams.sh" ]; then
+  echo "Falling back to shell script for diagram generation..."
+  bash generate-diagrams.sh
+else
+  echo "Warning: No diagram generation script found!"
+fi
 cd ../../..
 
 # Install Jekyll dependencies and build

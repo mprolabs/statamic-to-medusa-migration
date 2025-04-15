@@ -1,45 +1,40 @@
 #!/bin/bash
 
-# This script generates SVG files from PlantUML files using the PlantUML online server
-# No Java installation required!
+# This script generates SVG files from PlantUML files using the online PlantUML server
+# This version does not require local Java installation
+
+ASSETS_DIR="../../../assets/images"
+ONLINE_URL="http://www.plantuml.com/plantuml/svg/"
 
 # Create assets directory if it doesn't exist
-mkdir -p ../../assets/images
+mkdir -p $ASSETS_DIR
 
-# Get the directory of the script
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+echo "Using PlantUML online server for SVG generation..."
 
-# Generate SVGs from all PUML files
-for puml_file in "$SCRIPT_DIR"/*.puml; do
+# Function to encode PlantUML content for online server
+# This is a simplified version - for complex diagrams, a more robust encoding might be needed
+encode_for_plantuml() {
+  cat "$1" | curl -s --data-urlencode "plantuml@-" "$ONLINE_URL" > "$2"
+}
+
+# Process each PlantUML file
+for puml_file in *.puml; do
   if [ -f "$puml_file" ]; then
-    filename=$(basename -- "$puml_file")
-    filename_no_ext="${filename%.*}"
-    echo "Generating SVG for $filename_no_ext..."
+    base_name="${puml_file%.puml}"
+    svg_file="${base_name}.svg"
     
-    # Read the PUML file content
-    puml_content=$(cat "$puml_file")
+    echo "Generating SVG for ${base_name}..."
     
-    # URL encode the content (basic encoding for common special characters)
-    encoded_content=$(echo "$puml_content" | perl -pe 's/([^a-zA-Z0-9_.-])/sprintf("%%%02X", ord($1))/ge')
+    # Generate SVG using PlantUML online server
+    encode_for_plantuml "$puml_file" "$svg_file"
     
-    # Define PlantUML server URL
-    plantuml_server="https://www.plantuml.com/plantuml/svg/"
-    
-    # Use curl to fetch the SVG from the PlantUML server
-    echo "  Fetching from PlantUML server..."
-    curl -s -o "../../assets/images/$filename_no_ext.svg" --data-urlencode "plantuml=$puml_content" "$plantuml_server"
-    
-    # Check if the SVG was created successfully
-    if [ -f "../../assets/images/$filename_no_ext.svg" ]; then
-      filesize=$(stat -f%z "../../assets/images/$filename_no_ext.svg" 2>/dev/null || stat -c%s "../../assets/images/$filename_no_ext.svg")
-      if [ "$filesize" -gt 100 ]; then
-        echo "  Created ../../assets/images/$filename_no_ext.svg"
-      else
-        echo "  Error: SVG generation failed for $filename_no_ext - File too small"
-        rm "../../assets/images/$filename_no_ext.svg"
-      fi
+    # Check if SVG was generated successfully
+    if [ -f "$svg_file" ] && [ -s "$svg_file" ]; then
+      # Move SVG to assets directory
+      mv "$svg_file" "${ASSETS_DIR}/"
+      echo "  SVG generated and moved to assets directory"
     else
-      echo "  Error: SVG not generated for $filename_no_ext"
+      echo "  Error: SVG not generated for ${base_name}"
     fi
   fi
 done

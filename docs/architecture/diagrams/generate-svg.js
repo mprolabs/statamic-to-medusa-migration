@@ -1,103 +1,153 @@
-import fs from 'fs';
-import path from 'path';
-import https from 'https';
-import zlib from 'zlib';
-import { fileURLToPath } from 'url';
+#!/usr/bin/env node
 
-// Get the current directory
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const fs = require('fs');
+const path = require('path');
+const zlib = require('zlib');
+const https = require('https');
+const crypto = require('crypto');
 
-// Ensure asset directory exists
-const assetDir = path.join(__dirname, '..', '..', 'assets', 'images');
-if (!fs.existsSync(assetDir)) {
-  fs.mkdirSync(assetDir, { recursive: true });
-  console.log(`Created directory: ${assetDir}`);
+// Assets directory relative to this script
+const ASSETS_DIR = path.join(__dirname, '../../../assets/images');
+
+// PlantUML server URL for SVG
+const PLANTUML_SERVER = 'https://www.plantuml.com/plantuml/svg/';
+
+// Ensure assets directory exists
+if (!fs.existsSync(ASSETS_DIR)) {
+  fs.mkdirSync(ASSETS_DIR, { recursive: true });
+  console.log(`Created assets directory at ${ASSETS_DIR}`);
 }
 
-// Function to encode PlantUML content for the server
+/**
+ * Properly encode PlantUML content for the online server
+ * Uses zlib deflate and base64 encoding as required by PlantUML
+ */
 function encodePlantUML(content) {
-  // PlantUML server uses a custom deflate + base64 encoding
-  const deflated = zlib.deflateSync(content, { level: 9 });
+  const deflated = zlib.deflateSync(content);
   
-  // Convert to base64 and make it URL friendly
-  const base64 = deflated.toString('base64')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_');
+  // Base64 encode with PlantUML-specific encoding
+  let base64 = '';
+  for (let i = 0; i < deflated.length; i += 3) {
+    const a = (i < deflated.length) ? deflated[i] : 0;
+    const b = (i + 1 < deflated.length) ? deflated[i + 1] : 0;
+    const c = (i + 2 < deflated.length) ? deflated[i + 2] : 0;
+    
+    const chunk = (a << 16) | (b << 8) | c;
+    base64 += encode6bit((chunk >> 18) & 0x3F);
+    base64 += encode6bit((chunk >> 12) & 0x3F);
+    base64 += encode6bit((chunk >> 6) & 0x3F);
+    base64 += encode6bit(chunk & 0x3F);
+  }
   
   return base64;
 }
 
-// Function to fetch SVG from PlantUML server
-function generateSVG(pumlPath, outputPath) {
+/**
+ * Convert 6 bits to a PlantUML-friendly Base64 character
+ */
+function encode6bit(b) {
+  // PlantUML specific encoding table
+  const ALPHANUMERIC = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_";
+  if (b < 0 || b > 63) {
+    return '?';
+  }
+  return ALPHANUMERIC.charAt(b);
+}
+
+/**
+ * Download SVG from PlantUML server
+ */
+function downloadSVG(encodedContent, outputPath) {
   return new Promise((resolve, reject) => {
-    const filename = path.basename(pumlPath, '.puml');
-    console.log(`Generating SVG for ${filename}...`);
+    const url = `${PLANTUML_SERVER}${encodedContent}`;
     
-    try {
-      // Read the PUML file
-      const content = fs.readFileSync(pumlPath, 'utf8');
+    https.get(url, (res) => {
+      if (res.statusCode !== 200) {
+        reject(new Error(`Failed to download SVG: HTTP ${res.statusCode}`));
+        return;
+      }
       
-      // Encode the content
-      const encoded = encodePlantUML(content);
-      
-      // Define PlantUML server URL
-      const plantumlServer = 'https://www.plantuml.com/plantuml/svg/';
-      const url = plantumlServer + encoded;
-      
-      console.log(`  Fetching from PlantUML server...`);
-      
-      // Fetch the SVG
-      https.get(url, (response) => {
-        if (response.statusCode !== 200) {
-          reject(new Error(`Failed to generate SVG for ${filename}: HTTP ${response.statusCode}`));
-          return;
-        }
-        
-        const data = [];
-        
-        response.on('data', (chunk) => {
-          data.push(chunk);
-        });
-        
-        response.on('end', () => {
-          const svg = Buffer.concat(data);
-          
-          // Write the SVG to file
-          fs.writeFileSync(outputPath, svg);
-          console.log(`  Created ${outputPath}`);
-          resolve();
-        });
-      }).on('error', (error) => {
-        reject(new Error(`Failed to generate SVG for ${filename}: ${error.message}`));
+      const data = [];
+      res.on('data', (chunk) => {
+        data.push(chunk);
       });
-    } catch (error) {
-      reject(new Error(`Error processing ${filename}: ${error.message}`));
-    }
+      
+      res.on('end', () => {
+        const svg = Buffer.concat(data);
+        fs.writeFileSync(outputPath, svg);
+        resolve();
+      });
+    }).on('error', (err) => {
+      reject(err);
+    });
   });
 }
 
-// Get all PUML files
-const pumlDir = __dirname;
-const pumlFiles = fs.readdirSync(pumlDir)
-  .filter(file => file.endsWith('.puml'))
-  .map(file => path.join(pumlDir, file));
-
-// Process all PUML files
-async function processFiles() {
-  const promises = pumlFiles.map(pumlFile => {
-    const filename = path.basename(pumlFile, '.puml');
-    const outputPath = path.join(assetDir, `${filename}.svg`);
-    return generateSVG(pumlFile, outputPath);
-  });
+/**
+ * Process a single PlantUML file
+ */
+async function processFile(filePath) {
+  const fileName = path.basename(filePath, '.puml');
+  const outputPath = path.join(ASSETS_DIR, `${fileName}.svg`);
+  
+  console.log(`Processing ${fileName}...`);
   
   try {
-    await Promise.all(promises);
-    console.log('SVG generation complete!');
-  } catch (error) {
-    console.error('Error generating SVGs:', error.message);
+    const content = fs.readFileSync(filePath, 'utf8');
+    const encoded = encodePlantUML(content);
+    
+    await downloadSVG(encoded, outputPath);
+    
+    // Verify file was created successfully
+    const stats = fs.statSync(outputPath);
+    if (stats.size > 100) { // Ensure SVG is not just an error message
+      console.log(`  Successfully generated ${outputPath}`);
+      
+      // Calculate a hash of the file for verification
+      const fileHash = crypto.createHash('md5').update(content).digest('hex').substring(0, 8);
+      console.log(`  File hash: ${fileHash}`);
+      
+      return true;
+    } else {
+      console.error(`  Error: Generated SVG is too small (${stats.size} bytes), likely an error.`);
+      return false;
+    }
+  } catch (err) {
+    console.error(`  Error processing ${fileName}: ${err.message}`);
+    return false;
   }
 }
 
+/**
+ * Process all PlantUML files in the current directory
+ */
+async function main() {
+  const files = fs.readdirSync(__dirname).filter(file => file.endsWith('.puml'));
+  
+  console.log(`Found ${files.length} PlantUML files to process`);
+  
+  let successCount = 0;
+  let failureCount = 0;
+  
+  for (const file of files) {
+    const filePath = path.join(__dirname, file);
+    const success = await processFile(filePath);
+    
+    if (success) {
+      successCount++;
+    } else {
+      failureCount++;
+    }
+  }
+  
+  console.log('\nSummary:');
+  console.log(`  Success: ${successCount}`);
+  console.log(`  Failure: ${failureCount}`);
+  console.log(`  Total: ${files.length}`);
+}
+
 // Run the script
-processFiles(); 
+main().catch(err => {
+  console.error('Fatal error:', err);
+  process.exit(1);
+}); 
