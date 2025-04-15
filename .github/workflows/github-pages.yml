@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Build and deploy Jekyll site to GitHub Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -14,7 +14,7 @@ on:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -26,76 +26,95 @@ concurrency:
 
 jobs:
   # Build job
-  build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Java for PlantUML
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Generate Diagrams
-        run: |
-          mkdir -p docs/assets/images
-          curl -L -o plantuml.jar https://sourceforge.net/projects/plantuml/files/plantuml.jar/download
-          if [ -d "src/architecture/diagrams" ]; then
-            cd src/architecture/diagrams
-            for file in *.puml; do
-              if [ -f "$file" ]; then
-                echo "Rendering $file"
-                java -jar ../../../plantuml.jar -tsvg "$file"
-                mv "${file%.puml}.svg" ../../../docs/assets/images/
-              fi
-            done
-            cd ../../..
-          fi
+      
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7'
-          bundler-cache: false
-          working-directory: './docs'
-      # Install Bundler 1.17.2 specifically
-      - name: Install Bundler
+          ruby-version: '3.2' # Using a newer Ruby version with a newer RubyGems
+          bundler: '1.17.2'   # Match the bundler version in Gemfile.lock
+      
+      - name: Update RubyGems
         run: |
-          cd docs
-          gem install bundler -v 1.17.2
-      # Force install Google Protobuf with Ruby platform
-      - name: Force Google Protobuf Ruby Platform
+          gem update --system 3.4.22
+          gem --version
+      
+      - name: Force install specific gem versions
         run: |
-          cd docs
           gem install google-protobuf -v 3.21.12 --platform=ruby
-      - name: Build with Jekyll
-        run: |
-          cd docs
-          bundle config set --local path 'vendor/bundle'
-          # Directly modify the Gemfile to pin ffi version
-          if grep -q "ffi" Gemfile; then
-            sed -i 's/gem ["]\\{0,1\\}ffi["]\\{0,1\\}.*$/gem "ffi", "1.15.5"/' Gemfile
-          else
-            echo 'gem "ffi", "1.15.5"' >> Gemfile
-          fi
-          # Install the specific ffi version
           gem install ffi -v 1.15.5 --platform=ruby
-          # Normal bundle install
-          bundle install --no-deployment
-          # Extract repository name without owner
-          REPO_NAME=$(echo "${{ github.repository }}" | awk -F/ '{print $2}')
-          bundle exec jekyll build --baseurl "/$REPO_NAME"
-        env:
-          JEKYLL_ENV: production
+          gem list | grep -E 'ffi|google-protobuf'
+      
+      - name: Setup Bundler
+        run: |
+          echo "---" > ~/.bundle/config
+          echo "BUNDLE_FORCE_RUBY_PLATFORM: \"true\"" >> ~/.bundle/config
+          bundle config set --local path vendor/bundle
+          bundle config set --local clean true
+          bundle env
+      
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
+        
+      - name: Install PlantUML
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-jre graphviz
+          mkdir -p bin
+          curl -L https://github.com/plantuml/plantuml/releases/download/v1.2023.11/plantuml-1.2023.11.jar -o bin/plantuml.jar
+          echo '#!/bin/bash' > bin/plantuml
+          echo 'java -jar "$( dirname "${BASH_SOURCE[0]}" )/plantuml.jar" "$@"' >> bin/plantuml
+          chmod +x bin/plantuml
+          echo "$PWD/bin" >> $GITHUB_PATH
+          
+      - name: Generate Diagrams
+        run: find docs -name "*.puml" -exec plantuml -tsvg {} \;
+      
+      - name: Restore cache
+        uses: actions/cache/restore@v4
+        with:
+          path: docs/vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('docs/**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+            
+      - name: Install dependencies
+        working-directory: ./docs
+        run: |
+          bundle install --jobs 4 --retry 3 --conservative
+          
+      - name: Build with Jekyll
+        working-directory: ./docs
+        # use jekyll-remote-theme
+        env:
+          JEKYLL_ENV: production
+          PAGES_REPO_NWO: ${{ github.repository }}
+        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+        
+      - name: Save cache
+        uses: actions/cache/save@v4
+        with:
+          path: docs/vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('docs/**/Gemfile.lock') }}
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./docs/_site
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
