@@ -5,7 +5,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { ShoppingBagIcon, UserIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useCartStore } from '../lib/stores/cartStore';
+import { useCartStore } from '../store/cart';
 import CartDrawer from './CartDrawer';
 import { getCurrentLocale, setLocale } from '../lib/graphql/client';
 
@@ -214,9 +214,8 @@ const Header: React.FC = () => {
             <Disclosure.Panel className="sm:hidden">
               <div className="space-y-1 pb-3 pt-2">
                 {navigation.map((item) => (
-                  <Disclosure.Button
+                  <Link
                     key={item.name}
-                    as="a"
                     href={item.href}
                     className={`${
                       pathname === item.href || pathname?.startsWith(item.href + '/')
@@ -226,7 +225,7 @@ const Header: React.FC = () => {
                     aria-current={item.current ? 'page' : undefined}
                   >
                     {item.name}
-                  </Disclosure.Button>
+                  </Link>
                 ))}
               </div>
               <div className="border-t border-gray-200 pb-3 pt-4">
@@ -240,27 +239,24 @@ const Header: React.FC = () => {
                   </div>
                 </div>
                 <div className="mt-3 space-y-1">
-                  <Disclosure.Button
-                    as="a"
+                  <Link
                     href="/profile"
                     className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
                   >
                     Your Profile
-                  </Disclosure.Button>
-                  <Disclosure.Button
-                    as="a"
+                  </Link>
+                  <Link
                     href="/orders"
                     className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
                   >
                     Your Orders
-                  </Disclosure.Button>
-                  <Disclosure.Button
-                    as="a"
+                  </Link>
+                  <Link
                     href="#"
                     className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
                   >
                     Sign out
-                  </Disclosure.Button>
+                  </Link>
                 </div>
               </div>
             </Disclosure.Panel>

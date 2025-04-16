@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { createContext, useContext } from 'react';
 
 // Language dictionary types
@@ -49,9 +49,9 @@ export type Dictionary = {
 };
 
 // Supported languages
-export type Locale = 'en' | 'nl';
+export type Locale = 'en' | 'nl' | 'de';
 export const defaultLocale: Locale = 'en';
-export const locales: Locale[] = ['en', 'nl'];
+export const locales: Locale[] = ['en', 'nl', 'de'];
 
 // Context for translation
 export const DictionaryContext = createContext<Dictionary | null>(null);
@@ -76,8 +76,10 @@ export function getLocale(params?: { locale?: string }): Locale {
 
 // Hook to get current locale from URL
 export function useLocale(): Locale {
-  const params = useParams();
-  return getLocale(params as { locale?: string });
+  const pathname = usePathname();
+  // Extract locale from pathname (e.g., /en/products, /nl/cart, etc.)
+  const localeFromPath = pathname?.split('/')[1];
+  return getLocale({ locale: localeFromPath });
 }
 
 // Function to get dictionary for server components

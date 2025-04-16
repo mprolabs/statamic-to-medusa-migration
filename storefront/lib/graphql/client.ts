@@ -1,5 +1,6 @@
 import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { useCurrentLocale } from '../i18n/config';
 
 // Get the API URL from environment variables
 const API_URL = process.env.NEXT_PUBLIC_SALEOR_API_URL || 'https://demo.saleor.io/graphql/';

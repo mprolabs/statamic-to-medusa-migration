@@ -112,14 +112,19 @@ export const SUPPORTED_LANGUAGES: Language[] = [
     name: 'English',
   },
   {
-    code: 'fr',
-    name: 'French',
-    localName: 'Français'
+    code: 'nl',
+    name: 'Dutch',
+    localName: 'Nederlands'
   },
   {
     code: 'de',
     name: 'German',
     localName: 'Deutsch'
+  },
+  {
+    code: 'fr',
+    name: 'French',
+    localName: 'Français'
   },
   {
     code: 'es',

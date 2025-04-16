@@ -1,19 +1,20 @@
 import { createI18n } from 'next-international'
 
-export type Locale = 'en' | 'nl'
+export type Locale = 'en' | 'nl' | 'de'
 
 export const defaultLocale: Locale = 'en'
 
-export const locales: Locale[] = ['en', 'nl']
+export const locales: Locale[] = ['en', 'nl', 'de']
 
+// Create the i18n instance
 export const i18n = createI18n({
-  locales,
-  defaultLocale,
+  en: () => import('./dictionaries/en.json'),
+  nl: () => import('./dictionaries/nl.json'),
+  de: () => import('./dictionaries/de.json'),
 })
 
-export const getI18n = i18n.getI18n
-export const getScopedI18n = i18n.getScopedI18n
-export const getCurrentLocale = i18n.getCurrentLocale
+// Export the hooks
+export const { useI18n, useScopedI18n, useCurrentLocale, useChangeLocale } = i18n
 
 // Helper to get the language code for GraphQL queries
 export const getLanguageCodeFromLocale = (locale: Locale): string => {
@@ -22,6 +23,8 @@ export const getLanguageCodeFromLocale = (locale: Locale): string => {
       return 'EN'
     case 'nl':
       return 'NL'
+    case 'de':
+      return 'DE'
     default:
       return 'EN'
   }
