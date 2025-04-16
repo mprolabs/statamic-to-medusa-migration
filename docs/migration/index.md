@@ -1,8 +1,38 @@
 ---
+title: Migration
 layout: default
-title: Migration Process
-description: Comprehensive guide to migrating from Statamic with Simple Commerce to Saleor with multi-region and multi-language support
+has_children: true
+nav_order: 2
+permalink: /migration/
 ---
+
+# Migration
+
+This section contains documentation related to the migration from Statamic to Saleor, including data mapping, content migration, and API specifications.
+
+## Migration Documents
+
+- [API Specifications](/statamic-to-saleor-migration/migration/api-specifications): Detailed API contracts and endpoint specifications.
+- [Authentication & Security](/statamic-to-saleor-migration/migration/auth-security): Authentication mechanisms and security considerations.
+- [OpenAPI Documentation](/statamic-to-saleor-migration/migration/openapi-documentation): Swagger documentation for REST endpoints.
+- [Content Migration](/statamic-to-saleor-migration/migration/content-migration): Strategy for migrating content from Statamic.
+- [Data Migration](/statamic-to-saleor-migration/migration/data-migration): Process for migrating data to Saleor.
+- [Product Migration](/statamic-to-saleor-migration/migration/product-migration): Strategy for migrating products from Simple Commerce to Saleor.
+- [User Migration](/statamic-to-saleor-migration/migration/user-migration): Process for migrating user accounts.
+
+## Migration Process Overview
+
+The migration from Statamic to Saleor involves several key phases:
+
+1. **Analysis and Planning**: Understanding the current Statamic implementation and planning the migration strategy.
+2. **Data Mapping**: Creating mappings between Statamic data structures and Saleor models.
+3. **API Integration**: Setting up the necessary APIs for data transfer.
+4. **Content Migration**: Moving content from Statamic to Saleor.
+5. **User Migration**: Transferring user accounts and authentication.
+6. **Testing and Validation**: Ensuring the migrated data is accurate and functions correctly.
+7. **Deployment**: Launching the new Saleor-based system.
+
+Each aspect of the migration process is detailed in the associated documentation pages.
 
 # Migration Process
 

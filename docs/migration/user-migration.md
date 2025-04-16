@@ -2,6 +2,10 @@
 title: User Migration
 parent: Migration
 nav_order: 3
+has_toc: true
+has_children: true
+multilang_export: true
+permalink: /migration/user-migration/
 ---
 
 # User Migration

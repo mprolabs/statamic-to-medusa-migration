@@ -2,6 +2,10 @@
 title: Data Migration
 parent: Migration
 nav_order: 1
+has_toc: true
+has_children: true
+multilang_export: true
+permalink: /migration/data-migration/
 ---
 
 # Data Migration

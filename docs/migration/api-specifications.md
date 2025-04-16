@@ -1,7 +1,9 @@
 ---
 title: API Specifications
 parent: Migration
-nav_order: 4
+nav_order: 1
+has_toc: true
+permalink: /migration/api-specifications/
 ---
 
 # API Specifications

@@ -1,7 +1,11 @@
 ---
 title: Content Migration
 parent: Migration
-nav_order: 2
+nav_order: 4
+has_toc: true
+has_children: true
+multilang_export: true
+permalink: /migration/content-migration/
 ---
 
 # Content Migration

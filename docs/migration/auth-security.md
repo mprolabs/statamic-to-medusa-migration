@@ -1,7 +1,9 @@
 ---
 title: Authentication & Security
 parent: Migration
-nav_order: 5
+nav_order: 2
+has_toc: true
+permalink: /migration/auth-security/
 ---
 
 # Authentication & Security Requirements
