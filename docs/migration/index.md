@@ -2,13 +2,54 @@
 title: Migration
 layout: default
 has_children: true
-nav_order: 2
+nav_order: 4
 permalink: /migration/
 ---
 
 # Migration
 
-This section contains documentation related to the migration from Statamic to Saleor, including data mapping, content migration, and API specifications.
+This section contains documentation related to the migration from Statamic CMS with Simple Commerce to Saleor.
+
+## Overview
+
+Our migration project involves several key components:
+
+1. **Statamic to Saleor Platform Migration**: Moving from Statamic CMS with Simple Commerce to the Saleor headless e-commerce platform
+2. **Multi-Region Support**: Implementing region-specific configurations for NL, BE, and DE using Saleor's Channel system
+3. **Multi-Language Support**: Supporting content in Dutch, German, English, and French using Saleor's translation capabilities
+4. **Nimara Framework Adoption**: Migrating our custom Next.js storefront to the Nimara e-commerce framework
+
+## Key Migration Guides
+
+- [Data Migration Guide](data-migration.html) - Detailed process for migrating data from Statamic to Saleor
+- [Nimara Migration Guide](nimara-migration-guide.html) - Guide for migrating our custom storefront to the Nimara framework
+- [Multi-Region Implementation](multi-region-implementation.html) - How to implement multi-region support using Saleor's Channel system
+- [Multi-Language Implementation](multi-language-implementation.html) - Approach for implementing multi-language support
+
+## Migration Timeline
+
+| Phase | Description | Status |
+|-------|-------------|--------|
+| Proof of Concept | Validate technical approach and architecture | Completed |
+| Development Environment Setup | Configure Saleor and Next.js environments | Completed |
+| Data Model Design | Define Saleor data models and migration mappings | Completed |
+| Storefront Development | Build initial custom storefront | Completed |
+| Nimara Framework Migration | Move to Nimara e-commerce framework | In Progress |
+| Data Migration | Execute data migration | Pending |
+| Testing & Optimization | Test and refine implementation | Pending |
+| Deployment & Launch | Deploy to production | Pending |
+
+## Recent Updates
+
+- **2023-05-15**: Decision to adopt Nimara e-commerce framework
+- **2023-05-01**: Completed initial custom storefront implementation
+- **2023-04-15**: Finalized multi-region and multi-language implementation approach
+- **2023-04-01**: Completed architecture design for Saleor migration
+
+## Related Resources
+
+- [Multi-Region/Language Documentation]({{ site.baseurl }}/multi-region-language/) - Comprehensive guide to multi-region and multi-language support
+- [Architecture Documentation]({{ site.baseurl }}/architecture/) - Technical architecture diagrams and documentation
 
 ## Migration Documents
 

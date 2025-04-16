@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { GET_PRODUCTS } from '@/lib/graphql/queries';
-import { ProductsResponse } from '@/lib/graphql/types';
+import { GET_PRODUCTS } from '../lib/graphql/queries';
+import type { Product, ProductsResponse, Connection, Edge } from '../lib/graphql/types';
+import Image from 'next/image';
 import Link from 'next/link';
 
 interface ProductListProps {
@@ -14,31 +15,45 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ 
   limit = 8, 
-  categorySlug,
-  showLoadMore = false
+  categorySlug, 
+  showLoadMore = false 
 }) => {
-  const [productsToShow, setProductsToShow] = React.useState(limit);
+  const [displayLimit, setDisplayLimit] = useState<number>(limit);
   
-  // The Apollo client will automatically inject channel and language variables
-  // based on the current region and language from context
-  const { data, loading, error, fetchMore } = useQuery<ProductsResponse>(GET_PRODUCTS, {
-    variables: {
-      first: productsToShow,
-      filter: categorySlug ? { categories: [categorySlug] } : { isPublished: true, isAvailable: true },
-    },
-  });
-
-  if (loading) return <div className="w-full p-8 text-center">Loading products...</div>;
-  if (error) return <div className="w-full p-8 text-center text-red-500">Error: {error.message}</div>;
-  if (!data?.products || data.products.edges.length === 0) return <div className="w-full p-8 text-center">No products found</div>;
-
+  // Define variables for the query
+  const variables: Record<string, any> = {
+    first: displayLimit,
+  };
+  
+  // Add category filter if categorySlug is provided
+  if (categorySlug) {
+    variables.filter = {
+      categories: [categorySlug]
+    };
+  }
+  
+  const { loading, error, data, fetchMore } = useQuery<ProductsResponse>(
+    GET_PRODUCTS,
+    { variables }
+  );
+  
+  if (loading) return <div className="my-8 text-center">Loading products...</div>;
+  if (error) return <div className="my-8 text-center text-red-500">Error loading products: {error.message}</div>;
+  if (!data || !data.products || !data.products.edges || data.products.edges.length === 0) {
+    return <div className="my-8 text-center">No products found.</div>;
+  }
+  
+  const products = data.products.edges.map((edge: Edge<Product>) => edge.node);
+  const hasNextPage = data.products.pageInfo.hasNextPage;
+  
   const loadMoreProducts = () => {
-    if (data.products.pageInfo.hasNextPage) {
+    if (hasNextPage) {
       fetchMore({
         variables: {
+          first: displayLimit,
           after: data.products.pageInfo.endCursor,
         },
-        updateQuery: (prev, { fetchMoreResult }) => {
+        updateQuery: (prev: ProductsResponse, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
           
           return {
@@ -48,61 +63,44 @@ const ProductList: React.FC<ProductListProps> = ({
                 ...prev.products.edges,
                 ...fetchMoreResult.products.edges,
               ],
-            },
-          };
-        },
+            }
+          } as ProductsResponse;
+        }
       });
-    } else {
-      setProductsToShow(productsToShow + limit);
+      
+      setDisplayLimit(displayLimit + limit);
     }
   };
-
+  
   return (
-    <div className="w-full">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {data.products.edges.map(({ node }) => (
-          <div key={node.id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-            <Link href={`/products/${node.slug}`}>
-              <div className="aspect-square relative">
-                {node.thumbnail?.url && (
-                  <img 
-                    src={node.thumbnail.url} 
-                    alt={node.thumbnail.alt || node.name}
-                    className="object-cover w-full h-full"
-                  />
-                )}
-                {node.pricing?.onSale && (
-                  <span className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 text-xs rounded">
-                    Sale
-                  </span>
-                )}
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-900 truncate">{node.name}</h3>
-                <p className="text-gray-700">
-                  {node.pricing?.priceRange.start.gross.amount} 
-                  {node.pricing?.priceRange.start.gross.currency}
-                  
-                  {node.pricing?.onSale && node.pricing?.discount && (
-                    <span className="ml-2 text-red-500 text-sm">
-                      Save {node.pricing.discount.gross.amount} {node.pricing.discount.gross.currency}
-                    </span>
-                  )}
-                </p>
-                {node.category && (
-                  <p className="text-xs text-gray-500 mt-1">{node.category.name}</p>
-                )}
-              </div>
-            </Link>
-          </div>
+    <div className="py-4">
+      <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+        {products.map((product: Product) => (
+          <Link href={`/products/${product.slug}`} key={product.id} className="group">
+            <div className="w-full overflow-hidden rounded-lg bg-gray-100 aspect-w-1 aspect-h-1">
+              {product.thumbnail && (
+                <Image
+                  src={product.thumbnail.url}
+                  alt={product.thumbnail.alt || product.name}
+                  width={400}
+                  height={400}
+                  className="h-full w-full object-cover object-center group-hover:opacity-75"
+                />
+              )}
+            </div>
+            <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
+            <p className="mt-1 text-lg font-medium text-gray-900">
+              {product.pricing?.priceRange?.start?.gross.amount} {product.pricing?.priceRange?.start?.gross.currency}
+            </p>
+          </Link>
         ))}
       </div>
       
-      {showLoadMore && data.products.pageInfo.hasNextPage && (
-        <div className="mt-10 text-center">
+      {showLoadMore && hasNextPage && (
+        <div className="mt-8 text-center">
           <button
             onClick={loadMoreProducts}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Load More Products
           </button>

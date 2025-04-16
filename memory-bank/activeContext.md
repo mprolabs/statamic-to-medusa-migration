@@ -1,35 +1,44 @@
-# Active Context: Statamic to Saleor Migration
+# Active Context: Nimara Integration for Storefront
 
 ## Current Focus
-We are in the **Proof of Concept phase** of our migration project from Statamic CMS with Simple Commerce to Saleor. Key goals of this phase:
+We are transitioning from our custom-built Next.js storefront to using the Nimara e-commerce framework as our foundation. Nimara is a production-ready, headless e-commerce storefront built with Next.js, TypeScript, and shadcn/ui that integrates well with Saleor.
 
-1. Validate Saleor's multi-region capabilities for supporting 3 separate domains/stores (Netherlands, Belgium, Germany)
-2. Test multi-language support within Saleor (Dutch, German)
-3. Verify Next.js integration with Saleor and establish authentication patterns
-4. Explore data migration approaches from Statamic/Simple Commerce to Saleor
+## Key Decision: Nimara Framework Adoption
+After evaluating our current implementation against the Nimara e-commerce framework (https://github.com/mirumee/nimara-ecommerce), we've decided to use Nimara as the foundation for our storefront due to:
+
+1. **Mature Architecture**: Nimara provides a well-structured monorepo using Turborepo with proper separation of concerns
+2. **Complete Feature Set**: Includes user authentication, payment processing, and other advanced features
+3. **Modern UI Components**: Uses shadcn/ui for accessible, customizable components
+4. **Saleor Integration**: Built specifically for Saleor, with appropriate GraphQL implementation
+5. **Testing Framework**: Includes automated testing with Playwright
+
+## Migration Strategy
+We will implement "Option 1: Complete Migration to Nimara" with the following approach:
+
+1. Rename our current `storefront` directory to `storefront-old`
+2. Clone the Nimara repository into a new `storefront` directory
+3. Port our custom multi-region and multi-language implementation to Nimara
+4. Migrate our custom components and business logic
+5. Ensure all current functionality continues to work
 
 ## Recent Changes
-- Created a comprehensive multi-language architecture diagram (PlantUML) to document the language implementation approach
-- Updated the multi-region diagram to better reflect Saleor Channel-based implementation
-- Enhanced the main architecture diagram to emphasize multi-region and multi-language components
-- Updated architecture documentation to reference all three PlantUML diagrams
-- Updated multi-region-language documentation to link to the new architecture diagrams
-- Completed Task 1.1: "Create Saleor-based architecture diagram"
-- Updated architecture diagram documentation to properly use Jekyll's site.baseurl format
-- Updated TaskMaster tasks to align with Saleor-based migration project
-- Created project structure with `saleor-project/core` and `saleor-project/storefront` directories
-- Updated architecture diagrams to reflect Saleor-based approach
-- Initiated proof of concept implementation of Saleor's Channel system for multi-region support
-- Started exploring Saleor's translation features for multi-language support
+- Updated TaskMaster with new migration tasks
+- Documented the decision to adopt Nimara as our foundation
+- Created an implementation plan for the migration
 
 ## Next Steps
-- Define the multi-region and multi-language implementation approach (Task 1.2)
-- Determine the testing strategy for multi-region and multi-language features (Task 1.3)
-- Complete Saleor instance setup with multi-region configuration
-- Test Saleor's Channel system with 3 distinct sales channels
-- Configure Next.js storefront with language switching and region detection
-- Develop initial data migration script to move product data from Statamic to Saleor
-- Validate checkout flow with region-specific payment providers
+1. Set up the Nimara repository as our new storefront
+2. Configure the environment variables and verify the build
+3. Begin implementing our multi-region and multi-language support within the Nimara framework
+4. Port our custom components to the new structure
+5. Update documentation to reflect the new architecture
+
+## Critical Considerations
+- Preserving our multi-region implementation is a top priority
+- Maintaining multi-language support is essential
+- The migration should not disrupt the existing data modeling work
+- GraphQL queries may need to be adapted to Nimara's structure
+- The UI should maintain consistent branding while benefiting from shadcn/ui components
 
 ## Active Decisions
 - **Technology Stack**: Using Saleor as the unified commerce and content platform (replacing earlier Medusa.js + Strapi approach)

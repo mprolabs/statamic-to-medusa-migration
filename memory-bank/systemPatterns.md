@@ -1,338 +1,178 @@
-# System Patterns: Statamic to Saleor Migration
+# System Patterns: Nimara-based Architecture
 
 ## Architecture Overview
 
-The migration project involves transitioning from a Statamic CMS with Simple Commerce to a headless architecture using Saleor. The architecture is designed to support multi-region e-commerce across three domains (Netherlands, Belgium, Germany) and multi-language content (Dutch and English).
+Our system architecture is based on the Nimara e-commerce framework, a production-ready storefront designed specifically for Saleor. The architecture follows modern best practices with a clear separation of concerns:
 
-```
-┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
-│   NL Domain     │      │   BE Domain     │      │   DE Domain     │
-│  nl.domain.com  │      │  be.domain.com  │      │  de.domain.com  │
-└────────┬────────┘      └────────┬────────┘      └────────┬────────┘
-         │                        │                        │
-         │                        │                        │
-         ▼                        ▼                        ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                 │
-│                       CDN / Edge Caching                        │
-│                                                                 │
-└─────────────────────────────┬───────────────────────────────────┘
-                              │
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                 │
-│                   Next.js Storefronts (SSR/ISR)                 │
-│                                                                 │
-└─────────────────────────────┬───────────────────────────────────┘
-                              │
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                 │
-│                     Saleor (GraphQL API)                        │
-│                                                                 │
-├─────────────────────────────┬───────────────────────────────────┤
-│                             │                                   │
-│    NL Channel               │   BE Channel         DE Channel   │
-│                             │                                   │
-└─────────────────────────────┴───────────────────────────────────┘
+```mermaid
+graph TD
+    Client[Client Browser] --> NextJS[Next.js Storefront]
+    NextJS --> API[Saleor GraphQL API]
+    API --> Saleor[Saleor Core]
+    Saleor --> DB[(Database)]
+    
+    subgraph "Nimara Framework"
+        NextJS
+        StateManagement[Zustand State Management]
+        UIComponents[shadcn/ui Components]
+        ApolloClient[Apollo GraphQL Client]
+    end
+    
+    StateManagement --- NextJS
+    UIComponents --- NextJS
+    ApolloClient --- NextJS
+    ApolloClient --> API
 ```
 
-### Key Architectural Decisions
+## Key Architectural Patterns
 
-1. **Single Saleor Instance with Channel-Based Multi-Region**
-   - One Saleor instance serves all regions
-   - Regions implemented as separate Channels within Saleor
-   - Each Channel has region-specific configurations (pricing, taxation, shipping)
-   - Data isolation achieved through Channel filters
+### Monorepo Structure (Turborepo)
+Nimara uses a monorepo architecture with Turborepo, providing:
+- Clear separation between packages
+- Shared configuration and utilities
+- Optimized build process
+- Consistent tooling
 
-2. **Next.js Multi-Domain Frontend**
-   - Individual Next.js applications for each domain/region
-   - Shared component library for consistency
-   - Region-specific configurations via environment variables
-   - ISR (Incremental Static Regeneration) for performance optimization
+### Multi-Region Implementation
+We've extended Nimara's architecture to support multiple regions through Saleor's Channel system:
 
-3. **Multi-Language Implementation**
-   - Leveraging Saleor's built-in translation capabilities
-   - Language preference detected and persisted in user sessions
-   - Content served in appropriate language based on user preference and/or URL
-
-4. **Edge Caching Strategy**
-   - CDN deployment for static assets
-   - Edge caching configured per region
-   - Cache invalidation triggered by content updates
-
-## Component Architecture
-
-### Saleor Core
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Saleor Core                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐           │
-│  │   Product   │   │    Order    │   │  Customer   │           │
-│  │   Module    │   │   Module    │   │   Module    │           │
-│  └─────────────┘   └─────────────┘   └─────────────┘           │
-│                                                                 │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐           │
-│  │   Checkout  │   │   Payment   │   │    Gift     │           │
-│  │   Module    │   │   Module    │   │    Cards    │           │
-│  └─────────────┘   └─────────────┘   └─────────────┘           │
-│                                                                 │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐           │
-│  │  Shipping   │   │     Tax     │   │  Discount   │           │
-│  │   Module    │   │   Module    │   │   Module    │           │
-│  └─────────────┘   └─────────────┘   └─────────────┘           │
-│                                                                 │
-│  ┌─────────────────────────┐   ┌─────────────────────────┐     │
-│  │      Translations       │   │      Channel            │     │
-│  │                         │   │      Management         │     │
-│  └─────────────────────────┘   └─────────────────────────┘     │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    Browser[Client Browser] --> Routing[Domain/Region Routing]
+    Routing --> NL[NL Storefront]
+    Routing --> BE[BE Storefront]
+    Routing --> DE[DE Storefront]
+    
+    NL --> Apollo[Apollo Client]
+    BE --> Apollo
+    DE --> Apollo
+    
+    Apollo --> Saleor[Saleor GraphQL API]
+    
+    subgraph "Saleor Channels"
+        Saleor --> NL_Channel[NL Channel]
+        Saleor --> BE_Channel[BE Channel]
+        Saleor --> DE_Channel[DE Channel]
+    end
 ```
 
-### Next.js Storefront
+- Region detection based on domain
+- Channel-specific GraphQL queries
+- Region-specific configuration (pricing, tax, shipping)
+- Shared component base with region-specific overrides
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     Next.js Storefront                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐           │
-│  │   Product   │   │    Cart     │   │  Checkout   │           │
-│  │    Pages    │   │  Components │   │   Flow      │           │
-│  └─────────────┘   └─────────────┘   └─────────────┘           │
-│                                                                 │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐           │
-│  │   Account   │   │  Category   │   │   Search    │           │
-│  │    Pages    │   │    Pages    │   │    Pages    │           │
-│  └─────────────┘   └─────────────┘   └─────────────┘           │
-│                                                                 │
-│  ┌─────────────────────────┐   ┌─────────────────────────┐     │
-│  │  Apollo GraphQL Client  │   │   Region & Language     │     │
-│  │                         │   │       Middleware        │     │
-│  └─────────────────────────┘   └─────────────────────────┘     │
-│                                                                 │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │                  Shared Component Library                │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+### Multi-Language Support
+Language handling is implemented with:
+
+```mermaid
+graph TD
+    Request[User Request] --> LanguageDetection[Language Detection]
+    LanguageDetection --> PreferredLanguage{Preferred Language}
+    
+    PreferredLanguage -->|NL| DutchContent[Dutch Content]
+    PreferredLanguage -->|DE| GermanContent[German Content]
+    PreferredLanguage -->|EN| EnglishContent[English Content]
+    PreferredLanguage -->|FR| FrenchContent[French Content]
+    
+    DutchContent & GermanContent & EnglishContent & FrenchContent --> TranslatedResponse[Translated Response]
 ```
 
-## Key Design Patterns
+- Language detection from URL path segments
+- Language code passed to Saleor GraphQL queries
+- Client-side language switching
+- Server-side rendering with language context
 
-### 1. Channel-Based Region Isolation
+### State Management
+Zustand for client-side state management:
+- Cart state with localStorage persistence
+- User preferences and settings
+- UI state (modals, drawers, navigation)
 
-- **Pattern**: Use of Saleor's Channel system to separate region-specific data
-- **Implementation**: 
-  - Each region (NL, BE, DE) configured as a separate Channel
-  - Products associated with specific Channels
-  - Channel-specific pricing, stock, and availability
-  - API queries filtered by Channel
+### UI Component Architecture
+Leveraging shadcn/ui components:
+- Accessible by default
+- Themeable with Tailwind CSS
+- Consistent design language
+- Reusable across the application
 
-### 2. Multi-Language Content Management
+### Server/Client Component Pattern
+Next.js App Router with:
+- Server Components for data fetching
+- Client Components for interactivity
+- Hybrid approach for optimal performance
 
-- **Pattern**: Leveraging Saleor's built-in translation capabilities
-- **Implementation**:
-  - Products and variants with translations
-  - Language-specific content fields
-  - Language detection middleware in Next.js
-  - Language toggle component for user selection
+## Technology Stack
 
-### 3. GraphQL-Based Data Communication
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| Frontend | Next.js 14 | React framework with App Router |
+| UI | shadcn/ui + Tailwind CSS | Component library and styling |
+| State Management | Zustand | Client-side state with persistence |
+| API Client | Apollo Client | GraphQL data fetching |
+| Backend | Saleor | Headless e-commerce platform |
+| Build System | Turborepo | Monorepo management |
+| Testing | Playwright | End-to-end testing |
 
-- **Pattern**: Apollo Client for GraphQL communication
-- **Implementation**:
-  - Query fragments for reusable data patterns
-  - Custom hooks for data fetching
-  - Optimistic UI updates for improved UX
-  - Typed queries with TypeScript integration
-
-### 4. Domain-Based Routing
-
-- **Pattern**: Multi-domain architecture with shared codebase
-- **Implementation**:
-  - Domain-specific Next.js configuration
-  - Environment-based configuration loading
-  - Middleware for domain detection
-  - Region-specific domain handling
-
-### 5. Incremental Static Regeneration (ISR)
-
-- **Pattern**: Combining static generation with dynamic updates
-- **Implementation**:
-  - Product pages pre-rendered at build time
-  - Revalidation on data changes
-  - On-demand regeneration for critical updates
-  - Edge caching for optimized delivery
-
-## Data Models
-
-### Core Saleor Models
-
-1. **Product**
-   - Basic product information
-   - Attributes and metadata
-   - Channel availability
-   - Translations for multilingual content
-
-2. **ProductVariant**
-   - Variant-specific information
-   - Channel-specific pricing
-   - Stock information
-   - Digital content (if applicable)
-
-3. **Channel**
-   - Region-specific configuration
-   - Currency settings
-   - Tax settings
-   - Shipping zones
-
-4. **Collection**
-   - Grouping of products
-   - Channel availability
-   - Translations for names and descriptions
-
-5. **Order**
-   - Order information
-   - Channel context for region
-   - Currency and pricing information
-   - Shipping and billing details
-
-6. **Customer**
-   - User account information
-   - Address book
-   - Order history
-   - Channel associations
-
-## Integration Patterns
-
-### Payment Processing
-
-- **Pattern**: Channel-specific payment methods
-- **Implementation**:
-  - Mollie integration for NL/BE with region-specific methods
-  - Stripe integration as fallback across all regions
-  - Payment method availability determined by Channel
-
-### Shipping Providers
-
-- **Pattern**: Region-specific shipping options
-- **Implementation**:
-  - Channel-based shipping zone configuration
-  - Integration with regional carrier APIs
-  - Shipping rate calculation based on region
-
-### Authentication
-
-- **Pattern**: JWT-based authentication with cross-domain support
-- **Implementation**:
-  - Shared authentication state via secure cookies
-  - Region-aware user sessions
-  - Domain-specific authentication handling
-
-## Testing Patterns
-
-### BDD Testing Framework
-
-- **Pattern**: Behavior-Driven Development with Cypress
-- **Implementation**:
-  - Gherkin syntax for business-readable tests
-  - Parameterized tests for region/language combinations
-  - Reusable step definitions
-  - Custom commands for common operations
-
-### Visual Regression Testing
-
-- **Pattern**: Automated UI comparison across versions
-- **Implementation**:
-  - Screenshot comparison for key interfaces
-  - Region and language-specific test cases
-  - Responsive design testing
-
-### E2E Testing
-
-- **Pattern**: Full user journey testing
-- **Implementation**:
-  - Critical flow automation (checkout, account management)
-  - Cross-region testing
-  - Language switching testing
-  - Payment integration testing with test accounts
-
-## Deployment Architecture
-
+## Code Organization
+Nimara follows a well-structured monorepo pattern:
 ```
-┌────────────────────────────┐
-│      CI/CD Pipeline        │
-└───────────┬────────────────┘
-            │
-            ▼
-┌────────────────────────────┐
-│    Docker Containers       │
-├────────────────────────────┤
-│ ┌──────────┐ ┌──────────┐  │
-│ │  Saleor  │ │  Next.js │  │
-│ │  Core    │ │Frontend(s)│  │
-│ └──────────┘ └──────────┘  │
-└───────────┬────────────────┘
-            │
-            ▼
-┌────────────────────────────┐
-│    Kubernetes Cluster      │
-└───────────┬────────────────┘
-            │
-            ▼
-┌────────────────────────────┐
-│      CDN / Edge Cache      │
-└───────────┬────────────────┘
-            │
-            ▼
-┌────────────────────────────┐
-│      End Users             │
-└────────────────────────────┘
+nimara-ecommerce/
+├── apps/
+│   ├── docs/ - Documentation site
+│   └── storefront/ - Next.js storefront
+├── packages/
+│   ├── ui/ - UI components
+│   ├── config/ - Shared configuration
+│   └── tsconfig/ - TypeScript configuration
 ```
 
-## Migration Patterns
+Within the storefront:
+```
+storefront/
+├── app/ - Next.js App Router pages
+├── components/ - UI components
+├── lib/ - Utility functions and shared code
+│   ├── graphql/ - GraphQL queries and types
+│   └── stores/ - Zustand state stores
+└── public/ - Static assets
+```
 
-### Data Migration
+## Data Flow Patterns
 
-- **Pattern**: Extract, Transform, Load (ETL) process
-- **Implementation**:
-  - Extraction scripts for Statamic data
-  - Transformation to Saleor data models
-  - Data validation and verification
-  - Migration state tracking
+### GraphQL Data Fetching
+```mermaid
+sequenceDiagram
+    participant Client
+    participant ServerComponent as Server Component
+    participant ApolloClient as Apollo Client
+    participant SaleorAPI as Saleor GraphQL API
+    
+    Client->>ServerComponent: Request Page
+    ServerComponent->>ApolloClient: Execute Query
+    ApolloClient->>SaleorAPI: GraphQL Request
+    SaleorAPI-->>ApolloClient: GraphQL Response
+    ApolloClient-->>ServerComponent: Parsed Data
+    ServerComponent-->>Client: Rendered HTML + JSON
+```
 
-### URL Structure Preservation
+### Client-Side State Management
+```mermaid
+sequenceDiagram
+    participant User
+    participant Component as UI Component
+    participant Store as Zustand Store
+    participant LocalStorage as Local Storage
+    
+    User->>Component: Interaction
+    Component->>Store: Update State
+    Store->>LocalStorage: Persist State
+    Store-->>Component: Updated State
+    Component-->>User: UI Update
+```
 
-- **Pattern**: Comprehensive URL mapping and redirects
-- **Implementation**:
-  - URL structure analysis
-  - Mapping table generation
-  - Redirect implementation
-  - SEO preservation
-
-### User Data Migration
-
-- **Pattern**: Staged user data transfer
-- **Implementation**:
-  - Account information migration
-  - Password reset requirement
-  - Order history preservation
-  - Address book migration
-
-## Monitoring and Observability
-
-- **Pattern**: Comprehensive monitoring across services
-- **Implementation**:
-  - Application Performance Monitoring (APM)
-  - Error tracking and alerting
-  - User behavior analytics
-  - Region-specific performance tracking
-
-This document will be updated as the proof of concept progresses and more detailed patterns emerge.
+## Extension Points
+The architecture is designed for extensibility:
+- Custom hooks for business logic
+- Component composition for UI customization
+- Middleware for API request/response transformation
+- Plugin system for core functionality extensions
