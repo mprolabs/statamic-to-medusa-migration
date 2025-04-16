@@ -5,6 +5,9 @@ Welcome to the developer guides section. These guides provide detailed explanati
 ## Front-End Development
 
 - [Using GraphQL with Next.js Components](./graphql-usage.md) - Learn how to use GraphQL queries in your Next.js components with multi-region and multi-language support.
+- [Frontend Configuration](../development/frontend-configuration.md) - Detailed documentation on Next.js, Tailwind CSS, and PostCSS configuration.
+- [React Component Migration](../development/react-component-migration.md) - Guidelines for migrating React class components to functional components with hooks.
+- [Deployment Strategy](../development/deployment.md) - Strategy for deploying the application to staging and production environments.
 
 ## Architecture
 

@@ -59,6 +59,7 @@ Our migration project involves several key components:
 - [Content Migration](content-migration.md) - Strategy for migrating content from Statamic
 - [Data Mapping](data-mapping.md) - Detailed mapping between Statamic and Saleor data models
 - [Migration Strategy](migration-strategy.md) - Comprehensive approach for the migration process
+- [Migration Checklist](migration-checklist.md) - Comprehensive checklist for tracking migration progress
 - [User Migration](user-migration.md) - Process for migrating user accounts and authentication
 - [OpenAPI Documentation](openapi-documentation.md) - REST API specifications and endpoint documentation
 
