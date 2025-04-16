@@ -11,6 +11,20 @@ permalink: /infrastructure/infrastructure-requirements/
 
 This document outlines the comprehensive infrastructure requirements for the Saleor e-commerce platform implementation, with specific considerations for multi-region and multi-language deployments.
 
+## Overview
+
+The infrastructure design follows cloud-native best practices, with a focus on scalability, reliability, and security. The system is designed to efficiently support traffic from multiple regions while maintaining consistent performance across all channels.
+
+## Table of Contents
+
+* Cloud Provider Requirements
+* Compute Requirements
+* Storage Requirements
+* Networking Requirements
+* Infrastructure-as-Code
+* CI/CD Pipeline
+* Monitoring and Logging
+
 ## Infrastructure Overview
 
 The Saleor e-commerce platform requires a robust, scalable, and secure cloud infrastructure to support multi-region operations with optimal performance, high availability, and compliance with regional requirements. This document defines the technical specifications, architecture, and operational requirements for the underlying infrastructure.

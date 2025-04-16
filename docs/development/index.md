@@ -66,6 +66,7 @@ When developing multi-language capabilities:
 For detailed setup instructions, see the following guides:
 
 - [Setup Instructions](setup.md): Setting up the development environment
+- [Using GraphQL with Next.js](graphql-usage.md): Guide for using GraphQL in Next.js components with multi-region and multi-language support
 - [Local Development](local-development.md): Working with the local development environment
 - [Extending Functionality](extending.md): Guidelines for extending the core functionality
 - [Deployment Process](deployment.md): Deploying the application
