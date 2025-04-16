@@ -21,10 +21,10 @@ Our migration project involves several key components:
 
 ## Key Migration Guides
 
-- [Data Migration Guide](data-migration.html) - Detailed process for migrating data from Statamic to Saleor
-- [Nimara Migration Guide](nimara-migration-guide.html) - Guide for migrating our custom storefront to the Nimara framework
-- [Multi-Region Implementation](multi-region-implementation.html) - How to implement multi-region support using Saleor's Channel system
-- [Multi-Language Implementation](multi-language-implementation.html) - Approach for implementing multi-language support
+- [Data Migration Guide](data-migration.md) - Detailed process for migrating data from Statamic to Saleor
+- [Nimara Migration Guide](nimara-migration-guide.md) - Guide for migrating our custom storefront to the Nimara framework
+- [Multi-Region Implementation](/multi-region-language/multi-region-implementation/) - How to implement multi-region support using Saleor's Channel system
+- [Multi-Language Implementation](/multi-region-language/multi-language-implementation/) - Approach for implementing multi-language support
 
 ## Migration Timeline
 
@@ -48,18 +48,27 @@ Our migration project involves several key components:
 
 ## Related Resources
 
-- [Multi-Region/Language Documentation]({{ site.baseurl }}/multi-region-language/) - Comprehensive guide to multi-region and multi-language support
-- [Architecture Documentation]({{ site.baseurl }}/architecture/) - Technical architecture diagrams and documentation
+- [Multi-Region/Language Documentation](/multi-region-language/) - Comprehensive guide to multi-region and multi-language support
+- [Architecture Documentation](/architecture/) - Technical architecture diagrams and documentation
 
 ## Migration Documents
 
-- [API Specifications](/statamic-to-saleor-migration/migration/api-specifications): Detailed API contracts and endpoint specifications.
-- [Authentication & Security](/statamic-to-saleor-migration/migration/auth-security): Authentication mechanisms and security considerations.
-- [OpenAPI Documentation](/statamic-to-saleor-migration/migration/openapi-documentation): Swagger documentation for REST endpoints.
-- [Content Migration](/statamic-to-saleor-migration/migration/content-migration): Strategy for migrating content from Statamic.
-- [Data Migration](/statamic-to-saleor-migration/migration/data-migration): Process for migrating data to Saleor.
-- [Product Migration](/statamic-to-saleor-migration/migration/product-migration): Strategy for migrating products from Simple Commerce to Saleor.
-- [User Migration](/statamic-to-saleor-migration/migration/user-migration): Process for migrating user accounts.
+- [API Specifications](api-specifications.md) - Detailed API contracts and endpoint specifications
+- [Authentication & Security](authentication-security.md) - Authentication mechanisms and security considerations
+- [Data Migration](data-migration.md) - Process for migrating data to Saleor
+- [Content Migration](content-migration.md) - Strategy for migrating content from Statamic
+- [Data Mapping](data-mapping.md) - Detailed mapping between Statamic and Saleor data models
+- [Migration Strategy](migration-strategy.md) - Comprehensive approach for the migration process
+- [User Migration](user-migration.md) - Process for migrating user accounts and authentication
+- [OpenAPI Documentation](openapi-documentation.md) - REST API specifications and endpoint documentation
+
+## Product Migration
+
+The product migration is a critical component of the overall migration strategy. These documents provide detailed guidance on product data migration:
+
+- [Product Migration Overview](product-migration/index.md) - Overview of the product migration process
+- [Migration Scripts](product-migration/migration-scripts.md) - Technical implementation of product migration scripts
+- [Product Attribute Mapping](product-migration/product-attribute-mapping.md) - Detailed mapping of product attributes between systems
 
 ## Migration Process Overview
 
@@ -220,11 +229,11 @@ To minimize risks during the migration:
 - Thorough testing across all regions and languages
 - Phased go-live approach if necessary
 
-## Detailed Migration Documentation
+## Additional Documentation
 
-For more in-depth information on specific aspects of the migration process, refer to:
+For more detailed documentation on specific aspects of the migration process, refer to:
 
-- [Migration Strategy](strategy)
-- [Data Mapping](data-mapping)
-- [Content Migration](content-migration)
-- [Testing and Validation](testing) 
+- [Data Migration Guide](data-migration.md) - Detailed data mapping and migration process
+- [Nimara Migration Guide](nimara-migration-guide.md) - Framework migration details
+- [API Specifications](api-specifications.md) - Technical API details
+- [Content Migration](content-migration.md) - Content migration strategy 

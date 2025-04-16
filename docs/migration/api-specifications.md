@@ -1,492 +1,328 @@
 ---
+layout: default
 title: API Specifications
 parent: Migration
-nav_order: 1
-has_toc: true
-permalink: /migration/api-specifications/
+nav_order: 4
 ---
 
 # API Specifications
 
-This document outlines the API specifications for the Statamic to Saleor migration, detailing endpoints, authentication, and request/response formats to support the multi-region and multi-language requirements.
+This document outlines the API contracts and endpoint specifications for the Saleor migration project, focusing on integration points between components.
 
 ## GraphQL API Overview
 
-Saleor provides a comprehensive GraphQL API which will be used for all commerce operations. The API supports:
+Saleor provides a comprehensive GraphQL API that serves as the primary interface for all system interactions. Our implementation uses the following GraphQL endpoints:
 
-- Multi-region operations through Saleor's Channel system
-- Multi-language content through Saleor's translation capabilities
-- Complete e-commerce functionality including products, checkout, and orders
+| Endpoint | Purpose | Access Control |
+|----------|---------|----------------|
+| `/graphql/` | Main GraphQL API endpoint | JWT token required for mutations |
+| `/graphql/staff/` | Staff-only operations (Dashboard) | JWT token with staff permissions |
 
-### API Endpoint
+## Authentication and Authorization
 
-All API interactions will be made to a single GraphQL endpoint:
+### Authentication Methods
 
+1. **JWT-based Authentication**:
+   - Token obtained via `tokenCreate` mutation
+   - Refresh via `tokenRefresh` mutation
+   - Required in Authorization header: `Authorization: Bearer <token>`
+
+2. **API App Token Authentication**:
+   - For server-to-server communication
+   - Higher rate limits and permissions
+   - Used for migration scripts and backend processes
+
+### Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Next.js
+    participant SaleorAPI
+    
+    Client->>Next.js: Login Request (username/password)
+    Next.js->>SaleorAPI: tokenCreate mutation
+    SaleorAPI-->>Next.js: JWT token
+    Next.js-->>Client: Set auth cookie / return token
+    
+    Client->>Next.js: Request protected resource
+    Next.js->>SaleorAPI: Request with JWT in header
+    SaleorAPI-->>Next.js: Protected data
+    Next.js-->>Client: Rendered/returned data
 ```
-https://[saleor-instance]/graphql/
-```
 
-## Core Entity Endpoints
+## Data Model Access
 
-### Products API
+### Product Data API
 
-#### Fetching Products with Region and Language Context
+**Key Queries**:
+- `products`: List products with filtering, sorting, and pagination
+- `product`: Get a single product by ID or slug
 
-```graphql
-query GetProducts($channel: String!, $languageCode: LanguageCodeEnum!, $first: Int!) {
-  products(
-    channel: $channel,
-    first: $first
-  ) {
-    edges {
-      node {
-        id
-        name
-        description
-        translation(languageCode: $languageCode) {
-          name
-          description
-        }
-        slug
-        thumbnail {
-          url
-          alt
-        }
-        pricing {
-          priceRange {
-            start {
-              gross {
-                amount
-                currency
-              }
+**Key Mutations**:
+- `productCreate`: Create a new product
+- `productUpdate`: Update an existing product
+- `productDelete`: Delete a product
+
+**Product Variant Operations**:
+- `productVariantCreate`: Create product variants
+- `productVariantUpdate`: Update product variants
+- `productVariantDelete`: Delete product variants
+
+### Category and Collection API
+
+**Key Queries**:
+- `categories`: List categories with filtering and pagination
+- `category`: Get a single category by ID or slug
+- `collections`: List collections with filtering and pagination
+- `collection`: Get a single collection by ID or slug
+
+**Key Mutations**:
+- `categoryCreate`, `categoryUpdate`, `categoryDelete`
+- `collectionCreate`, `collectionUpdate`, `collectionDelete`
+
+### Multi-Channel Operations
+
+**Channel-Specific Queries**:
+- All list queries support `channel` parameter
+- Example: `products(channel: "NL") { ... }`
+
+**Channel Management**:
+- `channels`: List available channels
+- `channelCreate`, `channelUpdate`, `channelDelete`
+- `channelActivate`, `channelDeactivate`
+
+**Product Channel Listings**:
+- `productChannelListingUpdate`: Update product availability and pricing per channel
+- `productVariantChannelListingUpdate`: Update variant availability and pricing per channel
+
+### Multi-Language Support
+
+**Translation Queries**:
+- `translations`: Get translations for a specific language
+- Example: `translations(kind: PRODUCT, languageCode: NL) { ... }`
+
+**Translation Mutations**:
+- `productTranslate`: Translate product fields
+- `categoryTranslate`: Translate category fields
+- `attributeTranslate`: Translate attribute fields
+- `pageTranslate`: Translate page fields
+
+## Integration Patterns
+
+### Next.js Integration
+
+1. **Apollo Client Configuration**:
+   ```typescript
+   import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+   import { setContext } from '@apollo/client/link/context';
+   
+   const httpLink = createHttpLink({
+     uri: process.env.SALEOR_API_URL || 'https://your-saleor-instance.com/graphql/',
+   });
+   
+   const authLink = setContext((_, { headers }) => {
+     // Get token from cookies/localStorage/etc.
+     const token = getToken();
+     return {
+       headers: {
+         ...headers,
+         authorization: token ? `Bearer ${token}` : '',
+       }
+     };
+   });
+   
+   const regionLink = setContext((_, { headers }) => {
+     // Get region from context
+     const region = getRegion();
+     return {
+       headers: {
+         ...headers,
+         'x-region': region || 'default',
+       }
+     };
+   });
+   
+   const client = new ApolloClient({
+     link: authLink.concat(regionLink).concat(httpLink),
+     cache: new InMemoryCache(),
+   });
+   ```
+
+2. **Server-Side Rendering with Apollo**:
+   ```typescript
+   export async function getServerSideProps(context) {
+     const client = initializeApollo();
+     const { region, locale } = context;
+     
+     await client.query({
+       query: GET_PRODUCTS,
+       variables: {
+         channel: region.toUpperCase(),
+         languageCode: locale.toUpperCase(),
+       },
+     });
+     
+     return {
+       props: {
+         initialApolloState: client.cache.extract(),
+       },
+     };
+   }
+   ```
+
+### Migration Script Integration
+
+For migration scripts, a more direct API client is used:
+
+```python
+import requests
+
+class SaleorClient:
+    def __init__(self, api_url, email, password):
+        self.api_url = api_url
+        self.token = self._get_token(email, password)
+    
+    def _get_token(self, email, password):
+        mutation = """
+        mutation TokenCreate($email: String!, $password: String!) {
+            tokenCreate(email: $email, password: $password) {
+                token
+                errors {
+                    field
+                    message
+                }
             }
-          }
         }
-        category {
-          name
-          translation(languageCode: $languageCode) {
-            name
-          }
-        }
-      }
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
-    }
-  }
-}
-```
-
-#### Product Details
-
-```graphql
-query GetProductDetails($slug: String!, $channel: String!, $languageCode: LanguageCodeEnum!) {
-  product(slug: $slug, channel: $channel) {
-    id
-    name
-    description
-    translation(languageCode: $languageCode) {
-      name
-      description
-    }
-    slug
-    category {
-      id
-      name
-      translation(languageCode: $languageCode) {
-        name
-      }
-    }
-    variants {
-      id
-      name
-      translation(languageCode: $languageCode) {
-        name
-      }
-      pricing {
-        price {
-          gross {
-            amount
-            currency
-          }
-        }
-      }
-      attributes {
-        attribute {
-          name
-          translation(languageCode: $languageCode) {
-            name
-          }
-        }
-        values {
-          name
-          translation(languageCode: $languageCode) {
-            name
-          }
-        }
-      }
-    }
-    attributes {
-      attribute {
-        name
-        translation(languageCode: $languageCode) {
-          name
-        }
-      }
-      values {
-        name
-        translation(languageCode: $languageCode) {
-          name
-        }
-      }
-    }
-    media {
-      url
-      alt
-    }
-  }
-}
-```
-
-### Categories API
-
-#### Fetching Categories
-
-```graphql
-query GetCategories($channel: String!, $languageCode: LanguageCodeEnum!) {
-  categories(first: 100) {
-    edges {
-      node {
-        id
-        name
-        description
-        translation(languageCode: $languageCode) {
-          name
-          description
-        }
-        slug
-        products(channel: $channel, first: 5) {
-          totalCount
-          edges {
-            node {
-              id
-              name
-              translation(languageCode: $languageCode) {
-                name
-              }
+        """
+        response = requests.post(
+            self.api_url,
+            json={
+                'query': mutation,
+                'variables': {'email': email, 'password': password}
             }
-          }
-        }
-        children(first: 10) {
-          edges {
-            node {
-              id
-              name
-              translation(languageCode: $languageCode) {
-                name
-              }
-              slug
-            }
-          }
-        }
-      }
-    }
-  }
-}
+        )
+        result = response.json()
+        return result['data']['tokenCreate']['token']
+    
+    def execute_query(self, query, variables=None):
+        response = requests.post(
+            self.api_url,
+            json={'query': query, 'variables': variables or {}},
+            headers={'Authorization': f'Bearer {self.token}'}
+        )
+        return response.json()
 ```
 
-### Orders API
+## Data Validation
 
-#### Fetching Orders for a Channel
+### Input Validation Rules
 
-```graphql
-query GetOrders($channel: String!) {
-  orders(channel: $channel, first: 20) {
-    edges {
-      node {
-        id
-        number
-        created
-        status
-        total {
-          gross {
-            amount
-            currency
-          }
-        }
-        shippingAddress {
-          firstName
-          lastName
-          streetAddress1
-          streetAddress2
-          city
-          countryArea
-          postalCode
-          country {
-            code
-          }
-        }
-        lines {
-          id
-          productName
-          variantName
-          quantity
-          totalPrice {
-            gross {
-              amount
-              currency
-            }
-          }
-          thumbnail {
-            url
-            alt
-          }
-        }
-      }
-    }
-  }
-}
-```
+All API operations enforce the following validation rules:
 
-### Checkout API
+1. **Product Creation/Update**:
+   - Name is required and 1-250 characters long
+   - Slug must be unique and URL-safe
+   - Price precision must match currency settings
 
-#### Creating a Checkout
+2. **Category Creation/Update**:
+   - Name is required and 1-250 characters long
+   - Slug must be unique and URL-safe
+   - Parent category must exist if specified
 
-```graphql
-mutation CreateCheckout($checkoutInput: CheckoutCreateInput!) {
-  checkoutCreate(input: $checkoutInput) {
-    checkout {
-      id
-      token
-      totalPrice {
-        gross {
-          amount
-          currency
-        }
-      }
-      subtotalPrice {
-        gross {
-          amount
-          currency
-        }
-      }
-      lines {
-        id
-        quantity
-        variant {
-          id
-          name
-          product {
-            name
-          }
-        }
-        totalPrice {
-          gross {
-            amount
-            currency
-          }
-        }
-      }
-    }
-    errors {
-      field
-      message
-      code
-    }
-  }
-}
-```
+3. **Variant Creation/Update**:
+   - SKU must be unique if provided
+   - Price must be a valid positive number
+   - Selected attributes must match product type attributes
 
-Where `$checkoutInput` would include:
+### Error Handling
+
+All GraphQL operations return errors in a consistent format:
 
 ```json
 {
-  "channel": "netherlands",
-  "email": "customer@example.com",
-  "lines": [
-    {
-      "quantity": 1,
-      "variantId": "UHJvZHVjdFZhcmlhbnQ6MjE3"
-    }
-  ],
-  "languageCode": "NL"
-}
-```
-
-## Authentication & Security
-
-### JWT Authentication
-
-All authenticated API requests will use JWT tokens:
-
-```graphql
-mutation TokenCreate($email: String!, $password: String!) {
-  tokenCreate(email: $email, password: $password) {
-    token
-    refreshToken
-    errors {
-      field
-      message
-      code
-    }
-    user {
-      id
-      email
-    }
-  }
-}
-```
-
-### Authorization Headers
-
-Protected endpoints require the JWT token in the Authorization header:
-
-```
-Authorization: Bearer <jwt-token>
-```
-
-### Permission Structure
-
-The API implements a role-based permission system:
-
-1. **Anonymous Users**: Can browse products, categories, and create a checkout
-2. **Authenticated Customers**: Can view their orders and manage their account
-3. **Staff Users**: Can manage products, categories, and view orders based on their permissions
-4. **Admin Users**: Have full access to all resources
-
-### Rate Limiting
-
-API access is subject to rate limiting:
-
-- Anonymous users: 100 requests per minute
-- Authenticated users: 300 requests per minute
-- Staff/Admin users: 1000 requests per minute
-
-Rate limit headers will be included in responses:
-
-```
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 95
-X-RateLimit-Reset: 1620000000
-```
-
-## Multi-Region Implementation
-
-### Channel-Based Operations
-
-All region-specific operations must include the appropriate channel parameter:
-
-| Region | Channel ID | Domain |
-|--------|------------|--------|
-| Netherlands | `netherlands` | nl.domain.com |
-| Belgium | `belgium` | be.domain.com |
-| Germany | `germany` | de.domain.com |
-
-### Channel-Specific Mutations
-
-When creating or updating region-specific data, include the channel in the mutation:
-
-```graphql
-mutation UpdateProductPricing($productId: ID!, $variants: [ProductVariantChannelListingUpdateInput!]!) {
-  productVariantChannelListingUpdate(id: $productId, input: {
-    variants: $variants
-  }) {
-    productVariants {
-      id
-      channelListings {
-        channel {
-          id
-          name
+  "data": {
+    "operation": {
+      "success": false,
+      "errors": [
+        {
+          "field": "name",
+          "message": "This field is required",
+          "code": "REQUIRED"
         }
-        price {
-          amount
-          currency
-        }
-      }
-    }
-    errors {
-      field
-      message
-      code
+      ]
     }
   }
 }
 ```
 
-## Multi-Language Implementation
+## Rate Limiting and Quotas
 
-### Language Parameter
+| Operation Type | Anonymous Rate Limit | Authenticated Rate Limit | API App Rate Limit |
+|----------------|----------------------|--------------------------|-------------------|
+| Queries | 100/minute | 300/minute | 1000/minute |
+| Mutations | 10/minute | 100/minute | 500/minute |
 
-All queries that fetch translatable content should include the language code:
+For migration scripts, we use API App authentication to leverage higher rate limits.
 
-```graphql
-$languageCode: LanguageCodeEnum! # NL, DE, EN
-```
+## API Versioning
 
-### Creating Translations
+The Saleor API follows semantic versioning with the following characteristics:
 
-Creating or updating translations uses dedicated mutations:
+1. **API Stability**:
+   - Breaking changes are only introduced in major version upgrades
+   - Deprecation notices are provided at least one minor version before removal
 
-```graphql
-mutation TranslateProduct($productId: ID!, $input: ProductTranslationInput!, $languageCode: LanguageCodeEnum!) {
-  productTranslate(
-    id: $productId,
-    input: $input,
-    languageCode: $languageCode
-  ) {
-    product {
-      id
-      name
-      description
-      translations {
-        languageCode
-        name
-        description
-      }
-    }
-    errors {
-      field
-      message
-      code
-    }
-  }
-}
-```
+2. **Versioning Headers**:
+   - Use `Saleor-API-Version` header to request a specific version
+   - Example: `Saleor-API-Version: 2023-01-01`
 
-## Best Practices
+## Webhook Integration
 
-1. **Always Include Channel Context**: Ensure all queries include the appropriate channel parameter
-2. **Handle Missing Translations**: Implement fallback strategies when translations aren't available
-3. **Batch Operations**: Use bulk operations when possible to reduce API calls
-4. **Error Handling**: Always check for and handle errors returned in the response
-5. **Caching**: Implement appropriate caching for query responses
-6. **Pagination**: Use cursor-based pagination for large collections
+Saleor provides webhooks for real-time event notifications:
 
-## Migration API Considerations
+1. **Event Subscriptions**:
+   - `PRODUCT_CREATED`, `PRODUCT_UPDATED`, `PRODUCT_DELETED`
+   - `ORDER_CREATED`, `ORDER_UPDATED`, `ORDER_FULFILLED`
+   - `CUSTOMER_CREATED`, `CUSTOMER_UPDATED`
 
-During the migration process, these API specifications will be used to:
+2. **Webhook Configuration**:
+   ```graphql
+   mutation {
+     webhookCreate(input: {
+       name: "Product Updates",
+       targetUrl: "https://your-service.com/webhooks/products",
+       events: [PRODUCT_UPDATED, PRODUCT_CREATED],
+       isActive: true,
+       secretKey: "your-secret-key"
+     }) {
+       webhook {
+         id
+       }
+       errors {
+         field
+         message
+       }
+     }
+   }
+   ```
 
-1. **Extract data** from Statamic and Simple Commerce
-2. **Transform data** to match Saleor's data model
-3. **Load data** into Saleor using the appropriate mutations
-4. **Validate data** to ensure successful migration
+3. **Signature Verification**:
+   ```javascript
+   // In your webhook handler
+   const crypto = require('crypto');
+   
+   function verifyWebhook(req) {
+     const signature = req.headers['saleor-signature'];
+     const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+     const digest = hmac.update(JSON.stringify(req.body)).digest('hex');
+     return signature === digest;
+   }
+   ```
 
-The migration scripts will need to handle:
-- Channel-specific data for regional content
-- Translations for all supported languages
-- Proper relationships between entities
+## API Documentation Resources
 
-## API Documentation Tools
-
-The API will be documented using:
-
-1. **GraphQL Playground**: Available at the GraphQL endpoint for interactive exploration
-2. **OpenAPI/Swagger**: For REST endpoints and integration points
-3. **API Blueprint**: For high-level architectural documentation
-
-## Next Steps
-
-- Complete detailed mapping between Statamic data models and Saleor GraphQL mutations
-- Develop and test migration scripts using these API specifications
-- Implement client-side API integration in the Next.js frontend 
+- [Saleor API Reference](https://docs.saleor.io/docs/3.x/api-reference/) - Official Saleor API documentation
+- [GraphQL API Explorer](https://docs.saleor.io/docs/3.x/developer/extending/api/introspection) - Interactive API explorer
+- [JWT Authentication](https://docs.saleor.io/docs/3.x/developer/authentication) - Details on authentication mechanisms
+- [Webhooks Documentation](https://docs.saleor.io/docs/3.x/developer/extending/webhooks/asynchronous-events) - Comprehensive webhook documentation 
