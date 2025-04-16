@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { useCurrentLocale } from '../i18n/config';
+import { useCurrentLocale, getLanguageCodeFromLocale } from '../i18n/config';
 
 // Get the API URL from environment variables
 const API_URL = process.env.NEXT_PUBLIC_SALEOR_API_URL || 'https://demo.saleor.io/graphql/';
@@ -39,11 +39,14 @@ const channelLink = new ApolloLink((operation, forward) => {
   // Map region to channel (in this example, they match)
   const channel = region.toUpperCase();
 
+  // Get language code from the language
+  const languageCode = getLanguageCodeFromLocale(language as any);
+
   // Add variables to the operation
   operation.variables = {
     ...operation.variables,
     channel,
-    languageCode: language.toUpperCase(),
+    languageCode,
   };
 
   return forward(operation);

@@ -99,3 +99,114 @@ Architecture diagrams are available in both source and rendered formats:
 ## License
 
 This project is proprietary and not open for public use or distribution. 
+
+# Saleor Next.js Storefront
+
+A modern, responsive e-commerce storefront built with Next.js and integrated with the Saleor GraphQL API.
+
+## Features
+
+- 🛍️ Complete shopping experience (product browsing, cart, checkout)
+- 🌐 Multi-region and multi-language support
+- 🔄 Server and client components for optimal performance
+- 📱 Fully responsive design with Tailwind CSS
+- 🛒 Client-side cart state management with Zustand
+- 🔍 Product search and filtering
+- 👤 User accounts and order history
+
+## Technologies Used
+
+- [Next.js](https://nextjs.org/) - React framework
+- [TypeScript](https://www.typescriptlang.org/) - Type-safe JavaScript
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [Apollo Client](https://www.apollographql.com/docs/react/) - GraphQL client
+- [Zustand](https://github.com/pmndrs/zustand) - State management
+- [Headless UI](https://headlessui.dev/) - Unstyled, accessible UI components
+- [Heroicons](https://heroicons.com/) - Beautiful SVG icons
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 16.8+ and npm/yarn
+- A Saleor API endpoint (you can use the demo endpoint or set up your own)
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/your-username/saleor-nextjs-storefront.git
+cd saleor-nextjs-storefront
+```
+
+2. Install dependencies
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Configure environment variables
+Create a `.env.local` file in the root directory with the following variables:
+```
+NEXT_PUBLIC_SALEOR_API_URL=https://your-saleor-api-endpoint/graphql/
+```
+
+4. Start the development server
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Project Structure
+
+```
+/storefront
+  /app                  # Next.js app router structure
+    /about              # About page
+    /cart               # Cart page
+    /checkout           # Checkout flow
+    /orders             # Order history
+    /products           # Product listing and detail pages
+    /layout.tsx         # Root layout with providers
+  /components           # Reusable React components
+    /CartDrawer.tsx     # Sliding cart panel
+    /Header.tsx         # Navigation header
+    /ProductCard.tsx    # Product display card
+    /ProductDetail.tsx  # Product detail view
+    /ProductList.tsx    # Product listing component
+  /lib                  # Utility functions and modules
+    /graphql            # GraphQL queries and Apollo client setup
+  /store                # State management
+    /cart.ts            # Cart state with Zustand
+  /public               # Static assets
+```
+
+## Multi-Region and Multi-Language Support
+
+The storefront supports multiple regions and languages through the Saleor API's channel and language settings. Users can switch between regions and languages using the selectors in the header.
+
+## Features to Add
+
+- [ ] User authentication
+- [ ] Wish lists
+- [ ] Product reviews
+- [ ] Advanced search filtering
+- [ ] Payment gateway integration
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- [Saleor](https://saleor.io/) for the GraphQL API
+- [Next.js](https://nextjs.org/) documentation and examples
+- [Tailwind CSS](https://tailwindcss.com/) for the styling system 

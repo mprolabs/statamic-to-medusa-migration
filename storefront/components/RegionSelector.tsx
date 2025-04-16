@@ -1,8 +1,16 @@
 'use client';
 
-import { Fragment, useState, useEffect } from 'react';
-import { Menu, Transition } from '@headlessui/react';
-import { GlobeEuropeAfricaIcon, ChevronDownIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { useState, useEffect } from 'react';
+import { Globe } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '../packages/ui/src/components/select';
 import { SUPPORTED_REGIONS, DEFAULT_REGION, STORAGE_KEYS } from '../lib/constants';
 import { setLocale } from '../lib/graphql/client';
 
@@ -40,48 +48,30 @@ export default function RegionSelector() {
     || SUPPORTED_REGIONS[0];
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
-      <div>
-        <Menu.Button className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          <GlobeEuropeAfricaIcon className="w-5 h-5 mr-2 text-gray-400" aria-hidden="true" />
-          <span>{currentRegionObj.name}</span>
-          <ChevronDownIcon className="w-5 h-5 ml-2 -mr-1 text-gray-400" aria-hidden="true" />
-        </Menu.Button>
-      </div>
-
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
-      >
-        <Menu.Items className="absolute right-0 z-10 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="py-1">
-            {SUPPORTED_REGIONS.map((region) => (
-              <Menu.Item key={region.code}>
-                {({ active }: { active: boolean }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                    } ${
-                      currentRegion === region.code ? 'bg-gray-50' : ''
-                    } group flex items-center px-4 py-2 text-sm w-full text-left`}
-                    onClick={() => handleRegionChange(region.code)}
-                  >
-                    <span className="flex-grow">{region.name}</span>
-                    {currentRegion === region.code && (
-                      <CheckIcon className="w-5 h-5 text-indigo-600" aria-hidden="true" />
-                    )}
-                  </button>
-                )}
-              </Menu.Item>
-            ))}
-          </div>
-        </Menu.Items>
-      </Transition>
-    </Menu>
+    <Select value={currentRegion} onValueChange={handleRegionChange}>
+      <SelectTrigger className="w-[130px] bg-white border border-gray-200">
+        <span className="flex items-center">
+          <Globe className="w-4 h-4 mr-2 text-gray-500" aria-hidden="true" />
+          <SelectValue placeholder={currentRegionObj.name} />
+        </span>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Select Region</SelectLabel>
+          {SUPPORTED_REGIONS.map((region) => (
+            <SelectItem
+              key={region.code}
+              value={region.code}
+              className="flex items-center justify-between"
+            >
+              <div className="flex items-center">
+                <span className="mr-2">{region.flag}</span>
+                <span>{region.name}</span>
+              </div>
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 }

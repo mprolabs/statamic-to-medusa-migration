@@ -1,110 +1,138 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_PRODUCTS } from '../lib/graphql/queries';
-import type { Product, ProductsResponse, Connection, Edge } from '../lib/graphql/types';
-import Image from 'next/image';
-import Link from 'next/link';
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../packages/ui/src/components/select";
+import { Button } from "../packages/ui/src/components/button";
+import { Skeleton } from "../packages/ui/src/components/skeleton";
+import { ProductCard, ProductCardProps } from "./ProductCard";
+import { getCurrentLocale } from "../lib/graphql/client";
+import { cn } from "../lib/utils";
 
 interface ProductListProps {
-  limit?: number;
-  categorySlug?: string;
-  showLoadMore?: boolean;
+  products: ProductCardProps[];
+  categories?: { id: string; name: string }[];
+  loading?: boolean;
+  error?: Error | null;
+  onLoadMore?: () => void;
+  hasMore?: boolean;
 }
 
-const ProductList: React.FC<ProductListProps> = ({
-  limit = 8,
-  categorySlug,
-  showLoadMore = false
+export const ProductList: React.FC<ProductListProps> = ({
+  products,
+  categories = [],
+  loading = false,
+  error = null,
+  onLoadMore,
+  hasMore = false,
 }) => {
-  const [displayLimit, setDisplayLimit] = useState<number>(limit);
-
-  // Define variables for the query
-  const variables: Record<string, any> = {
-    first: displayLimit,
-  };
-
-  // Add category filter if categorySlug is provided
-  if (categorySlug) {
-    variables.filter = {
-      categories: [categorySlug]
-    };
-  }
-
-  const { loading, error, data, fetchMore } = useQuery<ProductsResponse>(
-    GET_PRODUCTS,
-    { variables }
+  const searchParams = useSearchParams();
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    searchParams?.get("category") || "all"
   );
+  const [filteredProducts, setFilteredProducts] = useState<ProductCardProps[]>(products);
+  const { region, language } = getCurrentLocale();
 
-  if (loading) return <div className="my-8 text-center">Loading products...</div>;
-  if (error) return <div className="my-8 text-center text-red-500">Error loading products: {error.message}</div>;
-  if (!data || !data.products || !data.products.edges || data.products.edges.length === 0) {
-    return <div className="my-8 text-center">No products found.</div>;
-  }
-
-  const products = data.products.edges.map((edge: Edge<Product>) => edge.node);
-  const hasNextPage = data.products.pageInfo.hasNextPage;
-
-  const loadMoreProducts = () => {
-    if (hasNextPage) {
-      fetchMore({
-        variables: {
-          first: displayLimit,
-          after: data.products.pageInfo.endCursor,
-        },
-        updateQuery: (prev: ProductsResponse, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
-
-          return {
-            products: {
-              ...fetchMoreResult.products,
-              edges: [
-                ...prev.products.edges,
-                ...fetchMoreResult.products.edges,
-              ],
-            }
-          } as ProductsResponse;
-        }
-      });
-
-      setDisplayLimit(displayLimit + limit);
+  useEffect(() => {
+    if (selectedCategory === "all") {
+      setFilteredProducts(products);
+    } else {
+      setFilteredProducts(
+        products.filter((product) => product.category === selectedCategory)
+      );
     }
+  }, [selectedCategory, products]);
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
   };
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <p className="text-red-500">Error loading products: {error.message}</p>
+        <Button variant="outline" className="mt-4">
+          Retry
+        </Button>
+      </div>
+    );
+  }
 
   return (
-    <div className="py-4">
-      <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-        {products.map((product: Product) => (
-          <Link href={`/products/${product.slug}`} key={product.id} className="group">
-            <div className="w-full overflow-hidden rounded-lg bg-gray-100 aspect-w-1 aspect-h-1">
-              {product.thumbnail && (
-                <Image
-                  src={product.thumbnail.url}
-                  alt={product.thumbnail.alt || product.name}
-                  width={400}
-                  height={400}
-                  className="h-full w-full object-cover object-center group-hover:opacity-75"
-                />
-              )}
-            </div>
-            <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
-            <p className="mt-1 text-lg font-medium text-gray-900">
-              {product.pricing?.priceRange?.start?.gross.amount} {product.pricing?.priceRange?.start?.gross.currency}
-            </p>
-          </Link>
-        ))}
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="mb-4 sm:mb-0 text-2xl font-bold tracking-tight">
+          Products {region && `for ${region}`} {language && `in ${language}`}
+        </h2>
+
+        {categories.length > 0 && (
+          <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
-      {showLoadMore && hasNextPage && (
-        <div className="mt-8 text-center">
-          <button
-            onClick={loadMoreProducts}
-            className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Load More Products
-          </button>
+      {filteredProducts.length === 0 && !loading ? (
+        <div className="flex flex-col items-center justify-center py-12">
+          <p className="text-gray-500">No products found.</p>
         </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {filteredProducts.map((product) => (
+              <ProductCard key={product.id} {...product} />
+            ))}
+
+            {loading &&
+              Array.from({ length: 4 }).map((_, index) => (
+                <div key={`skeleton-${index}`} className="h-full">
+                  <div className="h-full rounded-lg border border-gray-200 bg-white shadow-sm">
+                    <Skeleton className="aspect-square w-full rounded-t-lg" />
+                    <div className="p-4">
+                      <Skeleton className="mb-2 h-4 w-1/3" />
+                      <Skeleton className="mb-2 h-5 w-2/3" />
+                      <Skeleton className="h-5 w-1/4" />
+                    </div>
+                    <div className="p-4 pt-0">
+                      <Skeleton className="h-10 w-full" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+
+          {(hasMore || loading) && (
+            <div className="mt-8 flex justify-center">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={onLoadMore}
+                disabled={loading || !hasMore}
+                className={cn("min-w-[200px]", {
+                  "opacity-50 cursor-not-allowed": loading || !hasMore
+                })}
+              >
+                {loading ? "Loading..." : "Load More"}
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

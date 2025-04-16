@@ -1,13 +1,38 @@
 'use client';
 
-import React, { useState, Fragment } from 'react';
-import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { ShoppingBagIcon, UserIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ShoppingBagIcon, UserIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '../packages/ui/src/components/navigation-menu';
+import { Button } from '../packages/ui/src/components/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose,
+} from '../packages/ui/src/components/sheet';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../packages/ui/src/components/dropdown-menu';
 import { useCartStore } from '../store/cart';
 import CartDrawer from './CartDrawer';
-import { getCurrentLocale, setLocale } from '../lib/graphql/client';
+import LanguageSelector from './LanguageSelector';
+import RegionSelector from './RegionSelector';
+import { getCurrentLocale } from '../lib/graphql/client';
+import { cn } from '../lib/utils';
 
 interface NavigationItem {
   name: string;
@@ -20,6 +45,7 @@ const navigation: NavigationItem[] = [
   { name: 'Products', href: '/products', current: false },
   { name: 'Categories', href: '/categories', current: false },
   { name: 'About', href: '/about', current: false },
+  { name: 'Language Demo', href: '/language-demo', current: false },
 ];
 
 const Header: React.FC = () => {
@@ -36,233 +62,135 @@ const Header: React.FC = () => {
     setIsCartOpen(false);
   };
 
-  // Language and region options
-  const regions = ['US', 'EU', 'DE', 'PL'];
-  const languages = ['en', 'de', 'pl'];
-
-  const handleLocaleChange = (newRegion: string, newLanguage: string) => {
-    setLocale(newRegion, newLanguage);
-  };
-
   return (
     <>
-      <Disclosure as="nav" className="bg-white shadow">
-        {({ open }) => (
-          <>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between h-16">
-                <div className="flex">
-                  <div className="flex-shrink-0 flex items-center">
-                    <Link href="/" className="text-xl font-bold text-indigo-600">
-                      Bolen Store
-                    </Link>
-                  </div>
-                  <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                    {navigation.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className={`${
-                          pathname === item.href || pathname?.startsWith(item.href + '/')
-                            ? 'border-indigo-500 text-gray-900'
-                            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                        } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-                        aria-current={item.current ? 'page' : undefined}
-                      >
-                        {item.name}
+      <header className="bg-white shadow">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex">
+              <div className="flex-shrink-0 flex items-center">
+                <Link href="/" className="text-xl font-bold text-indigo-600">
+                  Bolen Store
+                </Link>
+              </div>
+
+              <div className="hidden sm:ml-6 sm:flex">
+                <NavigationMenuList>
+                  {navigation.map((item) => (
+                    <NavigationMenuItem key={item.name}>
+                      <Link href={item.href} legacyBehavior passHref>
+                        <NavigationMenuLink
+                          className={cn(
+                            "inline-flex items-center px-3 py-2 text-sm font-medium transition-colors",
+                            pathname === item.href || pathname?.startsWith(item.href + '/')
+                              ? "text-indigo-600"
+                              : "text-gray-700 hover:text-indigo-500"
+                          )}
+                        >
+                          {item.name}
+                        </NavigationMenuLink>
                       </Link>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex items-center">
-                  {/* Region/Language Selector */}
-                  <Menu as="div" className="relative ml-3">
-                    <div>
-                      <Menu.Button className="flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <span className="sr-only">Open locale menu</span>
-                        <span className="px-2 py-1 text-sm text-gray-700 hover:text-gray-900">
-                          {region}/{language}
-                        </span>
-                      </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {regions.map(reg => (
-                          <div key={reg}>
-                            <div className="px-4 py-2 text-xs font-semibold text-gray-500">{reg}</div>
-                            {languages.map(lang => (
-                              <Menu.Item key={`${reg}-${lang}`}>
-                                {({ active }) => (
-                                  <button
-                                    onClick={() => handleLocaleChange(reg, lang)}
-                                    className={`${
-                                      active ? 'bg-gray-100' : ''
-                                    } ${
-                                      region === reg && language === lang ? 'bg-indigo-50 text-indigo-500' : ''
-                                    } block px-4 py-2 text-sm text-gray-700 w-full text-left`}
-                                  >
-                                    {lang.toUpperCase()}
-                                  </button>
-                                )}
-                              </Menu.Item>
-                            ))}
-                          </div>
-                        ))}
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-
-                  {/* Cart Button */}
-                  <button
-                    type="button"
-                    className="relative ml-4 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none"
-                    onClick={openCart}
-                  >
-                    <span className="absolute -inset-1.5" />
-                    <span className="sr-only">Open cart</span>
-                    <ShoppingBagIcon className="h-6 w-6" aria-hidden="true" />
-                    {totalItems > 0 && (
-                      <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center">
-                        {totalItems}
-                      </span>
-                    )}
-                  </button>
-
-                  {/* Profile dropdown */}
-                  <Menu as="div" className="relative ml-3">
-                    <div>
-                      <Menu.Button className="relative flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        <span className="sr-only">Open user menu</span>
-                        <UserIcon className="h-6 w-6 text-gray-400" aria-hidden="true" />
-                      </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-200"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <Menu.Item>
-                          {({ active }) => (
-                            <Link
-                              href="/profile"
-                              className={`${
-                                active ? 'bg-gray-100' : ''
-                              } block px-4 py-2 text-sm text-gray-700`}
-                            >
-                              Your Profile
-                            </Link>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <Link
-                              href="/orders"
-                              className={`${
-                                active ? 'bg-gray-100' : ''
-                              } block px-4 py-2 text-sm text-gray-700`}
-                            >
-                              Your Orders
-                            </Link>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={`${
-                                active ? 'bg-gray-100' : ''
-                              } block px-4 py-2 text-sm text-gray-700`}
-                            >
-                              Sign out
-                            </a>
-                          )}
-                        </Menu.Item>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-
-                  {/* Mobile menu button */}
-                  <div className="ml-4 flex items-center sm:hidden">
-                    <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
-                      <span className="sr-only">Open main menu</span>
-                      {open ? (
-                        <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                      ) : (
-                        <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                      )}
-                    </Disclosure.Button>
-                  </div>
-                </div>
+                    </NavigationMenuItem>
+                  ))}
+                </NavigationMenuList>
               </div>
             </div>
 
-            {/* Mobile menu */}
-            <Disclosure.Panel className="sm:hidden">
-              <div className="space-y-1 pb-3 pt-2">
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`${
-                      pathname === item.href || pathname?.startsWith(item.href + '/')
-                        ? 'bg-indigo-50 border-indigo-500 text-indigo-700'
-                        : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
-                    } block border-l-4 py-2 pl-3 pr-4 text-base font-medium`}
-                    aria-current={item.current ? 'page' : undefined}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+            <div className="flex items-center">
+              {/* Language and Region Selectors */}
+              <div className="flex space-x-2">
+                <LanguageSelector />
+                <RegionSelector />
               </div>
-              <div className="border-t border-gray-200 pb-3 pt-4">
-                <div className="flex items-center px-4">
-                  <div className="flex-shrink-0">
-                    <UserIcon className="h-6 w-6 text-gray-400" aria-hidden="true" />
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-base font-medium text-gray-800">Guest User</div>
-                    <div className="text-sm font-medium text-gray-500">guest@example.com</div>
-                  </div>
-                </div>
-                <div className="mt-3 space-y-1">
-                  <Link
-                    href="/profile"
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+
+              {/* Cart Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={openCart}
+                className="relative ml-4"
+                aria-label="Open cart"
+              >
+                <ShoppingBagIcon className="h-6 w-6" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
+              </Button>
+
+              {/* Profile dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="ml-3"
+                    aria-label="User menu"
                   >
-                    Your Profile
-                  </Link>
-                  <Link
-                    href="/orders"
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
-                  >
-                    Your Orders
-                  </Link>
-                  <Link
-                    href="#"
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
-                  >
-                    Sign out
-                  </Link>
-                </div>
+                    <UserIcon className="h-6 w-6 text-gray-400" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">Your Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/orders">Your Orders</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>Sign out</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Mobile menu button */}
+              <div className="ml-4 flex items-center sm:hidden">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="ghost" size="icon" aria-label="Menu">
+                      <Bars3Icon className="h-6 w-6" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left">
+                    <div className="space-y-4 py-6">
+                      {navigation.map((item) => (
+                        <SheetClose asChild key={item.name}>
+                          <Link
+                            href={item.href}
+                            className={cn(
+                              "block px-3 py-2 text-base font-medium",
+                              pathname === item.href || pathname?.startsWith(item.href + '/')
+                                ? "text-indigo-600"
+                                : "text-gray-700 hover:text-indigo-500"
+                            )}
+                            aria-current={item.current ? 'page' : undefined}
+                          >
+                            {item.name}
+                          </Link>
+                        </SheetClose>
+                      ))}
+                      <div className="border-t border-gray-200 pt-4">
+                        <div className="flex flex-col space-y-4">
+                          <Link href="/profile" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-500">
+                            Your Profile
+                          </Link>
+                          <Link href="/orders" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-500">
+                            Your Orders
+                          </Link>
+                          <button className="text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-500">
+                            Sign out
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </SheetContent>
+                </Sheet>
               </div>
-            </Disclosure.Panel>
-          </>
-        )}
-      </Disclosure>
+            </div>
+          </div>
+        </div>
+      </header>
 
       <CartDrawer isOpen={isCartOpen} onClose={closeCart} />
     </>
