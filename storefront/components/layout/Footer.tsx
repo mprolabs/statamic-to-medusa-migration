@@ -47,7 +47,7 @@ export default function Footer() {
               </a>
             </div>
           </div>
-          
+
           {/* Navigation sections */}
           <div>
             <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Shop</h3>
@@ -61,7 +61,7 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Account</h3>
             <ul className="space-y-3">
@@ -74,7 +74,7 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Company</h3>
             <ul className="space-y-3">
@@ -88,7 +88,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        
+
         {/* Bottom section with copyright */}
         <div className="border-t border-gray-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm">
@@ -109,4 +109,4 @@ export default function Footer() {
       </div>
     </footer>
   )
-} 
+}

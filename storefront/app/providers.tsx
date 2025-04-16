@@ -8,12 +8,10 @@ interface ProvidersProps {
   children: React.ReactNode;
 }
 
-const Providers: React.FC<ProvidersProps> = ({ children }) => {
+export default function Providers({ children }: ProvidersProps) {
   return (
     <ApolloProvider client={client}>
       {children}
     </ApolloProvider>
   );
-};
-
-export default Providers; 
+}

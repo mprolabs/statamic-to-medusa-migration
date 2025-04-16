@@ -23,7 +23,7 @@ const httpLink = createHttpLink({
 const authLink = setContext((_, { headers }) => {
   // Get the authentication token from local storage if it exists
   const token = typeof window !== 'undefined' ? localStorage.getItem('saleorAuthToken') : null;
-  
+
   // Return the headers to the context so httpLink can read them
   return {
     headers: {
@@ -83,4 +83,4 @@ export function initializeApollo(
 // Use this function to get the Apollo Client instance
 export function useApollo(initialState: any, config: SaleorConfig = defaultSaleorConfig) {
   return initializeApollo(initialState, config);
-} 
+}

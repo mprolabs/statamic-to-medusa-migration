@@ -84,7 +84,7 @@ interface ProductGridProps {
 }
 
 export default function ProductGrid({ limit, category }: ProductGridProps) {
-  let filteredProducts = category 
+  let filteredProducts = category
     ? products.filter(product => product.category === category)
     : products
 
@@ -99,4 +99,4 @@ export default function ProductGrid({ limit, category }: ProductGridProps) {
       ))}
     </div>
   )
-} 
+}

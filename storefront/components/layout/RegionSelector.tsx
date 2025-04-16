@@ -17,7 +17,7 @@ export default function RegionSelector() {
       <div className="relative">
         <Listbox.Button className="flex items-center text-gray-700 hover:text-primary-600">
           <GlobeEuropeAfricaIcon className="h-4 w-4 mr-1" />
-          <span className="mr-1">{selected.flag}</span> 
+          <span className="mr-1">{selected.flag}</span>
           <span>{selected.name}</span>
           <ChevronDownIcon className="h-4 w-4 ml-1" />
         </Listbox.Button>
@@ -58,4 +58,4 @@ export default function RegionSelector() {
       </div>
     </Listbox>
   )
-} 
+}

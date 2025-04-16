@@ -1,0 +1,26 @@
+{
+  "common": {
+    "home": "Startpagina",
+    "products": "Producten",
+    "categories": "Categorieën",
+    "cart": "Winkelwagen",
+    "checkout": "Afrekenen",
+    "account": "Account",
+    "search": "Zoeken",
+    "search_placeholder": "Zoek producten...",
+    "menu": "Menu",
+    "close": "Sluiten",
+    "add_to_cart": "In winkelwagen",
+    "view_details": "Bekijk details",
+    "loading": "Laden...",
+    "error": "Er is een fout opgetreden.",
+    "try_again": "Probeer opnieuw",
+    "footer": {
+      "about": "Over ons",
+      "contact": "Contact",
+      "terms": "Voorwaarden",
+      "privacy": "Privacy",
+      "copyright": "© 2023 Onze Shop. Alle rechten voorbehouden."
+    }
+  }
+}

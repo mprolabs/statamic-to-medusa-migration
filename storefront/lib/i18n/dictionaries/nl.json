@@ -1,0 +1,43 @@
+{
+  "common": {
+    "shop": "Winkel",
+    "products": "Producten",
+    "categories": "Categorieën",
+    "cart": "Winkelwagen",
+    "addToCart": "In Winkelwagen",
+    "viewCart": "Bekijk Winkelwagen",
+    "checkout": "Afrekenen",
+    "search": "Zoeken",
+    "login": "Inloggen",
+    "register": "Registreren",
+    "account": "Account",
+    "logout": "Uitloggen",
+    "welcome": "Welkom in onze winkel",
+    "featured": "Aanbevolen Producten",
+    "shopNow": "Nu Winkelen",
+    "viewAll": "Bekijk Alles",
+    "loadMore": "Meer Laden",
+    "price": "Prijs"
+  },
+  "product": {
+    "outOfStock": "Niet op voorraad",
+    "inStock": "Op voorraad",
+    "quantity": "Aantal",
+    "addedToCart": "Toegevoegd aan Winkelwagen",
+    "relatedProducts": "Gerelateerde Producten",
+    "description": "Beschrijving",
+    "specifications": "Specificaties",
+    "reviews": "Beoordelingen"
+  },
+  "cart": {
+    "empty": "Je winkelwagen is leeg",
+    "startShopping": "Begin met Winkelen",
+    "subtotal": "Subtotaal",
+    "shipping": "Verzending",
+    "tax": "BTW",
+    "total": "Totaal",
+    "remove": "Verwijderen",
+    "update": "Bijwerken",
+    "proceedToCheckout": "Doorgaan naar Afrekenen"
+  }
+}

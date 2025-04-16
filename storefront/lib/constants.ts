@@ -1,28 +1,20 @@
 // API URLs
-export const SALEOR_API_URL = process.env.NEXT_PUBLIC_SALEOR_API_URL || 'https://api.saleor.io/graphql/';
+export const SALEOR_API_URL = process.env.NEXT_PUBLIC_SALEOR_API_URL || 'https://demo.saleor.io/graphql/';
 
 // Available regions with their configurations
 export const REGIONS = {
-  UK: {
-    name: 'United Kingdom',
-    code: 'UK',
-    domain: 'uk.domain.com',
-    currency: 'GBP',
-    languageCode: 'EN',
-    isDefault: true
-  },
   NL: {
     name: 'Netherlands',
     code: 'NL',
-    domain: 'nl.domain.com',
+    domain: 'nl.example.com',
     currency: 'EUR',
     languageCode: 'NL',
-    isDefault: false
+    isDefault: true
   },
   BE: {
     name: 'Belgium',
     code: 'BE',
-    domain: 'be.domain.com',
+    domain: 'be.example.com',
     currency: 'EUR',
     languageCode: 'NL',
     isDefault: false
@@ -30,45 +22,31 @@ export const REGIONS = {
   DE: {
     name: 'Germany',
     code: 'DE',
-    domain: 'de.domain.com',
+    domain: 'de.example.com',
     currency: 'EUR',
     languageCode: 'DE',
-    isDefault: false
-  },
-  FR: {
-    name: 'France',
-    code: 'FR',
-    domain: 'fr.domain.com',
-    currency: 'EUR',
-    languageCode: 'FR',
     isDefault: false
   }
 };
 
 // Available languages
 export const LANGUAGES = {
-  EN: {
-    name: 'English',
-    code: 'EN',
-    locale: 'en-GB',
-    isDefault: true
-  },
   NL: {
     name: 'Dutch',
     code: 'NL',
     locale: 'nl-NL',
+    isDefault: true
+  },
+  FR: {
+    name: 'French',
+    code: 'FR',
+    locale: 'fr-BE',
     isDefault: false
   },
   DE: {
     name: 'German',
     code: 'DE',
     locale: 'de-DE',
-    isDefault: false
-  },
-  FR: {
-    name: 'French',
-    code: 'FR',
-    locale: 'fr-FR',
     isDefault: false
   }
 };
@@ -84,4 +62,100 @@ export const IMAGE_SIZES = {
 };
 
 // Default region code
-export const DEFAULT_REGION_CODE = 'UK'; 
+export const DEFAULT_REGION_CODE = 'NL';
+
+// Region definitions
+export interface Region {
+  code: string;
+  name: string;
+  flag: string;
+  currency: string;
+  channelSlug: string;
+}
+
+// Language definitions
+export interface Language {
+  code: string;
+  name: string;
+  localName?: string;
+}
+
+// Supported regions with their display information and channel slugs
+export const SUPPORTED_REGIONS: Region[] = [
+  {
+    code: 'us',
+    name: 'United States',
+    flag: '🇺🇸',
+    currency: 'USD',
+    channelSlug: 'us-channel'
+  },
+  {
+    code: 'eu',
+    name: 'Europe',
+    flag: '🇪🇺',
+    currency: 'EUR',
+    channelSlug: 'eu-channel'
+  },
+  {
+    code: 'uk',
+    name: 'United Kingdom',
+    flag: '🇬🇧',
+    currency: 'GBP',
+    channelSlug: 'uk-channel'
+  }
+];
+
+// Supported languages with their display information
+export const SUPPORTED_LANGUAGES: Language[] = [
+  {
+    code: 'en',
+    name: 'English',
+  },
+  {
+    code: 'fr',
+    name: 'French',
+    localName: 'Français'
+  },
+  {
+    code: 'de',
+    name: 'German',
+    localName: 'Deutsch'
+  },
+  {
+    code: 'es',
+    name: 'Spanish',
+    localName: 'Español'
+  }
+];
+
+// Default values
+export const DEFAULT_REGION = 'us';
+export const DEFAULT_LANGUAGE = 'en';
+
+// API endpoints and configuration
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://demo.saleor.io/graphql/';
+export const STOREFRONT_URL = process.env.NEXT_PUBLIC_STOREFRONT_URL || 'http://localhost:3000';
+
+// Pagination defaults
+export const DEFAULT_PRODUCTS_PER_PAGE = 12;
+export const MAX_PRODUCTS_PER_PAGE = 24;
+
+// Local storage keys
+export const STORAGE_KEYS = {
+  AUTH_TOKEN: 'saleor.auth.token',
+  REGION: 'saleor.region',
+  LANGUAGE: 'saleor.language',
+  CART_ID: 'saleor.cart.id'
+};
+
+// Nimara specific constants
+export const NIMARA_VERSION = '1.0.0';
+
+// Breakpoints for responsive design
+export const BREAKPOINTS = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  '2xl': 1536,
+};

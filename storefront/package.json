@@ -1,36 +1,62 @@
 {
-  "name": "saleor-storefront",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+  "name": "nimara-ecommerce",
+  "license": "BSD-3-Clause",
+  "version": "1.0.0",
+  "author": {
+    "name": "Mirumee Labs",
+    "email": "hello@mirumee.com",
+    "url": "https://mirumee.com/"
   },
-  "dependencies": {
-    "@apollo/client": "^3.13.7",
-    "@headlessui/react": "^1.7.19",
-    "@heroicons/react": "^2.2.0",
-    "@saleor/app-sdk": "^0.47.0",
-    "@saleor/sdk": "^0.7.0",
-    "clsx": "^2.0.0",
-    "graphql": "^16.10.0",
-    "next": "^15.3.0",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-icons": "^5.5.0",
-    "zustand": "^4.4.3"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mirumee/nimara-ecommerce"
+  },
+  "private": true,
+  "packageManager": "pnpm@9.3.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "dotenv -- turbo run build",
+    "build:storefront": "pnpm run build --filter=storefront",
+    "build:stripe": "pnpm run build --filter=stripe",
+    "build:docs": "pnpm run build --filter=docs",
+    "start": "dotenv -- turbo run start",
+    "start:storefront": "pnpm run start --filter=storefront",
+    "start:docs": "pnpm run start --filter=docs",
+    "codegen": "dotenv -- turbo run codegen",
+    "dev": "dotenv -- turbo run dev",
+    "dev:storefront": "pnpm run dev --filter=storefront",
+    "dev:stripe": "pnpm run dev --filter=stripe",
+    "dev:docs": "pnpm run dev --filter=docs",
+    "test": "dotenv -- turbo run test",
+    "test:e2e": "dotenv -- turbo run test:e2e",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.4.16",
-    "eslint": "^8",
-    "eslint-config-next": "13.5.4",
-    "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.3",
-    "typescript": "^5"
+    "commitizen": "4.3.0",
+    "dotenv-cli": "7.4.2",
+    "eslint": "^8.57.0",
+    "eslint-config-custom": "workspace:*",
+    "husky": "9.1.6",
+    "lint-staged": "^15.2.11",
+    "turbo": "2.1.2"
+  },
+  "resolutions": {
+    "graphql": "16.9.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog",
+      "disableScopeLowerCase": true,
+      "disableSubjectLowerCase": true,
+      "maxHeaderWidth": 150
+    }
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.0.2",
+      "@types/react-dom": "19.0.2"
+    }
   }
 }

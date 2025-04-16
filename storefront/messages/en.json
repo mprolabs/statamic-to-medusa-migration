@@ -1,0 +1,52 @@
+{
+  "common": {
+    "home": "Home",
+    "products": "Products",
+    "categories": "Categories",
+    "cart": "Cart",
+    "checkout": "Checkout",
+    "account": "Account",
+    "search": "Search",
+    "search_placeholder": "Search products...",
+    "menu": "Menu",
+    "close": "Close",
+    "add_to_cart": "Add to cart",
+    "view_details": "View details",
+    "loading": "Loading...",
+    "error": "An error occurred.",
+    "try_again": "Try again",
+    "footer": {
+      "about": "About",
+      "contact": "Contact",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "copyright": "© 2023 Saleor Store. All rights reserved."
+    }
+  },
+  "product": {
+    "price": "Price",
+    "quantity": "Quantity",
+    "add_to_cart": "Add to cart",
+    "description": "Description",
+    "details": "Details",
+    "related": "Related products",
+    "reviews": "Reviews",
+    "out_of_stock": "Out of stock",
+    "in_stock": "In stock",
+    "discount": "Discount"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "continue_shopping": "Continue shopping",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "update": "Update",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "tax": "Tax",
+    "total": "Total",
+    "discount": "Discount",
+    "coupon": "Coupon"
+  }
+}

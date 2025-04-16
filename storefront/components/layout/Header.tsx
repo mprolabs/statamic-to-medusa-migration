@@ -21,14 +21,14 @@ export default function Header() {
           <RegionSelector />
           <LanguageSelector />
         </div>
-        
+
         {/* Main header */}
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <Link href="/" className="font-bold text-2xl text-primary-600">
             Saleor Store
           </Link>
-          
+
           {/* Navigation */}
           <nav className="hidden md:flex space-x-8">
             {navigation.map((item) => (
@@ -41,7 +41,7 @@ export default function Header() {
               </Link>
             ))}
           </nav>
-          
+
           {/* Actions */}
           <div className="flex items-center space-x-4">
             <button className="p-2 text-gray-500 hover:text-primary-600" aria-label="Search">
@@ -61,4 +61,4 @@ export default function Header() {
       </div>
     </header>
   )
-} 
+}

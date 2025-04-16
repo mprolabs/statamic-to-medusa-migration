@@ -1,0 +1,26 @@
+{
+  "common": {
+    "home": "Accueil",
+    "products": "Produits",
+    "categories": "Catégories",
+    "cart": "Panier",
+    "checkout": "Commander",
+    "account": "Compte",
+    "search": "Rechercher",
+    "search_placeholder": "Rechercher des produits...",
+    "menu": "Menu",
+    "close": "Fermer",
+    "add_to_cart": "Ajouter au panier",
+    "view_details": "Voir les détails",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite.",
+    "try_again": "Réessayer",
+    "footer": {
+      "about": "À propos",
+      "contact": "Contact",
+      "terms": "Conditions",
+      "privacy": "Confidentialité",
+      "copyright": "© 2023 Notre Boutique. Tous droits réservés."
+    }
+  }
+}

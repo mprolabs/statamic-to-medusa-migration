@@ -13,39 +13,39 @@ interface ProductListProps {
   showLoadMore?: boolean;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ 
-  limit = 8, 
-  categorySlug, 
-  showLoadMore = false 
+const ProductList: React.FC<ProductListProps> = ({
+  limit = 8,
+  categorySlug,
+  showLoadMore = false
 }) => {
   const [displayLimit, setDisplayLimit] = useState<number>(limit);
-  
+
   // Define variables for the query
   const variables: Record<string, any> = {
     first: displayLimit,
   };
-  
+
   // Add category filter if categorySlug is provided
   if (categorySlug) {
     variables.filter = {
       categories: [categorySlug]
     };
   }
-  
+
   const { loading, error, data, fetchMore } = useQuery<ProductsResponse>(
     GET_PRODUCTS,
     { variables }
   );
-  
+
   if (loading) return <div className="my-8 text-center">Loading products...</div>;
   if (error) return <div className="my-8 text-center text-red-500">Error loading products: {error.message}</div>;
   if (!data || !data.products || !data.products.edges || data.products.edges.length === 0) {
     return <div className="my-8 text-center">No products found.</div>;
   }
-  
+
   const products = data.products.edges.map((edge: Edge<Product>) => edge.node);
   const hasNextPage = data.products.pageInfo.hasNextPage;
-  
+
   const loadMoreProducts = () => {
     if (hasNextPage) {
       fetchMore({
@@ -55,7 +55,7 @@ const ProductList: React.FC<ProductListProps> = ({
         },
         updateQuery: (prev: ProductsResponse, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
-          
+
           return {
             products: {
               ...fetchMoreResult.products,
@@ -67,11 +67,11 @@ const ProductList: React.FC<ProductListProps> = ({
           } as ProductsResponse;
         }
       });
-      
+
       setDisplayLimit(displayLimit + limit);
     }
   };
-  
+
   return (
     <div className="py-4">
       <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
@@ -95,7 +95,7 @@ const ProductList: React.FC<ProductListProps> = ({
           </Link>
         ))}
       </div>
-      
+
       {showLoadMore && hasNextPage && (
         <div className="mt-8 text-center">
           <button
@@ -110,4 +110,4 @@ const ProductList: React.FC<ProductListProps> = ({
   );
 };
 
-export default ProductList; 
+export default ProductList;

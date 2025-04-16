@@ -10,12 +10,12 @@ interface HeroSectionProps {
   imageUrl: string
 }
 
-export default function HeroSection({ 
-  title, 
-  subtitle, 
-  ctaText, 
-  ctaLink, 
-  imageUrl 
+export default function HeroSection({
+  title,
+  subtitle,
+  ctaText,
+  ctaLink,
+  imageUrl
 }: HeroSectionProps) {
   return (
     <div className="relative overflow-hidden bg-gray-100">
@@ -30,21 +30,21 @@ export default function HeroSection({
               {subtitle}
             </p>
             <div>
-              <Link 
-                href={ctaLink} 
+              <Link
+                href={ctaLink}
                 className="inline-block bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-8 rounded-md transition-colors"
               >
                 {ctaText}
               </Link>
             </div>
           </div>
-          
+
           {/* Image - using a simple img for now, would use next/image in production */}
           <div className="relative h-64 md:h-auto">
             {/* Fallback if Next.js Image doesn't work in this environment */}
             <div className="relative h-full min-h-[320px] rounded-lg overflow-hidden shadow-lg">
-              <img 
-                src={imageUrl || '/placeholder-hero.jpg'} 
+              <img
+                src={imageUrl || '/placeholder-hero.jpg'}
                 alt="Hero image"
                 className="w-full h-full object-cover"
               />
@@ -54,4 +54,4 @@ export default function HeroSection({
       </div>
     </div>
   )
-} 
+}

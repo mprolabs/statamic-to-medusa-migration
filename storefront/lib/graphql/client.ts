@@ -12,10 +12,10 @@ const httpLink = createHttpLink({
 // Add auth headers to requests when token is available
 const authLink = setContext((_, { headers }) => {
   // Get the auth token from localStorage if available
-  const token = typeof window !== 'undefined' 
-    ? localStorage.getItem('saleorAuthToken') 
+  const token = typeof window !== 'undefined'
+    ? localStorage.getItem('saleorAuthToken')
     : null;
-  
+
   return {
     headers: {
       ...headers,
@@ -27,24 +27,24 @@ const authLink = setContext((_, { headers }) => {
 // Create region/language context link to add channel and language parameters
 const channelLink = new ApolloLink((operation, forward) => {
   // Get channel and language from context or defaults
-  const region = typeof window !== 'undefined' 
+  const region = typeof window !== 'undefined'
     ? localStorage.getItem('region') || process.env.NEXT_PUBLIC_DEFAULT_REGION || 'nl'
     : process.env.NEXT_PUBLIC_DEFAULT_REGION || 'nl';
-    
+
   const language = typeof window !== 'undefined'
     ? localStorage.getItem('language') || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en'
     : process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en';
-  
+
   // Map region to channel (in this example, they match)
   const channel = region.toUpperCase();
-  
+
   // Add variables to the operation
   operation.variables = {
     ...operation.variables,
     channel,
-    language,
+    languageCode: language.toUpperCase(),
   };
-  
+
   return forward(operation);
 });
 
@@ -63,7 +63,7 @@ export const getCurrentLocale = () => {
       language: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
     };
   }
-  
+
   return {
     region: localStorage.getItem('region') || process.env.NEXT_PUBLIC_DEFAULT_REGION || 'nl',
     language: localStorage.getItem('language') || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
@@ -75,8 +75,8 @@ export const setLocale = (region: string, language: string) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem('region', region);
     localStorage.setItem('language', language);
-    
+
     // Reload page to apply new locale
     window.location.reload();
   }
-}; 
+};

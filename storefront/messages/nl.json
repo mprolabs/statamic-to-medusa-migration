@@ -1,0 +1,52 @@
+{
+  "common": {
+    "home": "Startpagina",
+    "products": "Producten",
+    "categories": "Categorieën",
+    "cart": "Winkelwagen",
+    "checkout": "Afrekenen",
+    "account": "Account",
+    "search": "Zoeken",
+    "search_placeholder": "Zoek producten...",
+    "menu": "Menu",
+    "close": "Sluiten",
+    "add_to_cart": "In winkelwagen",
+    "view_details": "Bekijk details",
+    "loading": "Laden...",
+    "error": "Er is een fout opgetreden.",
+    "try_again": "Probeer opnieuw",
+    "footer": {
+      "about": "Over ons",
+      "contact": "Contact",
+      "terms": "Voorwaarden",
+      "privacy": "Privacy",
+      "copyright": "© 2023 Saleor Store. Alle rechten voorbehouden."
+    }
+  },
+  "product": {
+    "price": "Prijs",
+    "quantity": "Aantal",
+    "add_to_cart": "Toevoegen aan winkelwagen",
+    "description": "Beschrijving",
+    "details": "Details",
+    "related": "Gerelateerde producten",
+    "reviews": "Beoordelingen",
+    "out_of_stock": "Niet op voorraad",
+    "in_stock": "Op voorraad",
+    "discount": "Korting"
+  },
+  "cart": {
+    "title": "Winkelwagen",
+    "empty": "Je winkelwagen is leeg",
+    "continue_shopping": "Verder winkelen",
+    "checkout": "Afrekenen",
+    "remove": "Verwijderen",
+    "update": "Bijwerken",
+    "subtotal": "Subtotaal",
+    "shipping": "Verzending",
+    "tax": "BTW",
+    "total": "Totaal",
+    "discount": "Korting",
+    "coupon": "Kortingscode"
+  }
+}

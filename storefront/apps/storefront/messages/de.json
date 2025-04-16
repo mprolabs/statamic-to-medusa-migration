@@ -1,0 +1,26 @@
+{
+  "common": {
+    "home": "Startseite",
+    "products": "Produkte",
+    "categories": "Kategorien",
+    "cart": "Warenkorb",
+    "checkout": "Zur Kasse",
+    "account": "Konto",
+    "search": "Suchen",
+    "search_placeholder": "Produkte suchen...",
+    "menu": "Menü",
+    "close": "Schließen",
+    "add_to_cart": "In den Warenkorb",
+    "view_details": "Details anzeigen",
+    "loading": "Wird geladen...",
+    "error": "Ein Fehler ist aufgetreten.",
+    "try_again": "Erneut versuchen",
+    "footer": {
+      "about": "Über uns",
+      "contact": "Kontakt",
+      "terms": "AGB",
+      "privacy": "Datenschutz",
+      "copyright": "© 2023 Unser Shop. Alle Rechte vorbehalten."
+    }
+  }
+}

@@ -1,115 +1,104 @@
+'use client';
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Product } from '../graphql/types';
 
 export interface CartItem {
   id: string;
-  product: Product;
+  name: string;
+  price: number;
+  currency: string;
+  image: string;
   quantity: number;
   variantId?: string;
+  attributes?: Array<{
+    name: string;
+    value: string;
+  }>;
 }
 
 interface CartStore {
   items: CartItem[];
-  totalItems: number;
-  totalPrice: number;
-  
-  // Actions
-  addItem: (product: Product, quantity?: number, variantId?: string) => void;
-  removeItem: (itemId: string) => void;
-  updateItemQuantity: (itemId: string, quantity: number) => void;
+  isOpen: boolean;
+  addItem: (item: CartItem) => void;
+  removeItem: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  toggleCart: () => void;
+  closeCart: () => void;
+  openCart: () => void;
+  itemCount: number;
+  totalPrice: number;
 }
 
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
-      totalItems: 0,
-      totalPrice: 0,
-      
-      addItem: (product: Product, quantity = 1, variantId?: string) => {
-        const items = [...get().items];
-        const productId = variantId || product.id;
-        const existingItem = items.find(item => 
-          (variantId && item.variantId === variantId) || 
-          (!variantId && !item.variantId && item.product.id === product.id)
+      isOpen: false,
+
+      addItem: (newItem) => {
+        const { items } = get();
+        // Check if item already exists in cart
+        const existingItemIndex = items.findIndex(
+          (item) => item.id === newItem.id &&
+                   ((!item.variantId && !newItem.variantId) || item.variantId === newItem.variantId)
         );
-        
-        if (existingItem) {
-          // Update existing item quantity
-          existingItem.quantity += quantity;
+
+        if (existingItemIndex !== -1) {
+          // Item exists, update quantity
+          const updatedItems = [...items];
+          updatedItems[existingItemIndex].quantity += newItem.quantity;
+          set({ items: updatedItems });
         } else {
-          // Add new item
-          items.push({
-            id: productId,
-            product,
-            quantity,
-            variantId
-          });
-        }
-        
-        // Calculate totals
-        const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-        const totalPrice = items.reduce((sum, item) => {
-          const price = variantId && item.product.variants
-            ? item.product.variants.find(v => v.id === variantId)?.pricing?.price?.gross.amount || 
-              item.product.pricing?.priceRange?.start?.gross.amount || 0
-            : item.product.pricing?.priceRange?.start?.gross.amount || 0;
-          return sum + (price * item.quantity);
-        }, 0);
-        
-        set({ items, totalItems, totalPrice });
-      },
-      
-      removeItem: (itemId: string) => {
-        const items = get().items.filter(item => item.id !== itemId);
-        
-        // Calculate totals
-        const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-        const totalPrice = items.reduce((sum, item) => {
-          const price = item.variantId && item.product.variants
-            ? item.product.variants.find(v => v.id === item.variantId)?.pricing?.price?.gross.amount ||
-              item.product.pricing?.priceRange?.start?.gross.amount || 0
-            : item.product.pricing?.priceRange?.start?.gross.amount || 0;
-          return sum + (price * item.quantity);
-        }, 0);
-        
-        set({ items, totalItems, totalPrice });
-      },
-      
-      updateItemQuantity: (itemId: string, quantity: number) => {
-        const items = [...get().items];
-        const itemToUpdate = items.find(item => item.id === itemId);
-        
-        if (itemToUpdate) {
-          if (quantity <= 0) {
-            // Remove item if quantity is 0 or negative
-            return get().removeItem(itemId);
-          }
-          
-          itemToUpdate.quantity = quantity;
-          
-          // Calculate totals
-          const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-          const totalPrice = items.reduce((sum, item) => {
-            const price = item.variantId && item.product.variants
-              ? item.product.variants.find(v => v.id === item.variantId)?.pricing?.price?.gross.amount ||
-                item.product.pricing?.priceRange?.start?.gross.amount || 0
-              : item.product.pricing?.priceRange?.start?.gross.amount || 0;
-            return sum + (price * item.quantity);
-          }, 0);
-          
-          set({ items, totalItems, totalPrice });
+          // New item, add to cart
+          set({ items: [...items, newItem] });
         }
       },
-      
-      clearCart: () => {
-        set({ items: [], totalItems: 0, totalPrice: 0 });
+
+      removeItem: (id) => {
+        const { items } = get();
+        set({ items: items.filter(item => item.id !== id) });
+      },
+
+      updateQuantity: (id, quantity) => {
+        const { items } = get();
+        if (quantity <= 0) {
+          // Remove item if quantity is 0 or negative
+          set({ items: items.filter(item => item.id !== id) });
+          return;
+        }
+
+        set({
+          items: items.map(item =>
+            item.id === id ? { ...item, quantity } : item
+          )
+        });
+      },
+
+      clearCart: () => set({ items: [] }),
+
+      toggleCart: () => set(state => ({ isOpen: !state.isOpen })),
+
+      closeCart: () => set({ isOpen: false }),
+
+      openCart: () => set({ isOpen: true }),
+
+      get itemCount() {
+        return get().items.reduce((total, item) => total + item.quantity, 0);
+      },
+
+      get totalPrice() {
+        return get().items.reduce((total, item) => total + (item.price * item.quantity), 0);
       }
     }),
     {
-      name: 'saleor-cart', // Local storage key
+      name: 'shopping-cart',
+      // Skip persisting these computed/transient properties
+      partialize: (state) => ({
+        items: state.items,
+        isOpen: state.isOpen
+      }),
     }
   )
-); 
+);
